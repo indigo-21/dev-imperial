@@ -13,12 +13,6 @@
                         <div class="left w-50">
                             <h3 class="card-title">Section Items</h3>
                         </div>
-                        <div class="right w-50 text-right">
-                            <a href="{{ route('section_items.create') }}">
-                                <button class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i>
-                                &nbsp; Add Section Item</button>
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                       <table id="defaultTable" class="table table-bordered table-striped">

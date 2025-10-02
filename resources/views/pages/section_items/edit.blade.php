@@ -27,7 +27,7 @@
                     <div class="card-header">
                         <h5 class="card-title">{{ $section }}</h5>
                     </div>
-                    <div class="card-body section-card" data-section="{{ $index + 1 }}">
+                    <div class="card-body section-card" data-section="{{ $index + 2 }}">
                         <div class="section-items">
 
                             @if($index === 0) {{-- Section 2 --}}
