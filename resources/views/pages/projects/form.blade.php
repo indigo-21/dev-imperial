@@ -2,78 +2,176 @@
     <x-slot name="pageTitle">
         {{ isset($project) ? 'Edit' : 'Create' }} Project
     </x-slot>
+
     <x-slot name="content">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card card-primary">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Project Details</h3>
+                        <h3 class="card-title">Project Information</h3>
                     </div>
+
                     <form action="{{ isset($project) ? route('projects.update', $project->id) : route('projects.store') }}"
                         method="POST">
                         @csrf
                         @if (isset($project))
                             @method('PUT')
                         @endif
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="project_name">Project Name</label>
-                                            <input type="text" name="project_name" class="form-control" id="project_name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="project_date">Project Date</label>
-                                            <input type="date" name="project_date" class="form-control" id="project_date">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="project_reference">Project Reference</label>
-                                            <input type="text" name="project_reference" class="form-control" id="project_reference" placeholder="Project Reference">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="project_description">Project Description</label>
-                                            <textarea name="project_description" class="form-control" id="project_description" placeholder="Project Description"></textarea>
-                                        </div>
-                                       
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                {{-- Project Description --}}
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="project_description">Project Description</label>
+                                        <textarea name="project_description" id="project_description" class="form-control" rows="3"
+                                            placeholder="Enter project description">{{ old('project_description', $project->project_description ?? '') }}</textarea>
                                     </div>
                                 </div>
-                            </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Client Details</h3>
-                    </div>
-                    <form action="{{ isset($project) ? route('projects.update', $project->id) : route('projects.store') }}"
-                        method="POST">
-                        @csrf
-                        @if (isset($project))
-                            @method('PUT')
-                        @endif
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                       
-                                        <div class="form-group">
-                                            <label for="client_name">Client Name</label>
-                                            <input type="text" name="client_name" class="form-control" id="client_name" placeholder="Client Name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="client_address">Client Address</label>
-                                            <input type="text" name="client_address" class="form-control" id="client_address" placeholder="Client Address">
-                                        </div>
+
+                                {{-- Project Reference (Auto-generated dummy) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="project_reference">Project Reference</label>
+                                        <input type="text" name="project_reference" id="project_reference"
+                                            class="form-control"
+                                            value="{{ old('project_reference', $project->project_reference ?? 'PRJ-001') }}"
+                                            readonly>
                                     </div>
                                 </div>
+
+                                {{-- Client (Static Dropdown) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="client_id">Client</label>
+                                        <select name="client_id" id="client_id" class="form-control">
+                                            <option value="">-- Select Client --</option>
+                                            <option value="1" {{ old('client_id') == 1 ? 'selected' : '' }}>John Doe Ltd</option>
+                                            <option value="2" {{ old('client_id') == 2 ? 'selected' : '' }}>Acme Construction</option>
+                                            <option value="3" {{ old('client_id') == 3 ? 'selected' : '' }}>Sunrise Developers</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- Project Type --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="project_type">Project Type</label>
+                                        <select name="project_type" id="project_type" class="form-control">
+                                            <option value="">-- Select Type --</option>
+                                            <option value="Refurb" {{ old('project_type') == 'Refurb' ? 'selected' : '' }}>Refurb</option>
+                                            <option value="Relocation" {{ old('project_type') == 'Relocation' ? 'selected' : '' }}>Relocation</option>
+                                            <option value="Refresh/Small Works" {{ old('project_type') == 'Refresh/Small Works' ? 'selected' : '' }}>Refresh/Small Works</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {{-- Size (sqft) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="project_size">Size (sqft)</label>
+                                        <input type="number" name="project_size" id="project_size" class="form-control"
+                                            value="{{ old('project_size', $project->project_size ?? '') }}"
+                                            placeholder="Enter size in sqft">
+                                    </div>
+                                </div>
+
+                                {{-- Client Budget (£) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="client_budget">Client Budget (£)</label>
+                                        <input type="number" name="client_budget" id="client_budget" class="form-control"
+                                            step="0.01"
+                                            value="{{ old('client_budget', $project->client_budget ?? '') }}"
+                                            placeholder="Enter client budget">
+                                    </div>
+                                </div>
+
+                                {{-- Lead Source --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lead_source">Lead Source</label>
+                                        <input type="text" name="lead_source" id="lead_source" class="form-control"
+                                            value="{{ old('lead_source', $project->lead_source ?? '') }}"
+                                            placeholder="Enter lead source">
+                                    </div>
+                                </div>
+
+                                {{-- Lead Owner --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lead_owner">Lead Owner</label>
+                                        <input type="text" name="lead_owner" id="lead_owner" class="form-control"
+                                            value="{{ old('lead_owner', $project->lead_owner ?? '') }}"
+                                            placeholder="Enter lead owner">
+                                    </div>
+                                </div>
+
+                                {{-- Project Director --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="project_director">Project Director</label>
+                                        <input type="text" name="project_director" id="project_director"
+                                            class="form-control"
+                                            value="{{ old('project_director', $project->project_director ?? '') }}"
+                                            placeholder="Enter project director">
+                                    </div>
+                                </div>
+
+                                {{-- Pre-Construction --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="pre_construction">Pre-Construction</label>
+                                        <input type="text" name="pre_construction" id="pre_construction"
+                                            class="form-control"
+                                            value="{{ old('pre_construction', $project->pre_construction ?? '') }}"
+                                            placeholder="Enter pre-construction contact">
+                                    </div>
+                                </div>
+
+                                {{-- Designer --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="designer">Designer</label>
+                                        <input type="text" name="designer" id="designer" class="form-control"
+                                            value="{{ old('designer', $project->designer ?? '') }}"
+                                            placeholder="Enter designer name">
+                                    </div>
+                                </div>
+
+                                {{-- High Risk Building (Checkbox) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group form-check mt-4">
+                                        <input type="checkbox" name="high_risk_building" id="high_risk_building"
+                                            class="form-check-input"
+                                            {{ old('high_risk_building', $project->high_risk_building ?? false) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="high_risk_building">High Risk Building</label>
+                                    </div>
+                                </div>
+
+                                {{-- Referral Fee (%) --}}
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="referral_fee">Referral Fee (%)</label>
+                                        <input type="number" step="0.01" name="referral_fee" id="referral_fee"
+                                            class="form-control"
+                                            value="{{ old('referral_fee', $project->referral_fee ?? '') }}"
+                                            placeholder="Enter referral fee percentage">
+                                    </div>
+                                </div>
+
                             </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <button type="submit" class="btn btn-primary">
+                                {{ isset($project) ? 'Update Project' : 'Create Project' }}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </x-slot>
-    @section('scripts')
-       
-
-    @endsection
 </x-app-layout>

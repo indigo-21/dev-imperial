@@ -16,4 +16,9 @@ class ProjectController extends Controller
     {
         return view('pages.projects.form');
     }
+
+    public function edit(string $id)
+    {
+        return view('pages.projects.edit');
+    }
 }

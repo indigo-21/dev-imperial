@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="pageTitle">
-        Projects
+        Clients
     </x-slot>
 
     <x-slot name="content">
@@ -13,13 +13,13 @@
                 <div class="card card-primary card-outline">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="left w-50">
-                            <h3 class="card-title">Projects List</h3>
+                            <h3 class="card-title">Clients List</h3>
                         </div>
                         <div class="right w-50 text-right">
-                            <a href="{{ route('projects.create') }}">
+                            <a href="{{ route('clients.create') }}">
                                 <button class="btn btn-primary">
                                     <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                    &nbsp; Create new Project
+                                    &nbsp; Create New Client
                                 </button>
                             </a>
                         </div>
@@ -29,32 +29,20 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Project Reference</th>
-                                    <th>Client</th>
-                                    <th>Project Type</th>
-                                    <th>Project Director</th>
-                                    <th class="text-center" style="width: 60px;">Action</th>
+                                    <th>Business Name</th>
+                                    <th>Business Address</th>
+                                    <th>Industry</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>PRJ-001</td>
-                                    <td>Acme Construction</td>
-                                    <td>Refurb</td>
-                                    <td>Emily Carter</td>
-                                    <td class="text-center">
-                                        <form action="{{ route('projects.edit', 1) }}" method="GET" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Edit Project">
-                                                <i class="fa fa-pen"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <td>Acme Property Holdings Ltd.</td>
+                                    <td>22 King Street, London, W1A 1AA</td>
+                                    <td>Real Estate</td>
                                 </tr>
-                              
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>

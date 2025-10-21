@@ -21,6 +21,22 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.index') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Sub Contractor / Suppliers
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('clients.index') }}" class="nav-link {{ request()->routeIs('clients.index') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Clients
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('projects.index') }}" class="nav-link {{ request()->routeIs('projects.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-layer-group"></i>
                         <p>
@@ -28,30 +44,9 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('project-scope-templates.index') }}" class="nav-link {{ request()->routeIs('project-scope-templates.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-file-alt"></i>
-                        <p>
-                            Project Scope Template
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('costPlans.index') }}" class="nav-link {{ request()->routeIs('costPlans.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
-                        <p>
-                            Cost Plans
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('variation-orders.index') }}" class="nav-link {{ request()->routeIs('variation-orders.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-tasks"></i>
-                        <p>
-                            Variation Orders
-                        </p>
-                    </a>
-                </li>
+
+   
+               
             </ul>
         </nav>
     </div>

@@ -67,3 +67,13 @@ li.user-footer {
 .card-primary:not(.card-outline)>.card-header {
     background-color: var(--secondary-color);
 }
+
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #FFF;
+
+}
+
+.nav-tabs a {
+    color: #000;
+}
