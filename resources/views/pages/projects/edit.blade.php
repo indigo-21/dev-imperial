@@ -593,7 +593,48 @@
     </x-slot>
     @section('scripts') 
        <script>
+
+        let sectionCount = 0;
+
+          function addSection() {
+            sectionCount++;
+
+            let sectionHtml = `
+                <div class="card mt-3 p-3 section-row">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="mb-0 section-label"></label>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteSection(this)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" class="section-code" name="sections[${sectionCount}][code]" value="">
+                    <input type="text" name="sections[${sectionCount}][name]" 
+                        class="form-control mt-2" placeholder="Enter section name">
+                </div>
+            `;
+
+            document.getElementById('sections-wrapper').insertAdjacentHTML('beforeend', sectionHtml);
+
+            renumberSections();
+        }
+
+         function deleteSection(button) {
+            button.closest('.section-row').remove();
+            renumberSections();
+        }
+
+        function renumberSections() {
+            let sections = document.querySelectorAll('.section-row');
+            sections.forEach((row, index) => {
+                let number = (index + 1) + ".00";
+                row.querySelector('.section-label').innerText = "Section " + number;
+                row.querySelector('.section-code').value = number;
+            });
+        }
+
 document.addEventListener("DOMContentLoaded", function () {
+
+    
 
     /* -------------------------------
        COST PLAN SECTION LOGIC
