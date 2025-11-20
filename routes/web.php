@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SupplierTypeController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectScopeTemplateController;
@@ -10,6 +11,10 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SectionItemController;
 use App\Http\Controllers\VariationOrderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TemplateSection;
+use App\Http\Controllers\TemplateItem;
+
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('clients', ClientController::class);
     Route::resource('suppliers', SupplierController::class);
+    Route::resource('supplier-types', SupplierTypeController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('project-scope-templates', ProjectScopeTemplateController::class);
     Route::resource('costPlans', CostPlanController::class);

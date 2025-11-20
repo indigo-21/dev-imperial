@@ -20,6 +20,7 @@
                         </p>
                     </a>
                 </li>
+                
                 <li class="nav-item">
                     <a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
@@ -44,6 +45,42 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-header">CONFIGURATIONS</li>
+                 <li class="nav-item">
+                    <a href="{{ route('supplier-types.index') }}" class="nav-link {{ request()->routeIs('supplier-types.index') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-layer-group"></i>
+                        <p>
+                            Supplier Types
+                        </p>
+                    </a>
+                </li>
+
+                {{-- <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-table"></i>
+                        <p> Configurations <i class="fas fa-angle-left right"></i> </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('supplier-types.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Supplier Types</p>
+                        </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../tables/data.html" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>DataTables</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../tables/jsgrid.html" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>jsGrid</p>
+                            </a>
+                        </li>
+                    </ul>
+          </li> --}}
 
    
                

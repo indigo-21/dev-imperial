@@ -39,14 +39,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>ABC Electrical Ltd.</td>
-                                    <td>12 High Street, London, N1 3AB</td>
-                                    <td>1234567890</td>
-                                    <td>09876543</td>
-                                    <td>GB123456789</td>
-                                    <td>Electrical, Data</td>
-                                </tr>
+                                 @foreach ($suppliers as $supplier)
+                                         @php
+                                            $typeIds = explode(',', $supplier->supplier_types); // ["1","3","5"]
+                                            $typeNames = array_map(fn($id) => $supplierTypes[$id] ?? '-', $typeIds);
+                                        @endphp
+                                        <tr>
+                                            <td>{{ $supplier->business_name }}</td>
+                                            <td>{{ $supplier->business_address }}</td>
+                                            <td>{{ $supplier->unique_tax_reference }}</td>
+                                            <td>{{ $supplier->company_registration_number }}</td>
+                                            <td>{{ $supplier->vat_number }}</td>
+                                            <td>{{ implode(', ', $typeNames) }}</td>
+                                            <td>
+                                                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-pen"></i>Edit</a>
+                                                <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this supplier?')">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                 @endforeach
                             </tbody>
                         </table>
                     </div>

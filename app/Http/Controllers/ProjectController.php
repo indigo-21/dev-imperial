@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TemplateItem;
+use App\Models\TemplateSection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,8 @@ class ProjectController extends Controller
 
     public function edit(string $id)
     {
-        return view('pages.projects.edit');
+       $templateSections = TemplateSection::with('items')->get();
+
+       return view('pages.projects.edit', compact('templateSections'));
     }
 }

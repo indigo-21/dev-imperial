@@ -6,15 +6,32 @@
     <x-slot name="content">
         <div class="card card-primary card-outline">
             <div class="card-body">
-                <form action="{{ isset($supplier) ? route('suppliers.update', $supplier->id) : route('suppliers.store') }}" method="POST">
-                    @csrf
-                    @if(isset($supplier))
-                        @method('PUT')
-                    @endif
+                {{-- Tabs --}}
+                <ul class="nav nav-tabs" id="supplierFormTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab">
+                            Supplier Details
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab">
+                            Supplier Documents
+                        </a>
+                    </li>
+                </ul>
 
-                    <div class="row">
-                        <!-- LEFT COLUMN -->
-                        <div class="col-md-6">
+                <div class="tab-content mt-3" id="supplierFormTabsContent">
+                    {{-- Supplier Details Tab --}}
+                    <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                        <form action="{{ isset($supplier) ? route('suppliers.update', $supplier->id) : route('suppliers.store') }}" method="POST">
+                            @csrf
+                            @if(isset($supplier))
+                                @method('PUT')
+                            @endif
+
+                            {{-- Existing form fields here... --}}
+                            <div class="row">
+                                <div class="col-md-6">
                             {{-- BUSINESS NAME --}}
                             <div class="form-group">
                                 <label>Business Name</label>
@@ -97,8 +114,7 @@
                             </div>
                         </div>
 
-                        <!-- RIGHT COLUMN -->
-                        <div class="col-md-6">
+                                <div class="col-md-6">
                             {{-- CONTACTS --}}
                             <div class="form-group">
                                 <label>Contact Information</label>
@@ -208,58 +224,91 @@
                                 @enderror
                             </div>
                         </div>
+                            </div>
+
+                            <div class="mt-4 d-flex justify-content-end">
+                                <a href="{{ route('suppliers.index') }}" class="btn btn-secondary mr-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ isset($supplier) ? 'Update' : 'Create' }}
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
-                    {{-- SUBMIT BUTTON --}}
-                    <div class="mt-4 d-flex justify-content-end">
-                        <a href="{{ route('suppliers.index') }}" class="btn btn-secondary mr-2">Cancel</a>
-                        <button type="submit" class="btn btn-primary">
-                            {{ isset($supplier) ? 'Update' : 'Create' }}
-                        </button>
+                    {{-- Supplier Documents Tab --}}
+                    <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                         {{-- Upload Form --}}
+                            <div class="col-md-12">
+                            
+                                <form action="#" method="POST" enctype="multipart/form-data">
+                                    @csrf
+
+                                        <div class="col-md-6">
+                                        {{-- File Description --}}
+                                        <div class="form-group">
+                                            <label for="description">File Description</label>
+                                            <input type="text" name="description" id="description" class="form-control"
+                                                placeholder="Enter a brief description">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6"> 
+                                            {{-- File Upload --}}
+                                        <div class="form-group">
+                                            <label for="document">Select Document</label>
+                                            <input type="file" name="document" id="document" class="form-control-file">
+                                        </div>
+                                            {{-- Buttons --}}
+                                        <div class="form-group mt-3">
+                                            <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                                            <button type="submit" class="btn btn-primary ml-2">Upload</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        <div class="col-md-12">
+                            <h5 class="mb-3 text-center"><strong>Uploaded Documents</strong></h5>
+                            <table id="documentsTable" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">ID</th>
+                                        <th width="25%">Description</th>
+                                        <th width="25%">File Name</th>
+                                        <th width="20%">Uploaded By</th>
+                                        <th width="15%">Date</th>
+                                        <th width="10%">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{-- Example / demo data --}}
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Site Layout Plan</td>
+                                        <td><a href="#">layout_plan.pdf</a></td>
+                                        <td>Sarah Thompson</td>
+                                        <td>2025-10-20</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-outline-primary" title="View"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </form>
+
+                </div>
             </div>
         </div>
     </x-slot>
 
     @section('scripts')
-    <script>
-        let contactIndex = {{ count($contacts ?? [1]) }};
-
-        function addContact() {
-            const group = document.createElement('div');
-            group.classList.add('contact-info-group', 'mb-2', 'd-flex');
-            group.innerHTML = `
-                <input type="text" name="contacts[${contactIndex}][name]" class="form-control mr-2" placeholder="Contact Name" required>
-                <input type="text" name="contacts[${contactIndex}][phone]" class="form-control mr-2" placeholder="Phone Number">
-                <input type="text" name="contacts[${contactIndex}][email]" class="form-control mr-2" placeholder="Email Address">
-                <div class="contact-info-group-append">
-                    <button type="button" class="btn btn-danger" onclick="removeContact(this)"><i class="fa fa-minus"></i></button>
-                </div>`;
-            document.getElementById('contact-group').appendChild(group);
-            contactIndex++;
-        }
-
-        function removeContact(button) {
-            button.closest('.contact-info-group').remove();
-        }
-
-        // Update dropdown button text with selected types
-        $(document).on('change', '.supplier-checkbox', function () {
-            const selected = [];
-            $('.supplier-checkbox:checked').each(function () {
-                selected.push($(this).data('name'));
+        <script>
+            $(document).ready(function() {
+                $('#documentsTable').DataTable(); // Initialize datatable for documents
             });
-            $('#supplierDropdown').text(selected.length ? selected.join(', ') : 'Select Supplier Type(s)');
-        });
-
-        // Supplier search filter
-        $('#supplierSearch').on('keyup', function () {
-            const value = $(this).val().toLowerCase();
-            $('#supplierList .form-check').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
-        });
-    </script>
+        </script>
+        {{-- Include your existing contact add/remove JS --}}
     @endsection
 </x-app-layout>

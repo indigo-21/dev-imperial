@@ -11,13 +11,13 @@
                 'project_description' => 'Office refurbishment and workspace redesign for head office.',
                 'project_reference' => 'PRJ-001',
                 'client_id' => 2,
-                'project_type' => 'Refurb',
+                'project_type' => 'CAT A',
                 'project_size' => 15000,
                 'client_budget' => 2500000.00,
                 'lead_source' => 'Architect Referral',
                 'lead_owner' => 'James Carter',
                 'project_director' => 'Emily Carter',
-                'pre_construction' => 'Michael Reynolds',
+                'status' => 'Pre-construction',
                 'designer' => 'BrightSpace Studio',
                 'high_risk_building' => true,
                 'referral_fee' => 5.0,
@@ -32,7 +32,13 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <!-- Project Reference -->
+                             <!-- Project Reference -->
+                             <div class="col-md-4 mb-2 p-2 bg-danger text-white rounded">
+                                <strong>High Risk Building: No</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                           
                             <div class="col-md-4 mb-3">
                                 <strong>Project Reference:</strong>
                                 <p class="mb-0">{{ $project->project_reference ?? 'N/A' }}</p>
@@ -43,10 +49,7 @@
                                 <strong>Client:</strong>
                                 <p class="mb-0">Acme Construction</p>
                             </div>
-                              <div class="col-md-4 mb-3">
-                                <strong>High Risk Building:</strong>
-                                <p class="mb-0">No</p>
-                            </div>
+                             
                         </div>
                     </div>
                 </div>
@@ -65,10 +68,7 @@
                                             <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab"
                                                 aria-controls="documents" aria-selected="false">Project Files</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="template-tab" data-toggle="tab" href="#template" role="tab"
-                                                aria-controls="template" aria-selected="false">Project Sections</a>
-                                        </li>
+                                       
                                         <li class="nav-item">
                                             <a class="nav-link" id="costplan-tab" data-toggle="tab" href="#costplan" role="tab"
                                                 aria-controls="costplan" aria-selected="false">Cost Plan</a>
@@ -132,9 +132,18 @@
                                                                     <label for="project_type">Project Type</label>
                                                                     <select name="project_type" id="project_type" class="form-control">
                                                                         <option value="">-- Select Type --</option>
-                                                                        <option value="Refurb" {{ $project->project_type == 'Refurb' ? 'selected' : '' }}>Refurb</option>
-                                                                        <option value="Relocation" {{ $project->project_type == 'Relocation' ? 'selected' : '' }}>Relocation</option>
-                                                                        <option value="Refresh/Small Works" {{ $project->project_type == 'Refresh/Small Works' ? 'selected' : '' }}>Refresh/Small Works</option>
+                                                                        <option value="CAT A" {{ $project->project_type == 'CAT A' ? 'selected' : '' }}>CAT A</option>
+                                                                        <option value="CAT A+" {{ $project->project_type == 'CAT A+' ? 'selected' : '' }}>CAT A+</option>
+                                                                        <option value="CAT B" {{ $project->project_type == 'CAT B' ? 'selected' : '' }}>CAT B</option>
+                                                                        <option value="Small Works" {{ $project->project_type == 'Small Works' ? 'selected' : '' }}>Small Works</option>
+                                                                        <option value="Refurbishment" {{ $project->project_type == 'Refurbishment' ? 'selected' : '' }}>Refurbishment</option>
+                                                                        <option value="Reconfiguration" {{ $project->project_type == 'Reconfiguration' ? 'selected' : '' }}>Reconfiguration</option>
+                                                                        <option value="Day 2 Works" {{ $project->project_type == 'Day 2 Works' ? 'selected' : '' }}>Day 2 Works</option>
+                                                                        <option value="Dilapidation" {{ $project->project_type == 'Dilapidation' ? 'selected' : '' }}>Dilapidation</option>
+                                                                        <option value="Design Only" {{ $project->project_type == 'Design Only' ? 'selected' : '' }}>Design Only</option>
+                                                                        <option value="Furniture Only" {{ $project->project_type == 'Furniture Only' ? 'selected' : '' }}>Furniture Only</option>
+
+                                                                                                                                                
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -187,11 +196,37 @@
                                                             {{-- Pre-Construction --}}
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label for="pre_construction">Pre-Construction</label>
-                                                                    <input type="text" name="pre_construction" id="pre_construction" class="form-control"
-                                                                        value="{{ $project->pre_construction }}">
+                                                                    <label for="project_status">Project Status</label>
+                                                                    <select name="project_status" id="project_status" class="form-control">
+                                                                        @php
+                                                                            $statuses = [
+                                                                                'New Lead',
+                                                                                'Qualification',
+                                                                                'Meeting Stage',
+                                                                                'Design Stage',
+                                                                                'Costing Stage',
+                                                                                'Pitch/Presentation Stage',
+                                                                                'Awaiting Decision',
+                                                                                'Won',
+                                                                                'On Hold',
+                                                                                'Lost',
+                                                                                'Pre-Construction Stage',
+                                                                                'Construction Stage',
+                                                                                'After Care',
+                                                                            ];
+                                                                            $selectedStatus = old('project_status', $project->project_status ?? '');
+                                                                        @endphp
+
+                                                                        <option value="">-- Select Project Status --</option>
+                                                                        @foreach($statuses as $status)
+                                                                            <option value="{{ $status }}" {{ $selectedStatus == $status ? 'selected' : '' }}>
+                                                                                {{ $status }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
                                                                 </div>
                                                             </div>
+
 
                                                             {{-- Designer --}}
                                                             <div class="col-md-6">
@@ -292,107 +327,112 @@
                                         </div>
                                     </div>
 
-                                        {{-- Project Template --}}
-                                    <div class="tab-pane fade" id="template" role="tabpanel" aria-labelledby="template-tab">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                    <form action="{{ isset($project) ? route('costPlans.update', $project->id) : route('costPlans.store') }}" method="POST">
-                                                        @csrf
-                                                        @if (isset($project))
-                                                            @method('PUT')
-                                                        @endif
 
-                                                        <div class="card-body">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-
-                                                              
-
-                                                                    {{-- Dynamic Section Area --}}
-                                                                    <div class="form-group">
-                                                                        <div id="sections-wrapper">
-                                                                            <!-- Sections will be added dynamically -->
-                                                                        </div>
-
-                                                                        <button type="button" class="btn btn-success mt-3" onclick="addSection()">+ Add Section</button>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                        {{-- Cost Plan --}}
-                                        <div class="tab-pane fade" id="costplan" role="tabpanel" aria-labelledby="costplan-tab">
-                                            <form action="{{ route('section_items.store') }}" method="POST">
+                                       {{-- Cost Plan --}}
+                                    <div class="tab-pane fade" id="costplan" role="tabpanel" aria-labelledby="costplan-tab">
+                                        <form action="{{ route('section_items.store') }}" method="POST">
                                             @csrf
+
                                             @php
-                                                $sections = [
-                                                    '1.00 Demolition & Site Preparation',
-                                                    '2.00 Subfloor',
-                                                    '3.00 Ceiling Works',
-                                                    '4.00 Partitions & Walls',
-                                                    '5.00 Furniture & Fixtures',
-                                                    '6.00 Electrical & Lighting',
-                                                    '7.00 Mechanical (HVAC)',
-                                                    '8.00 Finishes & Painting'
-                                                ];
+                                        
 
                                                 $suppliers = [
-                                                    'Select Supplier',
-                                                    'ABC Supplies Ltd.',
-                                                    'BuildPro Contractors',
-                                                    'Elite Interiors Co.',
-                                                    'Metro Electricals',
-                                                    'Global HVAC Solutions'
+                                                'Select Supplier',
+                                                'ABC Supplies Ltd.',
+                                                'BuildPro Contractors',
+                                                'Elite Interiors Co.',
+                                                'Metro Electricals',
+                                                'Global HVAC Solutions'
                                                 ];
                                             @endphp
 
-                                            @foreach($sections as $index => $section)
+                                            @foreach($templateSections as $sectionIndex => $section)
                                                 <div class="card card-primary card-outline mb-4">
                                                     <div class="card-header">
-                                                        <h5 class="card-title">{{ $section }}</h5>
+                                                        <h5 class="card-title">{{ $section->section_code }} - {{ $section->section_name }}</h5>
                                                     </div>
-                                                    <div class="card-body section-card" data-section="{{ $index + 1 }}">
+
+                                                    <div class="card-body section-card" data-section="{{ $section->id }}">
                                                         <div class="section-items">
-                                                            <div class="form-group row mb-3 section-item-row">
-                                                                <div class="col-md-1">
-                                                                    <label>Code</label>
-                                                                    <input type="text" name="codes[{{ $index }}][]" class="form-control code-input" readonly value="{{ $index + 1 }}.01">
+
+                                                            {{-- Preloaded template items --}}
+                                                            @foreach($section->items as $item)
+                                                                <div class="form-group row mb-3 section-item-row">
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Code</label>
+                                                                        <input 
+                                                                            type="text" 
+                                                                            name="codes[{{ $section->id }}][]" 
+                                                                            class="form-control code-input" 
+                                                                            readonly 
+                                                                            value="{{ $item->item_code }}">
+                                                                    </div>
+
+                                                                    <div class="col-md-5">
+                                                                        <label>Item Description</label>
+                                                                        <textarea 
+                                                                        name="item_names[{{ $section->id }}][]" 
+                                                                        class="form-control " 
+                                                                        rows="2">{{ $item->description }}</textarea>
+                                                                    
+                                                                    </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Quantity</label>
+                                                                        <input 
+                                                                            type="number" 
+                                                                            name="quantities[{{ $section->id }}][]" 
+                                                                            class="form-control" 
+                                                                            min="1" 
+                                                                            value="{{ $item->quantity }}">
+                                                                    </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Unit</label>
+                                                                        <input 
+                                                                            type="text" 
+                                                                            name="units[{{ $section->id }}][]" 
+                                                                            class="form-control"
+                                                                            value="{{ $item->unit }}">
+                                                                    </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Rate</label>
+                                                                        <input 
+                                                                            type="text" 
+                                                                            name="rates[{{ $section->id }}][]" 
+                                                                            class="form-control"
+                                                                            value="{{ $item->rate }}">
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <label>Supplier</label>
+                                                                        <select name="suppliers" class="form-control">
+                                                                            @foreach($suppliers as $supplier)
+                                                                                <option value="{{ $supplier }}">{{ $supplier }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="col-md-1 d-flex align-items-center">
+                                                                        <button type="button" class="btn btn-danger remove-row">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </div>
+
                                                                 </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Item Description</label>
-                                                                    <input type="text" name="item_names[{{ $index }}][]" class="form-control" placeholder="Enter item description">
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label>Quantity</label>
-                                                                    <input type="number" name="quantities[{{ $index }}][]" class="form-control" min="1" value="1">
-                                                                </div>
-                                                                <div class="col-md-2">
-                                                                    <label>Unit</label>
-                                                                    <input type="text" name="units[{{ $index }}][]" class="form-control" placeholder="e.g. sqm, lm">
-                                                                </div>
-                                                                <div class="col-md-3">
-                                                                    <label>Supplier</label>
-                                                                    <select name="suppliers[{{ $index }}][]" class="form-control">
-                                                                        @foreach($suppliers as $supplier)
-                                                                            <option value="{{ $supplier }}">{{ $supplier }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-md-1 d-flex align-items-end">
-                                                                    <button type="button" class="btn btn-danger remove-row">
-                                                                        <i class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                            @endforeach
+
                                                         </div>
 
-                                                        <button type="button" class="btn btn-primary add-section-item mb-3">
-                                                            <i class="fas fa-plus"></i> &nbsp; Add Item
+                                                        {{-- Add new item --}}
+                                                        <button 
+                                                            type="button" 
+                                                            class="btn btn-primary add-section-item mb-3"
+                                                            data-section-id="{{ $section->id }}"
+                                                            data-section-code="{{ $section->section_code }}"
+                                                        >
+                                                            <i class="fas fa-plus"></i>&nbsp; Add Item
                                                         </button>
                                                     </div>
                                                 </div>
@@ -400,7 +440,7 @@
 
                                             <button type="submit" class="btn btn-success">Save All Sections</button>
                                         </form>
-                                        </div>
+                                    </div>
 
                                         {{-- Variation Order --}}
                                         <div class="tab-pane fade" id="variation" role="tabpanel" aria-labelledby="variation-tab">
@@ -581,8 +621,63 @@
 
                                         {{-- Summary --}}
                                         <div class="tab-pane fade" id="summary" role="tabpanel" aria-labelledby="summary-tab">
-                                            <p class="text-muted">Show a summary or report of the project here.</p>
+                                            <div class="card mt-3">
+                                                <div class="card-header bg-primary text-white">
+                                                    <strong>SUMMARY SHEET</strong>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered mb-0">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Section</th>
+                                                                    <th class="text-right">Total ex. VAT (£)</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr><td>1.00</td><td>DECONSTRUCT / STRIP OUT</td><td class="text-right">-</td></tr>
+                                                                <tr><td>2.00</td><td>SUBFLOOR</td><td class="text-right">3,588.00</td></tr>
+                                                                <tr><td>3.00</td><td>CEILINGS</td><td class="text-right">55,771.73</td></tr>
+                                                                <tr><td>4.00</td><td>PARTITIONS</td><td class="text-right">77,658.00</td></tr>
+                                                                <tr><td>5.00</td><td>DOORS & HARDWARE</td><td class="text-right">27,643.59</td></tr>
+                                                                <tr><td>6.00</td><td>SMALL POWER</td><td class="text-right">30,371.12</td></tr>
+                                                                <tr><td>7.00</td><td>LIGHTING & FITTINGS</td><td class="text-right">77,159.95</td></tr>
+                                                                <tr><td>8.00</td><td>FIRE AND EMERGENCY SYSTEMS</td><td class="text-right">10,400.00</td></tr>
+                                                                <tr><td>9.00</td><td>DATA AND TELECOMMUNICATIONS</td><td class="text-right">7,619.30</td></tr>
+                                                                <tr><td>10.00</td><td>SECURITY INSTALLATION</td><td class="text-right">10,404.00</td></tr>
+                                                                <tr><td>11.00</td><td>HVAC</td><td class="text-right">42,204.43</td></tr>
+                                                                <tr><td>12.00</td><td>PLUMBING</td><td class="text-right">4,140.50</td></tr>
+                                                                <tr><td>13.00</td><td>WCs & SHOWERS</td><td class="text-right">-</td></tr>
+                                                                <tr><td>14.00</td><td>BUILDERS WORKS</td><td class="text-right">6,500.00</td></tr>
+                                                                <tr><td>15.00</td><td>WALL, CEILING FINISHES & DECORATIONS</td><td class="text-right">3,469.20</td></tr>
+                                                                <tr><td>16.00</td><td>FLOOR FINISHES</td><td class="text-right">55,458.40</td></tr>
+                                                                <tr><td>17.00</td><td>JOINERY AND MISCELLANEOUS</td><td class="text-right">4,292.40</td></tr>
+                                                                <tr><td>18.00</td><td>TEA POINT</td><td class="text-right">15,866.81</td></tr>
+                                                                <tr><td>19.00</td><td>SIGNAGE AND BLINDS</td><td class="text-right">-</td></tr>
+                                                                <tr><td>20.00</td><td>DESIGN FEES</td><td class="text-right">3,705.00</td></tr>
+                                                                <tr><td>21.00</td><td>SITE SET UP AND ADMINISTRATION</td><td class="text-right">43,460.40</td></tr>
+                                                                <tr><td>22.00</td><td>EXTERNAL FEES AND CHARGES</td><td class="text-right">4,020.00</td></tr>
+                                                                <tr><td>23.00</td><td>CDM PRINCIPAL CONTRACTOR</td><td class="text-right">2,880.00</td></tr>
+                                                                <tr><td colspan="2"><strong>CONTINGENCY</strong></td><td class="text-right"><strong>13,387.16</strong></td></tr>
+                                                                <tr class="table-success">
+                                                                    <td colspan="2"><strong>Build Total ex. VAT</strong></td>
+                                                                    <td class="text-right"><strong>500,000.00</strong></td>
+                                                                </tr>
+                                                                <tr><td colspan="3"><strong>Variations</strong></td></tr>
+                                                                <tr><td colspan="2">VO01 POST CONTRACT VARIATIONS - 06.06.2025</td><td class="text-right">80,842.41</td></tr>
+                                                                <tr><td colspan="2">VO01 OMIT Contingency</td><td class="text-right">-13,387.16</td></tr>
+                                                                <tr><td colspan="2">VO02 POST CONTRACT VARIATIONS - 26.06.2025</td><td class="text-right">4,059.49</td></tr>
+                                                                <tr><td colspan="2">VO03 POST CONTRACT VARIATIONS - 03.07.2025</td><td class="text-right">1,958.75</td></tr>
+                                                                <tr><td colspan="2">VO04 POST CONTRACT VARIATIONS - 10.07.2025</td><td class="text-right">4,966.54</td></tr>
+                                                                <tr><td colspan="2">VO05 POST CONTRACT VARIATIONS - 14.07.2025</td><td class="text-right">3,312.67</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -727,15 +822,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     <label>Code</label>
                     <input type="text" class="form-control code-input" readonly>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <label>Item Description</label>
                     <input type="text" name="item_names[${sectionNumber}][]" class="form-control" placeholder="Enter item description">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>Quantity</label>
                     <input type="number" name="quantities[${sectionNumber}][]" class="form-control" min="1" value="1">
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <label>Unit</label>
                     <input type="text" name="units[${sectionNumber}][]" class="form-control" placeholder="e.g. sqm, lm">
                 </div>

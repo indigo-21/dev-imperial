@@ -120,15 +120,39 @@
                                 </div>
 
                                 {{-- Pre-Construction --}}
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="pre_construction">Pre-Construction</label>
-                                        <input type="text" name="pre_construction" id="pre_construction"
-                                            class="form-control"
-                                            value="{{ old('pre_construction', $project->pre_construction ?? '') }}"
-                                            placeholder="Enter pre-construction contact">
-                                    </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="project_status">Project Status</label>
+                                    <select name="project_status" id="project_status" class="form-control">
+                                        @php
+                                            $statuses = [
+                                                'New Lead',
+                                                'Qualification',
+                                                'Meeting Stage',
+                                                'Design Stage',
+                                                'Costing Stage',
+                                                'Pitch/Presentation Stage',
+                                                'Awaiting Decision',
+                                                'Won',
+                                                'On Hold',
+                                                'Lost',
+                                                'Pre-Construction Stage',
+                                                'Construction Stage',
+                                                'After Care',
+                                            ];
+                                            $selectedStatus = old('project_status', $project->project_status ?? '');
+                                        @endphp
+
+                                        <option value="">-- Select Project Status --</option>
+                                        @foreach($statuses as $status)
+                                            <option value="{{ $status }}" {{ $selectedStatus == $status ? 'selected' : '' }}>
+                                                {{ $status }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
+                            </div>
+
 
                                 {{-- Designer --}}
                                 <div class="col-md-6">

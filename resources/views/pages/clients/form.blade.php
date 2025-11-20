@@ -73,9 +73,50 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        {{-- Industries Dropdown (hidden by default) --}}
+                        <div class="form-group" id="industries-group" style="display: none;">
                             <label for="industry">Industry</label>
-                            <input type="text" name="industry" id="industry" class="form-control">
+                            <select name="industry" id="industry" class="form-control">
+                                <option value="">-- Select Industry --</option>
+                                @php
+                                    $industries = [
+                                        'Accountancy',
+                                        'Advertising Agency',
+                                        'Architecture',
+                                        'Charity',
+                                        'Construction',
+                                        'Data Centres',
+                                        'E-commerce',
+                                        'Education',
+                                        'Engineering',
+                                        'Entertainment Business',
+                                        'Fashion',
+                                        'Financial Services',
+                                        'Fintech Companies',
+                                        'Government/Local Councils',
+                                        'Healthcare',
+                                        'Hospitability',
+                                        'IT',
+                                        'Insurance',
+                                        'Legal',
+                                        'Leisure',
+                                        'Logistics',
+                                        'Manufacturing',
+                                        'Marketing/PR',
+                                        'Media',
+                                        'Property/Real Estate',
+                                        'Recruitment',
+                                        'Travel'
+                                    ];
+                                    $selectedIndustry = old('industry', $client->industry ?? '');
+                                @endphp
+
+                                @foreach($industries as $industry)
+                                    <option value="{{ $industry }}" {{ $selectedIndustry == $industry ? 'selected' : '' }}>
+                                        {{ $industry }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -114,6 +155,23 @@
                 if (e.target.closest('.remove-contact')) {
                     e.preventDefault();
                     e.target.closest('.contact-info-group').remove();
+                }
+            });
+
+            const clientType = document.getElementById('client_type');
+            const industriesGroup = document.getElementById('industries-group');
+
+            // Show on load if Occupier is already selected
+            if (clientType.value === 'Occupier') {
+                industriesGroup.style.display = 'block';
+            }
+
+            clientType.addEventListener('change', function() {
+                if (this.value === 'Occupier') {
+                    industriesGroup.style.display = 'block';
+                } else {
+                    industriesGroup.style.display = 'none';
+                    document.getElementById('industry').value = '';
                 }
             });
         });
