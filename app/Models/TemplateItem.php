@@ -13,6 +13,7 @@ class TemplateItem extends Model
         'quantity',
         'unit',
         'rate',
+        'mark_up',
     ];
 
     public function section()

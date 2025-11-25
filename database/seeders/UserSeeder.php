@@ -32,6 +32,14 @@ class UserSeeder extends Seeder
                 'password'     => Hash::make('danny123')
             ],
 
+            [
+                'firstname'    => 'Tommy',
+                'lastname'     => 'Rae',
+                'user_type_id' => 1,
+                'email'        => 'tommy@imperialfitout.co.uk',
+                'password'     => Hash::make('tommy123')
+            ],
+
         ];
 
         User::insert($data);

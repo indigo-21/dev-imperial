@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('unit', 50);
             $table->decimal('rate', 15, 2);
+            $table->integer('mark_up');
+
         });
     }
 
