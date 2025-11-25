@@ -359,7 +359,7 @@
                                                             @foreach($section->items as $item)
                                                                 <div class="form-group row mb-3 section-item-row">
 
-                                                                    <div class="col-md-1">
+                                                                    <div class="short-input">
                                                                         <label>Code</label>
                                                                         <input 
                                                                             type="text" 
@@ -378,15 +378,16 @@
                                                                     
                                                                     </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Quantity</label>
+                                                                    <div class="short-input">
+                                                                        <label>Qty</label>
                                                                         <input 
                                                                             type="number" 
                                                                             name="quantities[{{ $section->id }}][]" 
-                                                                            class="form-control" 
-                                                                            min="1" 
+                                                                            class="form-control calc-field quantity-input" 
+                                                                            min="1"
                                                                             value="{{ $item->quantity }}">
                                                                     </div>
+
 
                                                                     <div class="col-md-1">
                                                                         <label>Unit</label>
@@ -400,11 +401,42 @@
                                                                     <div class="col-md-1">
                                                                         <label>Rate</label>
                                                                         <input 
-                                                                            type="text" 
+                                                                            type="number" 
+                                                                            step="0.01"
                                                                             name="rates[{{ $section->id }}][]" 
-                                                                            class="form-control"
+                                                                            class="form-control calc-field rate-input"
                                                                             value="{{ $item->rate }}">
                                                                     </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Cost</label>
+                                                                        <input 
+                                                                            type="number"
+                                                                            name="costs[{{ $section->id }}][]" 
+                                                                            class="form-control cost-output" 
+                                                                            readonly>
+                                                                    </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Total</label>
+                                                                        <input 
+                                                                            type="number"
+                                                                            name="totals[{{ $section->id }}][]" 
+                                                                            class="form-control total-output" 
+                                                                            readonly>
+                                                                    </div>
+
+                                                                    <div class="col-md-1">
+                                                                        <label>Mark Up</label>
+                                                                        <input 
+                                                                            type="number"
+                                                                            min="0"
+                                                                            step="0.1"
+                                                                            name="markups[{{ $section->id }}][]" 
+                                                                            class="form-control calc-field markup-input"
+                                                                            value="20">
+                                                                    </div>
+
                                                                     <div class="col-md-2">
                                                                         <label>Supplier</label>
                                                                         <select name="suppliers" class="form-control">
@@ -727,9 +759,25 @@
             });
         }
 
+        document.addEventListener("input", function (e) {
+
+    if (e.target.classList.contains("calc-field")) {
+        let row = e.target.closest(".section-item-row");
+
+        let qty   = parseFloat(row.querySelector(".quantity-input").value) || 0;
+        let rate  = parseFloat(row.querySelector(".rate-input").value) || 0;
+        let markup = parseFloat(row.querySelector(".markup-input").value) || 0;
+
+        let cost = qty * rate;
+        row.querySelector(".cost-output").value = cost.toFixed(2);
+
+        let total = cost * (1 + markup / 100);
+        row.querySelector(".total-output").value = total.toFixed(2);
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    
 
     /* -------------------------------
        COST PLAN SECTION LOGIC
@@ -746,6 +794,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 codeInput.value = sectionNumber + "." + String(index + 1).padStart(2, '0');
             });
         }
+
+        function parseNumber(value) {
+    return parseFloat(value.toString().replace(/,/g, '')) || 0;
+}
+
+function formatNumber(value) {
+    return parseFloat(value || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function calculateRow(row) {
+    const qty = parseFloat(row.querySelector(".quantity-input").value) || 0;
+    const rate = parseFloat(row.querySelector(".rate-input").value) || 0;
+    const markup = parseFloat(row.querySelector(".markup-input").value) || 0;
+
+    const cost = qty * rate;
+    const total = cost * (1 + markup / 100);
+
+    row.querySelector(".cost-output").value = cost.toFixed(2);
+    row.querySelector(".total-output").value = total.toFixed(2);
+}
+
+
+
+// After populating your template data from the spreadsheet
+document.querySelectorAll(".section-item-row").forEach(calculateRow);
+
+// Also trigger live calculation on input changes
+document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("calc-field")) {
+        let row = e.target.closest(".section-item-row");
+        calculateRow(row);
+    }
+});
+
 
         sectionCard.querySelector(".add-section-item").addEventListener("click", function () {
             const container = sectionCard.querySelector(".section-items");
@@ -769,6 +851,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="col-md-2">
                     <label>Unit</label>
                     <input type="text" name="units[${sectionNumber}][]" class="form-control" placeholder="e.g. sqm, lm">
+                </div>
+                <div class="col-md-1">
+                    <label>Cost</label>
+                    <input type="text" name="costs[${sectionNumber}][]" class="form-control cost-output" readonly>
+                </div>
+                <div class="col-md-1">
+                    <label>Total</label>
+                    <input type="text" name="totals[${sectionNumber}][]" class="form-control total-output" readonly>
+                </div>
+                <div class="col-md-1">
+                    <label>Mark Up %</label>
+                    <input type="number" min="0" step="0.1" name="markups[${sectionNumber}][]" class="form-control calc-field markup-input" value="20">
                 </div>
                 <div class="col-md-3">
                     <label>Supplier</label>
@@ -903,6 +997,9 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
     <style>
+        .short-input {
+            width: 65px;
+        }
         .selectable-label {
             cursor: pointer;
         }

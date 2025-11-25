@@ -60,10 +60,18 @@
                                         <label for="project_type">Project Type</label>
                                         <select name="project_type" id="project_type" class="form-control">
                                             <option value="">-- Select Type --</option>
-                                            <option value="Refurb" {{ old('project_type') == 'Refurb' ? 'selected' : '' }}>Refurb</option>
-                                            <option value="Relocation" {{ old('project_type') == 'Relocation' ? 'selected' : '' }}>Relocation</option>
-                                            <option value="Refresh/Small Works" {{ old('project_type') == 'Refresh/Small Works' ? 'selected' : '' }}>Refresh/Small Works</option>
+                                            <option value="CAT A" {{ old('project_type') == 'CAT A' ? 'selected' : '' }}>CAT A</option>
+                                            <option value="CAT A+" {{ old('project_type') == 'CAT A+' ? 'selected' : '' }}>CAT A+</option>
+                                            <option value="CAT B" {{ old('project_type') == 'CAT B' ? 'selected' : '' }}>CAT B</option>
+                                            <option value="Small Works" {{ old('project_type') == 'Small Works' ? 'selected' : '' }}>Small Works</option>
+                                            <option value="Refurbishment" {{ old('project_type') == 'Refurbishment' ? 'selected' : '' }}>Refurbishment</option>
+                                            <option value="Reconfiguration" {{ old('project_type') == 'Reconfiguration' ? 'selected' : '' }}>Reconfiguration</option>
+                                            <option value="Day 2 Works" {{ old('project_type') == 'Day 2 Works' ? 'selected' : '' }}>Day 2 Works</option>
+                                            <option value="Dilapidation" {{ old('project_type') == 'Dilapidation' ? 'selected' : '' }}>Dilapidation</option>
+                                            <option value="Design Only" {{ old('project_type') == 'Design Only' ? 'selected' : '' }}>Design Only</option>
+                                            <option value="Furniture Only" {{ old('project_type') == 'Furniture Only' ? 'selected' : '' }}>Furniture Only</option>
                                         </select>
+
                                     </div>
                                 </div>
 
