@@ -348,9 +348,13 @@
 
                                             @foreach($templateSections as $sectionIndex => $section)
                                                 <div class="card card-primary card-outline mb-4">
-                                                    <div class="card-header">
+                                                    <div class="card-header " data-toggle="collapse" data-target="#section-{{ $section->id }}"  aria-expanded="true" 
+     aria-controls="section-{{ $section->id }}" style="cursor:pointer;">
                                                         <h5 class="card-title">{{ $section->section_code }} - {{ $section->section_name }}</h5>
                                                     </div>
+
+                                                    <div id="section-{{ $section->id }}" class="collapse show">
+
 
                                                     <div class="card-body section-card" data-section="{{ $section->id }}">
                                                         <div class="section-items">
@@ -358,98 +362,113 @@
                                                             {{-- Preloaded template items --}}
                                                             @foreach($section->items as $item)
                                                                 <div class="form-group row mb-3 section-item-row">
-
-                                                                    <div class="short-input">
-                                                                        <label>Code</label>
-                                                                        <input 
-                                                                            type="text" 
-                                                                            name="codes[{{ $section->id }}][]" 
-                                                                            class="form-control code-input" 
-                                                                            readonly 
-                                                                            value="{{ $item->item_code }}">
-                                                                    </div>
-
-                                                                    <div class="col-md-5">
-                                                                        <label>Item Description</label>
-                                                                        <textarea 
-                                                                        name="item_names[{{ $section->id }}][]" 
-                                                                        class="form-control " 
-                                                                        rows="2">{{ $item->description }}</textarea>
                                                                     
+                                                                    <div class="col-md-6 d-flex">
+                                                                        <div class="short-input">
+                                                                            <label>Code</label>
+                                                                            <input 
+                                                                                type="text" 
+                                                                                name="codes[{{ $section->id }}][]" 
+                                                                                class="form-control code-input" 
+                                                                                readonly 
+                                                                                value="{{ $item->item_code }}">
+                                                                        </div>
+
+                                                                        <div class="col">
+                                                                            <label>Item Description</label>
+                                                                            <textarea 
+                                                                            name="item_names[{{ $section->id }}][]" 
+                                                                            class="form-control " 
+                                                                            rows="4">{{ $item->description }}</textarea>
                                                                     </div>
 
-                                                                    <div class="short-input">
-                                                                        <label>Qty</label>
-                                                                        <input 
-                                                                            type="number" 
-                                                                            name="quantities[{{ $section->id }}][]" 
-                                                                            class="form-control calc-field quantity-input" 
-                                                                            min="1"
-                                                                            value="{{ $item->quantity }}">
                                                                     </div>
 
+                                                                    <div class="col-md-6">
+                                                                        <div class="row g-2">  
+                                                                            
+                                                                            <!-- Qty (small auto width) -->
+                                                                            <div class="col-md-2">
+                                                                                <label>Qty</label>
+                                                                                <input 
+                                                                                    type="number"
+                                                                                    name="quantities[{{ $section->id }}][]"
+                                                                                    class="form-control calc-field quantity-input"
+                                                                                    min="1"
+                                                                                    value="{{ $item->quantity }}">
+                                                                            </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Unit</label>
-                                                                        <input 
-                                                                            type="text" 
-                                                                            name="units[{{ $section->id }}][]" 
-                                                                            class="form-control"
-                                                                            value="{{ $item->unit }}">
-                                                                    </div>
+                                                                            <!-- Unit (small auto width) -->
+                                                                            <div class="col-md-2">
+                                                                                <label>Unit</label>
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    name="units[{{ $section->id }}][]"
+                                                                                    class="form-control"
+                                                                                    value="{{ $item->unit }}">
+                                                                            </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Rate</label>
-                                                                        <input 
-                                                                            type="number" 
-                                                                            step="0.01"
-                                                                            name="rates[{{ $section->id }}][]" 
-                                                                            class="form-control calc-field rate-input"
-                                                                            value="{{ $item->rate }}">
-                                                                    </div>
+                                                                            <!-- Rate (small auto width) -->
+                                                                            <div class="col-md-3">
+                                                                                <label>Rate</label>
+                                                                                <input 
+                                                                                    type="number"
+                                                                                    step="0.01"
+                                                                                    name="rates[{{ $section->id }}][]"
+                                                                                    class="form-control calc-field rate-input"
+                                                                                    value="{{ $item->rate }}">
+                                                                            </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Cost</label>
-                                                                        <input 
-                                                                            type="number"
-                                                                            name="costs[{{ $section->id }}][]" 
-                                                                            class="form-control cost-output" 
-                                                                            readonly>
-                                                                    </div>
+                                                                            <!-- Cost (auto-expand) -->
+                                                                            <div class="col-md-2">
+                                                                                <label>Cost</label>
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    name="costs[{{ $section->id }}][]"
+                                                                                    class="form-control cost-output"
+                                                                                    readonly>
+                                                                            </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Total</label>
-                                                                        <input 
-                                                                            type="number"
-                                                                            name="totals[{{ $section->id }}][]" 
-                                                                            class="form-control total-output" 
-                                                                            readonly>
-                                                                    </div>
+                                                                            <!-- Total (auto-expand) -->
+                                                                            <div class="col-md-2">
+                                                                                <label>Total</label>
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    name="totals[{{ $section->id }}][]"
+                                                                                    class="form-control total-output"
+                                                                                    readonly>
+                                                                            </div>
 
-                                                                    <div class="col-md-1">
-                                                                        <label>Mark Up</label>
-                                                                        <input 
-                                                                            type="number"
-                                                                            min="0"
-                                                                            step="0.1"
-                                                                            name="markups[{{ $section->id }}][]" 
-                                                                            class="form-control calc-field markup-input"
-                                                                            value="20">
-                                                                    </div>
+                                                                            <!-- Markup (small auto width) -->
+                                                                            <div class="col-md-3 mt-3">
+                                                                                <label>Mark Up %</label>
+                                                                                <input 
+                                                                                    type="number"
+                                                                                    step="0.1"
+                                                                                    min="0"
+                                                                                    name="markups[{{ $section->id }}][]"
+                                                                                    class="form-control calc-field markup-input"
+                                                                                    value="20">
+                                                                            </div>
 
-                                                                    <div class="col-md-2">
-                                                                        <label>Supplier</label>
-                                                                        <select name="suppliers" class="form-control">
-                                                                            @foreach($suppliers as $supplier)
-                                                                                <option value="{{ $supplier }}">{{ $supplier }}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
+                                                                            <!-- Supplier (full width on wrap) -->
+                                                                            <div class="col mt-3">
+                                                                                <label>Supplier</label>
+                                                                                <select name="suppliers[{{ $section->id }}][]" class="form-control">
+                                                                                    @foreach($suppliers as $supplier)
+                                                                                        <option value="{{ $supplier }}">{{ $supplier }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
 
-                                                                    <div class="col-md-1 d-flex align-items-center">
-                                                                        <button type="button" class="btn btn-danger remove-row">
-                                                                            <i class="fas fa-trash"></i>
-                                                                        </button>
+                                                                            <!-- Remove row button -->
+                                                                            <div class="col-auto d-flex align-items-end">
+                                                                                <button type="button" class="btn btn-danger remove-row">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </div>
+
+                                                                        </div>
                                                                     </div>
 
                                                                 </div>
@@ -467,6 +486,7 @@
                                                             <i class="fas fa-plus"></i>&nbsp; Add Item
                                                         </button>
                                                     </div>
+                                                    </div>  
                                                 </div>
                                             @endforeach
 
@@ -719,83 +739,48 @@
         </div>
     </x-slot>
     @section('scripts') 
-       <script>
+     <script>
+let sectionCount = 0;
 
-        let sectionCount = 0;
+// ----------------------------
+// SECTION ADD / DELETE
+// ----------------------------
+function addSection() {
+    sectionCount++;
+    const sectionHtml = `
+        <div class="card mt-3 p-3 section-row">
+            <div class="d-flex justify-content-between align-items-center">
+                <label class="mb-0 section-label"></label>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteSection(this)">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+            <input type="hidden" class="section-code" name="sections[${sectionCount}][code]" value="">
+            <input type="text" name="sections[${sectionCount}][name]" class="form-control mt-2" placeholder="Enter section name">
+        </div>
+    `;
+    document.getElementById('sections-wrapper').insertAdjacentHTML('beforeend', sectionHtml);
+    renumberSections();
+}
 
-          function addSection() {
-            sectionCount++;
+function deleteSection(button) {
+    button.closest('.section-row').remove();
+    renumberSections();
+}
 
-            let sectionHtml = `
-                <div class="card mt-3 p-3 section-row">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="mb-0 section-label"></label>
-                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteSection(this)">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                    <input type="hidden" class="section-code" name="sections[${sectionCount}][code]" value="">
-                    <input type="text" name="sections[${sectionCount}][name]" 
-                        class="form-control mt-2" placeholder="Enter section name">
-                </div>
-            `;
+function renumberSections() {
+    const sections = document.querySelectorAll('.section-row');
+    sections.forEach((row, index) => {
+        const number = (index + 1).toFixed(2);
+        row.querySelector('.section-label').innerText = "Section " + number;
+        row.querySelector('.section-code').value = number;
+    });
+}
 
-            document.getElementById('sections-wrapper').insertAdjacentHTML('beforeend', sectionHtml);
-
-            renumberSections();
-        }
-
-         function deleteSection(button) {
-            button.closest('.section-row').remove();
-            renumberSections();
-        }
-
-        function renumberSections() {
-            let sections = document.querySelectorAll('.section-row');
-            sections.forEach((row, index) => {
-                let number = (index + 1) + ".00";
-                row.querySelector('.section-label').innerText = "Section " + number;
-                row.querySelector('.section-code').value = number;
-            });
-        }
-
-        document.addEventListener("input", function (e) {
-
-    if (e.target.classList.contains("calc-field")) {
-        let row = e.target.closest(".section-item-row");
-
-        let qty   = parseFloat(row.querySelector(".quantity-input").value) || 0;
-        let rate  = parseFloat(row.querySelector(".rate-input").value) || 0;
-        let markup = parseFloat(row.querySelector(".markup-input").value) || 0;
-
-        let cost = qty * rate;
-        row.querySelector(".cost-output").value = cost.toFixed(2);
-
-        let total = cost * (1 + markup / 100);
-        row.querySelector(".total-output").value = total.toFixed(2);
-    }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-
-
-    /* -------------------------------
-       COST PLAN SECTION LOGIC
-    --------------------------------*/
-    const costPlanCards = document.querySelectorAll("#costplan .section-card");
-
-    costPlanCards.forEach((sectionCard) => {
-        const sectionNumber = sectionCard.dataset.section;
-
-        function updateCostPlanCodes() {
-            const rows = sectionCard.querySelectorAll(".section-item-row");
-            rows.forEach((row, index) => {
-                const codeInput = row.querySelector(".code-input");
-                codeInput.value = sectionNumber + "." + String(index + 1).padStart(2, '0');
-            });
-        }
-
-        function parseNumber(value) {
+// ----------------------------
+// HELPER FUNCTIONS
+// ----------------------------
+function parseNumber(value) {
     return parseFloat(value.toString().replace(/,/g, '')) || 0;
 }
 
@@ -803,112 +788,158 @@ function formatNumber(value) {
     return parseFloat(value || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
+// ----------------------------
+// CALCULATION LOGIC
+// ----------------------------
 function calculateRow(row) {
-    const qty = parseFloat(row.querySelector(".quantity-input").value) || 0;
-    const rate = parseFloat(row.querySelector(".rate-input").value) || 0;
-    const markup = parseFloat(row.querySelector(".markup-input").value) || 0;
+    // Only calculate if the row has necessary fields
+    const qtyInput = row.querySelector(".quantity-input");
+    const rateInput = row.querySelector(".rate-input");
+    const markupInput = row.querySelector(".markup-input");
+    const costOutput = row.querySelector(".cost-output");
+    const totalOutput = row.querySelector(".total-output");
+
+    if (!qtyInput || !rateInput || !markupInput || !costOutput || !totalOutput) return;
+
+    const qty = parseNumber(qtyInput.value);
+    const rate = parseNumber(rateInput.value);
+    const markup = parseNumber(markupInput.value);
 
     const cost = qty * rate;
     const total = cost * (1 + markup / 100);
 
-    row.querySelector(".cost-output").value = cost.toFixed(2);
-    row.querySelector(".total-output").value = total.toFixed(2);
+    costOutput.value = cost.toFixed(2);
+    totalOutput.value = total.toFixed(2);
 }
 
-
-
-// After populating your template data from the spreadsheet
-document.querySelectorAll(".section-item-row").forEach(calculateRow);
-
-// Also trigger live calculation on input changes
+// Live calculation on input
 document.addEventListener("input", function(e) {
     if (e.target.classList.contains("calc-field")) {
-        let row = e.target.closest(".section-item-row");
-        calculateRow(row);
+        const row = e.target.closest(".section-item-row");
+        if (row) calculateRow(row);
     }
 });
 
+// ----------------------------
+// COST PLAN SECTION LOGIC
+// ----------------------------
+document.addEventListener("DOMContentLoaded", function() {
+    const costPlanCards = document.querySelectorAll("#costplan .section-card");
 
-        sectionCard.querySelector(".add-section-item").addEventListener("click", function () {
+    costPlanCards.forEach(sectionCard => {
+        const sectionNumber = sectionCard.dataset.section;
+        const suppliers = @json($suppliers);
+
+        function updateCostPlanCodes() {
+            sectionCard.querySelectorAll(".section-item-row").forEach((row, index) => {
+                const codeInput = row.querySelector(".code-input");
+                if (codeInput) codeInput.value = sectionNumber + "." + String(index + 1).padStart(2, '0');
+            });
+        }
+
+        // Add new row
+        sectionCard.querySelector(".add-section-item").addEventListener("click", function() {
             const container = sectionCard.querySelector(".section-items");
-            const suppliers = @json($suppliers);
-
             const newRow = document.createElement("div");
             newRow.classList.add("form-group", "row", "mb-3", "section-item-row");
-            newRow.innerHTML = `
-                <div class="col-md-1">
+            newRow.innerHTML = newRow.innerHTML = `
+            <div class="col-md-6 d-flex">
+                <div class="short-input me-2">
                     <label>Code</label>
                     <input type="text" class="form-control code-input" readonly>
                 </div>
-                <div class="col-md-3">
+                <div class="col">
                     <label>Item Description</label>
-                    <input type="text" name="item_names[${sectionNumber}][]" class="form-control" placeholder="Enter item description">
+                    <textarea name="item_names[${sectionNumber}][]" class="form-control" rows="4" placeholder="Enter item description"></textarea>
                 </div>
-                <div class="col-md-2">
-                    <label>Quantity</label>
-                    <input type="number" name="quantities[${sectionNumber}][]" class="form-control" min="1" value="1">
+            </div>
+
+            <div class="col-md-6">
+                <div class="row g-2">
+
+                    <div class="col-md-2">
+                        <label>Qty</label>
+                        <input type="number" name="quantities[${sectionNumber}][]" class="form-control calc-field quantity-input" min="1" value="1">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Unit</label>
+                        <input type="text" name="units[${sectionNumber}][]" class="form-control" placeholder="e.g. sqm, lm">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Rate</label>
+                        <input type="number" step="0.01" name="rates[${sectionNumber}][]" class="form-control calc-field rate-input" value="0">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Cost</label>
+                        <input type="text" name="costs[${sectionNumber}][]" class="form-control cost-output" readonly>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Total</label>
+                        <input type="text" name="totals[${sectionNumber}][]" class="form-control total-output" readonly>
+                    </div>
+
+                    <div class="col-md-3 mt-3">
+                        <label>Mark Up %</label>
+                        <input type="number" step="0.1" min="0" name="markups[${sectionNumber}][]" class="form-control calc-field markup-input" value="20">
+                    </div>
+
+                    <div class="col mt-3">
+                        <label>Supplier</label>
+                        <select name="suppliers[${sectionNumber}][]" class="form-control">
+                            ${suppliers.map(s => `<option value="${s}">${s}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <div class="col-auto d-flex align-items-end">
+                        <button type="button" class="btn btn-danger remove-row">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+
                 </div>
-                <div class="col-md-2">
-                    <label>Unit</label>
-                    <input type="text" name="units[${sectionNumber}][]" class="form-control" placeholder="e.g. sqm, lm">
-                </div>
-                <div class="col-md-1">
-                    <label>Cost</label>
-                    <input type="text" name="costs[${sectionNumber}][]" class="form-control cost-output" readonly>
-                </div>
-                <div class="col-md-1">
-                    <label>Total</label>
-                    <input type="text" name="totals[${sectionNumber}][]" class="form-control total-output" readonly>
-                </div>
-                <div class="col-md-1">
-                    <label>Mark Up %</label>
-                    <input type="number" min="0" step="0.1" name="markups[${sectionNumber}][]" class="form-control calc-field markup-input" value="20">
-                </div>
-                <div class="col-md-3">
-                    <label>Supplier</label>
-                    <select name="suppliers[${sectionNumber}][]" class="form-control">
-                        ${suppliers.map(s => `<option value="${s}">${s}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" class="btn btn-danger remove-row"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
+            </div>
+        `;
             container.appendChild(newRow);
             updateCostPlanCodes();
+            calculateRow(newRow);
         });
 
-        sectionCard.addEventListener("click", (e) => {
-            if (e.target.closest(".remove-row")) {
-                e.target.closest(".section-item-row").remove();
+        // Remove row
+        sectionCard.addEventListener("click", e => {
+            const btn = e.target.closest(".remove-row");
+            if (btn) {
+                const row = btn.closest(".section-item-row");
+                row.remove();
                 updateCostPlanCodes();
             }
         });
 
+        // Calculate all rows initially
+        sectionCard.querySelectorAll(".section-item-row").forEach(calculateRow);
         updateCostPlanCodes();
     });
 
-
-    /* -------------------------------
-       VARIATION ORDER SECTION LOGIC
-    --------------------------------*/
+    // ----------------------------
+    // VARIATION ORDER LOGIC
+    // ----------------------------
     const variationCards = document.querySelectorAll("#section-items-form .section-card");
-
-    variationCards.forEach((sectionCard) => {
+    variationCards.forEach(sectionCard => {
         const sectionNumber = sectionCard.dataset.section;
+        const suppliers = @json($suppliers);
 
         function updateVariationCodes() {
-            const rows = sectionCard.querySelectorAll(".section-item-row");
-            rows.forEach((row, index) => {
+            sectionCard.querySelectorAll(".section-item-row").forEach((row, index) => {
                 const codeInput = row.querySelector(".code-input");
-                codeInput.value = sectionNumber + "." + String(index + 1).padStart(2, '0');
+                if (codeInput) codeInput.value = sectionNumber + "." + String(index + 1).padStart(2, '0');
             });
         }
 
-        sectionCard.querySelector(".add-section-item").addEventListener("click", function () {
+        sectionCard.querySelector(".add-section-item").addEventListener("click", function() {
             const container = sectionCard.querySelector(".section-items");
-            const suppliers = @json($suppliers);
-
             const newRow = document.createElement("div");
             newRow.classList.add("form-group", "row", "mb-3", "section-item-row");
             newRow.innerHTML = `
@@ -922,7 +953,7 @@ document.addEventListener("input", function(e) {
                 </div>
                 <div class="col-md-1">
                     <label>Quantity</label>
-                    <input type="number" name="quantities[${sectionNumber}][]" class="form-control" min="1" value="1">
+                    <input type="number" name="quantities[${sectionNumber}][]" class="form-control quantity-input calc-field" min="1" value="1">
                 </div>
                 <div class="col-md-1">
                     <label>Unit</label>
@@ -942,9 +973,10 @@ document.addEventListener("input", function(e) {
             updateVariationCodes();
         });
 
-        sectionCard.addEventListener("click", (e) => {
-            if (e.target.closest(".remove-row")) {
-                e.target.closest(".section-item-row").remove();
+        sectionCard.addEventListener("click", e => {
+            const btn = e.target.closest(".remove-row");
+            if (btn) {
+                btn.closest(".section-item-row").remove();
                 updateVariationCodes();
             }
         });
@@ -952,53 +984,16 @@ document.addEventListener("input", function(e) {
         updateVariationCodes();
     });
 
-
-    /* -------------------------------
-       VARIATION ORDER CREATION LOGIC
-    --------------------------------*/
-    const createVoBtn = document.getElementById('create-vo-btn');
-    const variationTable = document.getElementById('variation-table');
-    const createVoForm = document.getElementById('create-vo-form');
-    const sectionItemsForm = document.getElementById('section-items-form');
-
-    if (createVoBtn) {
-        createVoBtn.addEventListener('click', function () {
-            variationTable.style.display = 'none';
-            createVoForm.style.display = 'block';
-            generateNextVO();
-        });
-    }
-
-    const proceedBtn = document.getElementById('proceed-btn');
-    if (proceedBtn) {
-        proceedBtn.addEventListener('click', function () {
-            createVoForm.style.display = 'none';
-            sectionItemsForm.style.display = 'block';
-        });
-    }
-
-    function generateNextVO() {
-        const lastVO = 'VO-01'; // Ideally fetched dynamically later
-        const lastNumber = parseInt(lastVO.split('-')[1]);
-        const nextNumber = (lastNumber + 1).toString().padStart(2, '0');
-        document.getElementById('variation_order').value = 'VO-' + nextNumber;
-    }
-
-    /* -------------------------------
-       SELECTABLE SCOPE BOXES
-    --------------------------------*/
-    window.toggleBox = function (box) {
-        box.classList.toggle('selected');
-        const input = box.nextElementSibling;
-        input.disabled = !input.disabled;
-    };
-
 });
 </script>
 
     <style>
         .short-input {
             width: 65px;
+        }
+        .section-item-row {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 25px;
         }
         .selectable-label {
             cursor: pointer;
