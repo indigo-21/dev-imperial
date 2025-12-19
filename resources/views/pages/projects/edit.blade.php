@@ -79,7 +79,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" id="summary-tab" data-toggle="tab" href="#summary" role="tab"
-                                                aria-controls="summary" aria-selected="false">Summary</a>
+                                                aria-controls="summary" aria-selected="false">Adjudication</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -348,9 +348,28 @@
 
                                             @foreach($templateSections as $sectionIndex => $section)
                                                 <div class="card card-primary card-outline mb-4">
-                                                    <div class="card-header " data-toggle="collapse" data-target="#section-{{ $section->id }}"  aria-expanded="true" 
-     aria-controls="section-{{ $section->id }}" style="cursor:pointer;">
-                                                        <h5 class="card-title">{{ $section->section_code }} - {{ $section->section_name }}</h5>
+                                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                                        data-toggle="collapse"
+                                                        data-target="#section-{{ $section->id }}"
+                                                        aria-expanded="true"
+                                                        aria-controls="section-{{ $section->id }}"
+                                                        style="cursor:pointer;">
+
+                                                        <h5 class="card-title mb-0">
+                                                            {{ $section->section_code }} - {{ $section->section_name }}
+                                                        </h5>
+
+                                                        <div class="d-flex align-items-center ml-auto" onclick="event.stopPropagation();">
+                                                            <label class="mb-0 me-2"><strong>Mark Up % &nbsp; </strong></label>
+                                                            <input
+                                                                type="number"
+                                                                step="0.1"
+                                                                min="0"
+                                                                class="form-control section-markup-input"
+                                                                style="width:90px;"
+                                                                data-section-id="{{ $section->id }}"
+                                                                value="20">
+                                                        </div>
                                                     </div>
 
                                                     <div id="section-{{ $section->id }}" class="collapse show">
@@ -476,6 +495,18 @@
 
                                                         </div>
 
+                                                        {{-- Subtotal row --}}
+                                                       <div class="form-group row mb-3 section-subtotal-row d-flex justify-content-end">
+                                                            <div class="col-auto text-end">
+                                                                <label><strong>Subtotal</strong></label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <input type="text" class="form-control subtotal-cost" readonly placeholder="Cost">
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <input type="text" class="form-control subtotal-total" readonly placeholder="Total">
+                                                            </div>
+                                                        </div>
                                                         {{-- Add new item --}}
                                                         <button 
                                                             type="button" 
@@ -672,7 +703,7 @@
                                         </div>
 
                                         {{-- Summary --}}
-                                        <div class="tab-pane fade" id="summary" role="tabpanel" aria-labelledby="summary-tab">
+                                       <div class="tab-pane fade" id="summary" role="tabpanel" aria-labelledby="summary-tab">
                                             <div class="card mt-3">
                                                 <div class="card-header bg-primary text-white">
                                                     <strong>SUMMARY SHEET</strong>
@@ -684,52 +715,100 @@
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Section</th>
-                                                                    <th class="text-right">Total ex. VAT (£)</th>
+                                                                    <th class="text-right">Cost £</th>
+                                                                    <th class="text-right">Mark Up £</th>
+                                                                    <th class="text-right">Profit £</th>
+                                                                    <th class="text-right">Gross Profit %</th>
+                                                                    <th class="text-right">Total ex. VAT £</th>
+                                                                    <th class="text-right">PO Amount £</th>
+                                                                    <th class="text-right">Inv Amount £</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr><td>1.00</td><td>DECONSTRUCT / STRIP OUT</td><td class="text-right">-</td></tr>
-                                                                <tr><td>2.00</td><td>SUBFLOOR</td><td class="text-right">3,588.00</td></tr>
-                                                                <tr><td>3.00</td><td>CEILINGS</td><td class="text-right">55,771.73</td></tr>
-                                                                <tr><td>4.00</td><td>PARTITIONS</td><td class="text-right">77,658.00</td></tr>
-                                                                <tr><td>5.00</td><td>DOORS & HARDWARE</td><td class="text-right">27,643.59</td></tr>
-                                                                <tr><td>6.00</td><td>SMALL POWER</td><td class="text-right">30,371.12</td></tr>
-                                                                <tr><td>7.00</td><td>LIGHTING & FITTINGS</td><td class="text-right">77,159.95</td></tr>
-                                                                <tr><td>8.00</td><td>FIRE AND EMERGENCY SYSTEMS</td><td class="text-right">10,400.00</td></tr>
-                                                                <tr><td>9.00</td><td>DATA AND TELECOMMUNICATIONS</td><td class="text-right">7,619.30</td></tr>
-                                                                <tr><td>10.00</td><td>SECURITY INSTALLATION</td><td class="text-right">10,404.00</td></tr>
-                                                                <tr><td>11.00</td><td>HVAC</td><td class="text-right">42,204.43</td></tr>
-                                                                <tr><td>12.00</td><td>PLUMBING</td><td class="text-right">4,140.50</td></tr>
-                                                                <tr><td>13.00</td><td>WCs & SHOWERS</td><td class="text-right">-</td></tr>
-                                                                <tr><td>14.00</td><td>BUILDERS WORKS</td><td class="text-right">6,500.00</td></tr>
-                                                                <tr><td>15.00</td><td>WALL, CEILING FINISHES & DECORATIONS</td><td class="text-right">3,469.20</td></tr>
-                                                                <tr><td>16.00</td><td>FLOOR FINISHES</td><td class="text-right">55,458.40</td></tr>
-                                                                <tr><td>17.00</td><td>JOINERY AND MISCELLANEOUS</td><td class="text-right">4,292.40</td></tr>
-                                                                <tr><td>18.00</td><td>TEA POINT</td><td class="text-right">15,866.81</td></tr>
-                                                                <tr><td>19.00</td><td>SIGNAGE AND BLINDS</td><td class="text-right">-</td></tr>
-                                                                <tr><td>20.00</td><td>DESIGN FEES</td><td class="text-right">3,705.00</td></tr>
-                                                                <tr><td>21.00</td><td>SITE SET UP AND ADMINISTRATION</td><td class="text-right">43,460.40</td></tr>
-                                                                <tr><td>22.00</td><td>EXTERNAL FEES AND CHARGES</td><td class="text-right">4,020.00</td></tr>
-                                                                <tr><td>23.00</td><td>CDM PRINCIPAL CONTRACTOR</td><td class="text-right">2,880.00</td></tr>
-                                                                <tr><td colspan="2"><strong>CONTINGENCY</strong></td><td class="text-right"><strong>13,387.16</strong></td></tr>
-                                                                <tr class="table-success">
-                                                                    <td colspan="2"><strong>Build Total ex. VAT</strong></td>
-                                                                    <td class="text-right"><strong>500,000.00</strong></td>
+                                                                <tr>
+                                                                    <td>1.00</td>
+                                                                    <td>DECONSTRUCT / STRIP OUT</td>
+                                                                    <td class="text-right">6,000.00</td>
+                                                                    <td class="text-right">900.00</td>
+                                                                    <td class="text-right">900.00</td>
+                                                                    <td class="text-right">15%</td>
+                                                                    <td class="text-right">6,900.00</td>
+                                                                    <td class="text-right">5,800.00</td>
+                                                                    <td class="text-right">6,900.00</td>
                                                                 </tr>
-                                                                <tr><td colspan="3"><strong>Variations</strong></td></tr>
-                                                                <tr><td colspan="2">VO01 POST CONTRACT VARIATIONS - 06.06.2025</td><td class="text-right">80,842.41</td></tr>
-                                                                <tr><td colspan="2">VO01 OMIT Contingency</td><td class="text-right">-13,387.16</td></tr>
-                                                                <tr><td colspan="2">VO02 POST CONTRACT VARIATIONS - 26.06.2025</td><td class="text-right">4,059.49</td></tr>
-                                                                <tr><td colspan="2">VO03 POST CONTRACT VARIATIONS - 03.07.2025</td><td class="text-right">1,958.75</td></tr>
-                                                                <tr><td colspan="2">VO04 POST CONTRACT VARIATIONS - 10.07.2025</td><td class="text-right">4,966.54</td></tr>
-                                                                <tr><td colspan="2">VO05 POST CONTRACT VARIATIONS - 14.07.2025</td><td class="text-right">3,312.67</td></tr>
+
+                                                                <tr>
+                                                                    <td>2.00</td>
+                                                                    <td>SUBFLOOR</td>
+                                                                    <td class="text-right">5,800.00</td>
+                                                                    <td class="text-right">870.00</td>
+                                                                    <td class="text-right">870.00</td>
+                                                                    <td class="text-right">15%</td>
+                                                                    <td class="text-right">6,670.00</td>
+                                                                    <td class="text-right">5,600.00</td>
+                                                                    <td class="text-right">6,670.00</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>3.00</td>
+                                                                    <td>CEILINGS</td>
+                                                                    <td class="text-right">6,200.00</td>
+                                                                    <td class="text-right">1,240.00</td>
+                                                                    <td class="text-right">1,240.00</td>
+                                                                    <td class="text-right">20%</td>
+                                                                    <td class="text-right">7,440.00</td>
+                                                                    <td class="text-right">6,000.00</td>
+                                                                    <td class="text-right">7,440.00</td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>4.00</td>
+                                                                    <td>PARTITIONS</td>
+                                                                    <td class="text-right">6,500.00</td>
+                                                                    <td class="text-right">975.00</td>
+                                                                    <td class="text-right">975.00</td>
+                                                                    <td class="text-right">15%</td>
+                                                                    <td class="text-right">7,475.00</td>
+                                                                    <td class="text-right">6,200.00</td>
+                                                                    <td class="text-right">7,475.00</td>
+                                                                </tr>
+
+                                                                <!-- CONTINGENCY -->
+                                                                <tr>
+                                                                    <td colspan="6"><strong>CONTINGENCY</strong></td>
+                                                                    <td class="text-right"><strong>1,200.00</strong></td>
+                                                                    <td class="text-right">-</td>
+                                                                    <td class="text-right">-</td>
+                                                                </tr>
+
+                                                                <!-- BUILD TOTAL -->
+                                                                <tr class="table-success">
+                                                                    <td colspan="6"><strong>Build Total ex. VAT</strong></td>
+                                                                    <td class="text-right"><strong>29,960.00</strong></td>
+                                                                    <td class="text-right"><strong>26,000.00</strong></td>
+                                                                    <td class="text-right"><strong>29,960.00</strong></td>
+                                                                </tr>
+
+                                                                <!-- VARIATIONS -->
+                                                                <tr>
+                                                                    <td colspan="9"><strong>Variations</strong></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2">VO01 POST CONTRACT VARIATIONS</td>
+                                                                    <td class="text-right">6,000.00</td>
+                                                                    <td class="text-right">900.00</td>
+                                                                    <td class="text-right">900.00</td>
+                                                                    <td class="text-right">15%</td>
+                                                                    <td class="text-right">6,900.00</td>
+                                                                    <td class="text-right">5,800.00</td>
+                                                                    <td class="text-right">6,900.00</td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -923,6 +1002,64 @@ document.addEventListener("DOMContentLoaded", function() {
         updateCostPlanCodes();
     });
 
+    // Sub total
+     function updateSubtotals(sectionCard) {
+        let subtotalCost = 0;
+        let subtotalTotal = 0;
+
+        sectionCard.querySelectorAll('.section-item-row').forEach(row => {
+            const cost = parseFloat(row.querySelector('.cost-output').value) || 0;
+            const total = parseFloat(row.querySelector('.total-output').value) || 0;
+
+            subtotalCost += cost;
+            subtotalTotal += total;
+        });
+
+        const subtotalRow = sectionCard.querySelector('.section-subtotal-row');
+        subtotalRow.querySelector('.subtotal-cost').value = subtotalCost.toFixed(2);
+        subtotalRow.querySelector('.subtotal-total').value = subtotalTotal.toFixed(2);
+    }
+
+    // Initial calculation for all sections
+    document.querySelectorAll('.section-card').forEach(sectionCard => {
+        updateSubtotals(sectionCard);
+    });
+
+    // Recalculate subtotal whenever any input changes
+    document.querySelectorAll('.calc-field').forEach(input => {
+        input.addEventListener('input', function () {
+            const sectionCard = input.closest('.section-card');
+            // Recalculate the cost and total if necessary (assuming you have that already)
+            const qty = parseFloat(sectionCard.querySelector('.quantity-input').value) || 0;
+            const rate = parseFloat(sectionCard.querySelector('.rate-input').value) || 0;
+            const markup = parseFloat(sectionCard.querySelector('.markup-input').value) || 0;
+
+            sectionCard.querySelectorAll('.section-item-row').forEach(row => {
+                const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+                const rateVal = parseFloat(row.querySelector('.rate-input').value) || 0;
+                const markupVal = parseFloat(row.querySelector('.markup-input').value) || 0;
+
+                const cost = quantity * rateVal;
+                const total = cost + (cost * markupVal / 100);
+
+                row.querySelector('.cost-output').value = cost.toFixed(2);
+                row.querySelector('.total-output').value = total.toFixed(2);
+            });
+
+            updateSubtotals(sectionCard);
+        });
+    });
+
+    
+
+    // Recalculate when adding/removing rows dynamically
+    document.querySelectorAll('.add-section-item, .remove-row').forEach(button => {
+        button.addEventListener('click', function () {
+            const sectionCard = button.closest('.section-card');
+            setTimeout(() => updateSubtotals(sectionCard), 100); // delay to allow new row creation/removal
+        });
+    });
+
     // ----------------------------
     // VARIATION ORDER LOGIC
     // ----------------------------
@@ -982,6 +1119,34 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         updateVariationCodes();
+    });
+
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.section-markup-input').forEach(function (headerInput) {
+
+        headerInput.addEventListener('input', function () {
+            const sectionId = this.dataset.sectionId;
+            const newMarkup = this.value;
+
+            const sectionCard = document.querySelector(
+                '.section-card[data-section="' + sectionId + '"]'
+            );
+
+            if (!sectionCard) return;
+
+            sectionCard.querySelectorAll('.markup-input').forEach(function (itemInput) {
+                itemInput.value = newMarkup;
+
+                // 🔥 Force all listeners to fire
+                itemInput.dispatchEvent(new Event('input', { bubbles: true }));
+                itemInput.dispatchEvent(new Event('change', { bubbles: true }));
+                itemInput.dispatchEvent(new Event('keyup', { bubbles: true }));
+            });
+        });
+
     });
 
 });
