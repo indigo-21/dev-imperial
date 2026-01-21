@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SupplierContactSeeder::class,
             TemplateSectionSeeder::class,
             TemplateItemSeeder::class,
+            ProjectTypeSeeder::class,
         ]);
     }
 }

@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('cost_plan_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('cost_plan_section_id')->constrained('cost_plan_sections')->cascadeOnDelete();
+            $table->string('item_code')->nullable();
+            $table->string('description');
+            $table->float('quantity', 2)->nullable();
+            $table->float('mark_up', 2)->nullable();
+            $table->string('unit')->nullable();
+            $table->float('rate', 2)->nullable();
+            $table->float('cost', 2)->nullable();
+            $table->float('total', 2)->nullable();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
