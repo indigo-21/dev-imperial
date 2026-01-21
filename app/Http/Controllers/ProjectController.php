@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TemplateItem;
 use App\Models\TemplateSection;
+use App\Models\Supplier;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,8 @@ class ProjectController extends Controller
     public function edit(string $id)
     {
        $templateSections = TemplateSection::with('items')->get();
+       $suppliers = Supplier::orderBy('business_name')->get();
 
-       return view('pages.projects.edit', compact('templateSections'));
+       return view('pages.projects.edit', compact('templateSections', 'suppliers'));
     }
 }

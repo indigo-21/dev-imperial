@@ -34,7 +34,7 @@
                         <div class="row">
                              <!-- Project Reference -->
                              <div class="col-md-4 mb-2 p-2 bg-danger text-white rounded">
-                                <strong>High Risk Building: No</strong>
+                                <strong>High Risk Building: Yes</strong>
                             </div>
                         </div>
                         <div class="row">
@@ -333,19 +333,6 @@
                                         <form action="{{ route('section_items.store') }}" method="POST">
                                             @csrf
 
-                                            @php
-                                        
-
-                                                $suppliers = [
-                                                'Select Supplier',
-                                                'ABC Supplies Ltd.',
-                                                'BuildPro Contractors',
-                                                'Elite Interiors Co.',
-                                                'Metro Electricals',
-                                                'Global HVAC Solutions'
-                                                ];
-                                            @endphp
-
                                             @foreach($templateSections as $sectionIndex => $section)
                                                 <div class="card card-primary card-outline mb-4">
                                                     <div class="card-header d-flex justify-content-between align-items-center"
@@ -471,14 +458,66 @@
                                                                             </div>
 
                                                                             <!-- Supplier (full width on wrap) -->
-                                                                            <div class="col mt-3">
-                                                                                <label>Supplier</label>
-                                                                                <select name="suppliers[{{ $section->id }}][]" class="form-control">
-                                                                                    @foreach($suppliers as $supplier)
-                                                                                        <option value="{{ $supplier }}">{{ $supplier }}</option>
-                                                                                    @endforeach
-                                                                                </select>
+                                                                           <div class="col-md-8 mt-3">
+    <label>Supplier</label>
+
+    <select
+        name="suppliers[{{ $section->id }}]"
+        class="form-control select2bs4"
+    >
+        <option value="">Select Supplier</option>
+        @foreach ($suppliers as $supplier)
+            <option value="{{ $supplier->id }}"
+                @if(old('suppliers.' . $section->id) == $supplier->id) selected @endif>
+                {{ $supplier->business_name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+                                                                            <!-- Purchase Order Number -->
+                                                                            <div class="col-md-3 mt-3">
+                                                                                <label>PO Number</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="po_numbers[{{ $section->id }}][]"
+                                                                                    class="form-control"
+                                                                                    placeholder="PO-001">
                                                                             </div>
+
+                                                                            <!-- Purchase Order Value -->
+                                                                            <div class="col-md-3 mt-3">
+                                                                                <label>PO Value</label>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    step="0.01"
+                                                                                    name="po_values[{{ $section->id }}][]"
+                                                                                    class="form-control"
+                                                                                    placeholder="0.00">
+                                                                            </div>
+
+                                                                            <!-- Invoice Reference Number -->
+                                                                            <div class="col-md-3 mt-3">
+                                                                                <label>Invoice Ref</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="invoice_refs[{{ $section->id }}][]"
+                                                                                    class="form-control"
+                                                                                    placeholder="INV-001">
+                                                                            </div>
+
+                                                                            <!-- Invoice Value -->
+                                                                            <div class="col-md-3 mt-3">
+                                                                                <label>Invoice Value</label>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    step="0.01"
+                                                                                    name="invoice_values[{{ $section->id }}][]"
+                                                                                    class="form-control"
+                                                                                    placeholder="0.00">
+                                                                            </div>
+
+                                                                            
 
                                                                             <!-- Remove row button -->
                                                                             <div class="col-auto d-flex align-items-end">
@@ -711,17 +750,19 @@
                                                 <div class="card-body p-0">
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered mb-0">
-                                                            <thead class="thead-light">
+                                                          <thead class="thead-light">
                                                                 <tr>
                                                                     <th>#</th>
                                                                     <th>Section</th>
-                                                                    <th class="text-right">Cost £</th>
-                                                                    <th class="text-right">Mark Up £</th>
-                                                                    <th class="text-right">Profit £</th>
+                                                                    <th class="text-right">Cost</th>
+                                                                    <th class="text-right">Mark Up</th>
+                                                                    <th class="text-right">Profit</th>
                                                                     <th class="text-right">Gross Profit %</th>
-                                                                    <th class="text-right">Total ex. VAT £</th>
-                                                                    <th class="text-right">PO Amount £</th>
-                                                                    <th class="text-right">Inv Amount £</th>
+                                                                    <th class="text-right">Total ex. VAT</th>
+                                                                    <th>PO Number</th>
+                                                                    <th class="text-right">PO Amount</th>
+                                                                    <th>Invoice Ref</th>
+                                                                    <th class="text-right">Inv Amount</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -733,7 +774,9 @@
                                                                     <td class="text-right">900.00</td>
                                                                     <td class="text-right">15%</td>
                                                                     <td class="text-right">6,900.00</td>
+                                                                    <td>PO-001</td>
                                                                     <td class="text-right">5,800.00</td>
+                                                                    <td>INV-001</td>
                                                                     <td class="text-right">6,900.00</td>
                                                                 </tr>
 
@@ -745,7 +788,9 @@
                                                                     <td class="text-right">870.00</td>
                                                                     <td class="text-right">15%</td>
                                                                     <td class="text-right">6,670.00</td>
+                                                                    <td>PO-002</td>
                                                                     <td class="text-right">5,600.00</td>
+                                                                    <td>INV-002</td>
                                                                     <td class="text-right">6,670.00</td>
                                                                 </tr>
 
@@ -757,7 +802,9 @@
                                                                     <td class="text-right">1,240.00</td>
                                                                     <td class="text-right">20%</td>
                                                                     <td class="text-right">7,440.00</td>
+                                                                    <td>PO-003</td>
                                                                     <td class="text-right">6,000.00</td>
+                                                                    <td>INV-003</td>
                                                                     <td class="text-right">7,440.00</td>
                                                                 </tr>
 
@@ -769,30 +816,32 @@
                                                                     <td class="text-right">975.00</td>
                                                                     <td class="text-right">15%</td>
                                                                     <td class="text-right">7,475.00</td>
+                                                                    <td>PO-004</td>
                                                                     <td class="text-right">6,200.00</td>
+                                                                    <td>INV-004</td>
                                                                     <td class="text-right">7,475.00</td>
                                                                 </tr>
 
                                                                 <!-- CONTINGENCY -->
                                                                 <tr>
-                                                                    <td colspan="6"><strong>CONTINGENCY</strong></td>
-                                                                    <td class="text-right"><strong>1,200.00</strong></td>
-                                                                    <td class="text-right">-</td>
-                                                                    <td class="text-right">-</td>
+                                                                    <td colspan="7"><strong>CONTINGENCY</strong></td>
+                                                                    <td colspan="4" class="text-right"><strong>1,200.00</strong></td>
                                                                 </tr>
 
                                                                 <!-- BUILD TOTAL -->
                                                                 <tr class="table-success">
-                                                                    <td colspan="6"><strong>Build Total ex. VAT</strong></td>
-                                                                    <td class="text-right"><strong>29,960.00</strong></td>
+                                                                    <td colspan="7"><strong>Build Total ex. VAT</strong></td>
+                                                                    <td></td>
                                                                     <td class="text-right"><strong>26,000.00</strong></td>
+                                                                    <td></td>
                                                                     <td class="text-right"><strong>29,960.00</strong></td>
                                                                 </tr>
 
                                                                 <!-- VARIATIONS -->
                                                                 <tr>
-                                                                    <td colspan="9"><strong>Variations</strong></td>
+                                                                    <td colspan="11"><strong>Variations</strong></td>
                                                                 </tr>
+
                                                                 <tr>
                                                                     <td colspan="2">VO01 POST CONTRACT VARIATIONS</td>
                                                                     <td class="text-right">6,000.00</td>
@@ -800,7 +849,9 @@
                                                                     <td class="text-right">900.00</td>
                                                                     <td class="text-right">15%</td>
                                                                     <td class="text-right">6,900.00</td>
+                                                                    <td>PO-005</td>
                                                                     <td class="text-right">5,800.00</td>
+                                                                    <td>INV-005</td>
                                                                     <td class="text-right">6,900.00</td>
                                                                 </tr>
                                                             </tbody>
@@ -966,13 +1017,36 @@ document.addEventListener("DOMContentLoaded", function() {
                         <input type="number" step="0.1" min="0" name="markups[${sectionNumber}][]" class="form-control calc-field markup-input" value="20">
                     </div>
 
-                    <div class="col mt-3">
+                    <div class="col-md-8 mt-3">
                         <label>Supplier</label>
                         <select name="suppliers[${sectionNumber}][]" class="form-control">
                             ${suppliers.map(s => `<option value="${s}">${s}</option>`).join('')}
                         </select>
                     </div>
+                    
+                    <!-- Purchase Order Number -->
+                    <div class="col-md-3 mt-3">
+                        <label>PO Number</label>
+                        <input type="text" name="po_numbers[${sectionNumber}][]" class="form-control" placeholder="PO-001">
+                    </div>
 
+                    <!-- Purchase Order Value -->
+                    <div class="col-md-3 mt-3">
+                        <label>PO Value</label>
+                        <input type="number" step="0.01" name="po_values[${sectionNumber}][]" class="form-control" placeholder="0.00">
+                    </div>
+
+                    <!-- Invoice Reference -->
+                    <div class="col-md-3 mt-3">
+                        <label>Invoice Ref</label>
+                        <input type="text" name="invoice_refs[${sectionNumber}][]" class="form-control" placeholder="INV-001">
+                    </div>
+
+                    <!-- Invoice Value -->
+                    <div class="col-md-3 mt-3">
+                        <label>Invoice Value</label>
+                        <input type="number" step="0.01" name="invoice_values[${sectionNumber}][]" class="form-control" placeholder="0.00">
+                    </div>
                     <div class="col-auto d-flex align-items-end">
                         <button type="button" class="btn btn-danger remove-row">
                             <i class="fas fa-trash"></i>
@@ -1150,6 +1224,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+ $(document).ready(function() {
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+})
+    
 </script>
 
     <style>

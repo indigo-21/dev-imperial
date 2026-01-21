@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             UserTypeSeeder::class,
             UserSeeder::class,
             SupplierTypeSeeder::class,
+            SupplierSeeder::class,
+            SupplierContactSeeder::class,
             TemplateSectionSeeder::class,
             TemplateItemSeeder::class,
         ]);

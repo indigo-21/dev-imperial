@@ -29,13 +29,14 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Business Name</th>
                                     <th>Business Address</th>
                                     <th>UTR</th>
                                     <th>Company Reg. No.</th>
                                     <th>VAT Number</th>
                                     <th>Supplier Type</th>
-                                   
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,6 +46,7 @@
                                             $typeNames = array_map(fn($id) => $supplierTypes[$id] ?? '-', $typeIds);
                                         @endphp
                                         <tr>
+                                            <td>{{ $supplier->id }}</td>
                                             <td>{{ $supplier->business_name }}</td>
                                             <td>{{ $supplier->business_address }}</td>
                                             <td>{{ $supplier->unique_tax_reference }}</td>
