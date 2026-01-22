@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
             $table->string('section_code')->nullable();
             $table->string('section_name');
+            $table->float('mark_up', 2)->nullable();
             $table->integer('order')->default(0);
             $table->timestamps();
         });
