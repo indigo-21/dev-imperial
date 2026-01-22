@@ -44,8 +44,7 @@ class SupplierTypeController extends Controller
             'created_by' => auth()->id()
         ]);
 
-        return redirect()->route('supplier-types.index')
-                     ->with('success', 'Supplier type added successfully!');
+        return redirect()->route('supplier-types.index')->with('success', 'Supplier type added successfully!');
     }
 
     /**
@@ -69,9 +68,18 @@ class SupplierTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, SupplierType $supplierType)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:supplier_types,name,' . $supplierType->id,
+        ]);
+    
+        $supplierType->update([
+            'name' => $request->name,
+            'updated_by' => auth()->id(),
+        ]);
+    
+        return redirect()->route('supplier-types.index')->with('success', 'Supplier type updated successfully!');
     }
 
     /**

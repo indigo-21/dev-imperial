@@ -114,31 +114,69 @@
                             </div>
                         </div>
 
-                                <div class="col-md-6">
+                        <div class="col-md-6">
                             {{-- CONTACTS --}}
                             <div class="form-group">
                                 <label>Contact Information</label>
+
                                 <div id="contact-group">
                                     @php
-                                        $contacts = old('contacts', $supplier->contacts ?? [['name'=>'','phone'=>'','email'=>'']]);
+                                        $contacts = old(
+                                            'contacts',
+                                            isset($supplier)
+                                                ? $supplier->contacts->toArray()
+                                                : [['contact_name' => '', 'phone' => '', 'email' => '']]
+                                        );
                                     @endphp
+
                                     @foreach ($contacts as $index => $contact)
                                         <div class="contact-info-group d-flex mb-2">
-                                            <input type="text" name="contacts[{{ $index }}][name]" class="form-control mr-2" placeholder="Contact Name" value="{{ $contact['contact_name'] ?? '' }}">
-                                            <input type="text" name="contacts[{{ $index }}][phone]" class="form-control mr-2" placeholder="Phone Number" value="{{ $contact['phone'] ?? '' }}">
-                                            <input type="text" name="contacts[{{ $index }}][email]" class="form-control mr-2" placeholder="Email Address" value="{{ $contact['email'] ?? '' }}">
+
+                                            {{-- IMPORTANT: Contact ID --}}
+                                            @if(!empty($contact['id']))
+                                                <input type="hidden" name="contacts[{{ $index }}][id]" value="{{ $contact['id'] }}">
+                                            @endif
+
+                                            <input
+                                                type="text"
+                                                name="contacts[{{ $index }}][name]"
+                                                class="form-control mr-2"
+                                                placeholder="Contact Name"
+                                                value="{{ $contact['contact_name'] ?? $contact['name'] ?? '' }}"
+                                            >
+
+                                            <input
+                                                type="text"
+                                                name="contacts[{{ $index }}][phone]"
+                                                class="form-control mr-2"
+                                                placeholder="Phone Number"
+                                                value="{{ $contact['phone'] ?? '' }}"
+                                            >
+
+                                            <input
+                                                type="email"
+                                                name="contacts[{{ $index }}][email]"
+                                                class="form-control mr-2"
+                                                placeholder="Email Address"
+                                                value="{{ $contact['email'] ?? '' }}"
+                                            >
+
                                             <div class="contact-info-group-append">
-                                                @if($index === 0)
-                                                    <button type="button" class="btn btn-success" onclick="addContact()"><i class="fa fa-plus"></i></button>
+                                                @if ($index === 0)
+                                                    <button type="button" class="btn btn-success" onclick="addContact()">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
                                                 @else
-                                                    <button type="button" class="btn btn-danger" onclick="removeContact(this)"><i class="fa fa-minus"></i></button>
+                                                    <button type="button" class="btn btn-danger" onclick="removeContact(this)">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
                                                 @endif
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
-                                
                             </div>
+
 
                             {{-- SUPPLIER TYPE --}}
                             <div class="form-group">

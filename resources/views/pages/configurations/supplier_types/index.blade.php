@@ -61,5 +61,20 @@
     @section('scripts')
         @include('includes.datatables-scripts')
         <script src="{{ asset('assets/js/datatables.js') }}"></script>
+
+        @if (session('success'))
+            <script>
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: @json(session('success')),
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            </script>
+        @endif
     @endsection
+    
 </x-app-layout>

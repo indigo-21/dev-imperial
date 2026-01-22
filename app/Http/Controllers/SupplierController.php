@@ -101,7 +101,76 @@ class SupplierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(self::formRule(), self::errorMessage());
+
+        $supplier = Supplier::with('contacts')->findOrFail($id);
+    
+        // Update supplier fields
+        $supplier->fill($request->all());
+    
+        // Convert supplier types array to comma-separated string
+        $supplier->supplier_types = implode(',', $request->supplier_types);
+    
+        $supplier->updated_by = auth()->id();
+    
+        $supplier->save();
+    
+        /**
+         * Update contacts
+         * - Update existing contacts (with ID)
+         * - Create new contacts
+         * - Delete removed contacts
+         */
+        $existingContactIds = $supplier->contacts->pluck('id')->toArray();
+        $submittedContactIds = [];
+    
+        if ($request->has('contacts')) {
+    
+            foreach ($request->contacts as $contact) {
+    
+                // Skip completely empty rows
+                if (
+                    empty($contact['name']) &&
+                    empty($contact['phone']) &&
+                    empty($contact['email'])
+                ) {
+                    continue;
+                }
+    
+                // Update existing contact
+                if (!empty($contact['id'])) {
+    
+                    $submittedContactIds[] = $contact['id'];
+    
+                    $supplier->contacts()
+                        ->where('id', $contact['id'])
+                        ->update([
+                            'contact_name' => $contact['name'] ?? null,
+                            'phone' => $contact['phone'] ?? null,
+                            'email' => $contact['email'] ?? null,
+                        ]);
+    
+                } else {
+                    // Create new contact
+                    $newContact = $supplier->contacts()->create([
+                        'contact_name' => $contact['name'] ?? null,
+                        'phone' => $contact['phone'] ?? null,
+                        'email' => $contact['email'] ?? null,
+                    ]);
+    
+                    $submittedContactIds[] = $newContact->id;
+                }
+            }
+        }
+    
+        // Delete removed contacts
+        $contactsToDelete = array_diff($existingContactIds, $submittedContactIds);
+        if (!empty($contactsToDelete)) {
+            $supplier->contacts()->whereIn('id', $contactsToDelete)->delete();
+        }
+    
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier updated successfully!');
     }
 
     /**
