@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
     Route::group(["prefix" => "projects", "as" => "projects."], function(){
         Route::get('/index', [ProjectController::class, 'index'])->name("index");
+        Route::get('/create', [ProjectController::class, 'create'])->name("create");
         Route::get('/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
         Route::post('/', [ProjectController::class, 'upsertProject'])
             ->name('store');
