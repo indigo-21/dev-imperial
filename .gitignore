@@ -25,3 +25,9 @@ Thumbs.db
 /node_modules/.package-lock.json
 /package-lock.json
 /public/build/*
+node_modules/.package-lock.json
+node_modules/.package-lock.json
+public/build/manifest.json
+public/build/assets/app-DhZxFZL-.css
+package-lock.json
+node_modules/.package-lock.json
