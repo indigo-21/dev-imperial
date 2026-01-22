@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('project_type_id')->constrained('project_types')->cascadeOnDelete();
             $table->float('client_budget', 2)->nullable();
             $table->string('lead_owner')->nullable();
-            $table->string('pre_construction')->nullable();
+            $table->string('project_status')->nullable();
             $table->boolean('high_risk_building')->default(false);
             $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
             $table->float('size', 2)->nullable();
@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('project_director')->nullable();
             $table->string('designer')->nullable();
             $table->float('referral_fee', 2)->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users');
+            $table->foreignId('updated_by')->nullable()->constrained('users');
+            $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
