@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('clients', ClientController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('supplier-types', SupplierTypeController::class);
-    Route::resource('projects', ProjectController::class);
     Route::resource('project-scope-templates', ProjectScopeTemplateController::class);
     Route::resource('costPlans', CostPlanController::class);
     Route::resource('sections', SectionController::class);
@@ -40,7 +39,16 @@ Route::middleware('auth')->group(function () {
 
     // Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])
     // ->name('projects.edit');
-	Route::get('/projects/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
+
+    Route::group(["prefix" => "projects", "as" => "projects."], function(){
+        Route::get('/index', [ProjectController::class, 'index'])->name("index");
+        Route::get('/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
+        Route::post('/', [ProjectController::class, 'upsertProject'])
+            ->name('store');
+
+        Route::put('/{id}', [ProjectController::class, 'upsertProject'])
+            ->name('update');
+    });
 
     
 
