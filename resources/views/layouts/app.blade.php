@@ -13,6 +13,7 @@
 
         <title>{{ config('app.name', 'Imperial') }}</title>
 
+        @yield('style')
     </head>
     <body class="font-sans antialiased">
         <div class="wrapper">

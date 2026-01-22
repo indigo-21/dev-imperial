@@ -43,11 +43,9 @@
                                     <td>Refurb</td>
                                     <td>Emily Carter</td>
                                     <td class="text-center">
-                                        <form action="{{ route('projects.edit', 1) }}" method="GET" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-outline-primary" title="Edit Project">
+                                        <a type="submit" href="{{url('projects/edit/project-detail/1')}}" class="btn btn-sm btn-outline-primary" title="Edit Project">
                                                 <i class="fa fa-pen"></i>
-                                            </button>
-                                        </form>
+                                        </a>
                                     </td>
                                 </tr>
                               

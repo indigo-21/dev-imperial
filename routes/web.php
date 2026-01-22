@@ -38,8 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::get('section_items/{section_item?}/edit', [SectionItemController::class, 'edit'])
     ->name('section_items.edit');
 
-    Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])
-    ->name('projects.edit');
+    // Route::get('/projects/{id}/edit', [ProjectController::class, 'edit'])
+    // ->name('projects.edit');
+	Route::get('/projects/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
+
     
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -73,9 +73,221 @@
                                     {{-- Project Details --}}
                                     <div class="tab-pane fade show active" id="details" role="tabpanel"
                                         aria-labelledby="details-tab">
-                                        
-                                        @yield('project-detail-tab')
 
+
+                                        <form action="{{ route('projects.update', $project->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    {{-- Project Description --}}
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="project_description">Project Description</label>
+                                                            <textarea name="project_description" id="project_description" class="form-control" rows="3">{{ $project->project_description }}</textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Project Reference --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="project_reference">Project Reference</label>
+                                                            <input type="text" name="project_reference"
+                                                                id="project_reference" class="form-control"
+                                                                value="{{ $project->project_reference }}" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Client --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="client_id">Client</label>
+                                                            <select name="client_id" id="client_id"
+                                                                class="form-control">
+                                                                <option value="">-- Select Client --</option>
+                                                                <option value="1"
+                                                                    {{ $project->client_id == 1 ? 'selected' : '' }}>
+                                                                    John Doe Ltd</option>
+                                                                <option value="2"
+                                                                    {{ $project->client_id == 2 ? 'selected' : '' }}>
+                                                                    Acme Construction</option>
+                                                                <option value="3"
+                                                                    {{ $project->client_id == 3 ? 'selected' : '' }}>
+                                                                    Sunrise Developers</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Project Type --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="project_type">Project Type</label>
+                                                            <select name="project_type" id="project_type"
+                                                                class="form-control">
+                                                                <option value="">-- Select Type --</option>
+                                                                <option value="CAT A"
+                                                                    {{ $project->project_type == 'CAT A' ? 'selected' : '' }}>
+                                                                    CAT A</option>
+                                                                <option value="CAT A+"
+                                                                    {{ $project->project_type == 'CAT A+' ? 'selected' : '' }}>
+                                                                    CAT A+</option>
+                                                                <option value="CAT B"
+                                                                    {{ $project->project_type == 'CAT B' ? 'selected' : '' }}>
+                                                                    CAT B</option>
+                                                                <option value="Small Works"
+                                                                    {{ $project->project_type == 'Small Works' ? 'selected' : '' }}>
+                                                                    Small Works</option>
+                                                                <option value="Refurbishment"
+                                                                    {{ $project->project_type == 'Refurbishment' ? 'selected' : '' }}>
+                                                                    Refurbishment</option>
+                                                                <option value="Reconfiguration"
+                                                                    {{ $project->project_type == 'Reconfiguration' ? 'selected' : '' }}>
+                                                                    Reconfiguration</option>
+                                                                <option value="Day 2 Works"
+                                                                    {{ $project->project_type == 'Day 2 Works' ? 'selected' : '' }}>
+                                                                    Day 2 Works</option>
+                                                                <option value="Dilapidation"
+                                                                    {{ $project->project_type == 'Dilapidation' ? 'selected' : '' }}>
+                                                                    Dilapidation</option>
+                                                                <option value="Design Only"
+                                                                    {{ $project->project_type == 'Design Only' ? 'selected' : '' }}>
+                                                                    Design Only</option>
+                                                                <option value="Furniture Only"
+                                                                    {{ $project->project_type == 'Furniture Only' ? 'selected' : '' }}>
+                                                                    Furniture Only</option>
+
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Size --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="project_size">Size (sqft)</label>
+                                                            <input type="number" name="project_size"
+                                                                id="project_size" class="form-control"
+                                                                value="{{ $project->project_size }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Client Budget --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="client_budget">Client Budget (£)</label>
+                                                            <input type="number" step="0.01" name="client_budget"
+                                                                id="client_budget" class="form-control"
+                                                                value="{{ $project->client_budget }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Lead Source --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="lead_source">Lead Source</label>
+                                                            <input type="text" name="lead_source" id="lead_source"
+                                                                class="form-control"
+                                                                value="{{ $project->lead_source }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Lead Owner --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="lead_owner">Lead Owner</label>
+                                                            <input type="text" name="lead_owner" id="lead_owner"
+                                                                class="form-control"
+                                                                value="{{ $project->lead_owner }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Project Director --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="project_director">Project Director</label>
+                                                            <input type="text" name="project_director"
+                                                                id="project_director" class="form-control"
+                                                                value="{{ $project->project_director }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Pre-Construction --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="project_status">Project Status</label>
+                                                            <select name="project_status" id="project_status"
+                                                                class="form-control">
+                                                                @php
+                                                                    $statuses = [
+                                                                        'New Lead',
+                                                                        'Qualification',
+                                                                        'Meeting Stage',
+                                                                        'Design Stage',
+                                                                        'Costing Stage',
+                                                                        'Pitch/Presentation Stage',
+                                                                        'Awaiting Decision',
+                                                                        'Won',
+                                                                        'On Hold',
+                                                                        'Lost',
+                                                                        'Pre-Construction Stage',
+                                                                        'Construction Stage',
+                                                                        'After Care',
+                                                                    ];
+                                                                    $selectedStatus = old(
+                                                                        'project_status',
+                                                                        $project->project_status ?? '',
+                                                                    );
+                                                                @endphp
+
+                                                                <option value="">-- Select Project Status --
+                                                                </option>
+                                                                @foreach ($statuses as $status)
+                                                                    <option value="{{ $status }}"
+                                                                        {{ $selectedStatus == $status ? 'selected' : '' }}>
+                                                                        {{ $status }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    {{-- Designer --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="designer">Designer</label>
+                                                            <input type="text" name="designer" id="designer"
+                                                                class="form-control"
+                                                                value="{{ $project->designer }}">
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- High Risk Building --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-check mt-4">
+                                                            <input type="checkbox" name="high_risk_building"
+                                                                id="high_risk_building" class="form-check-input"
+                                                                {{ $project->high_risk_building ? 'checked' : '' }}>
+                                                            <label class="form-check-label"
+                                                                for="high_risk_building">High Risk Building</label>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Referral Fee --}}
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="referral_fee">Referral Fee (%)</label>
+                                                            <input type="number" step="0.01" name="referral_fee"
+                                                                id="referral_fee" class="form-control"
+                                                                value="{{ $project->referral_fee }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
                                     </div>
 
                                     {{-- Documents --}}
