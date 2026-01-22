@@ -46,9 +46,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
         Route::post('/', [ProjectController::class, 'upsertProject'])
             ->name('store');
-
         Route::put('/{id}', [ProjectController::class, 'upsertProject'])
             ->name('update');
+         Route::post('/costplan_store', [ProjectController::class, 'upsertCostPlan'])
+            ->name('costplan_store');
+         Route::put('/costplan_update/{id}', [ProjectController::class, 'upsertCostPlan'])
+            ->name('costplan_update');
     });
 
     
