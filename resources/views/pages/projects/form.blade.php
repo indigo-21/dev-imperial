@@ -49,23 +49,25 @@
                     </div>
                     <div class="card-body">
                         @isset($project)
-                            <div class="row">
-                                <!-- Project Reference -->
-                                <div class="col-md-4 mb-2 p-2 bg-danger text-white rounded">
-                                    <strong>High Risk Building: Yes</strong>
+                            @if ($project->high_risk_building == 1)
+                                 <div class="row">
+                                    <!-- Project Reference -->
+                                    <div class="col-md-4 mb-2 p-2 bg-danger text-white rounded">
+                                        <strong>High Risk Building: Yes</strong>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                             <div class="row">
 
                                 <div class="col-md-4 mb-3">
                                     <strong>Project Reference:</strong>
-                                    <p class="mb-0">{{ $project->project_reference ?? 'N/A' }}</p>
+                                    <p class="mb-0"> {{"PRJ-" . str_pad($project->id, 5, '0', STR_PAD_LEFT)}}</p>
                                 </div>
 
                                 <!-- Client -->
                                 <div class="col-md-4 mb-3">
                                     <strong>Client:</strong>
-                                    <p class="mb-0">Acme Construction</p>
+                                    <p class="mb-0">{{$project->client->business_name}}</p>
                                 </div>
 
                             </div>

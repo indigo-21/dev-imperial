@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
@@ -21,5 +21,13 @@ class Project extends Model
         'designer',
         'referral_fee',
     ];
+
+    public function client(): BelongsTo{
+        return $this->belongsTo(Client::class);
+    }
+
+    public function project_type(): BelongsTo{
+        return $this->belongsTo(ProjectType::class);
+    }
 
 }

@@ -37,18 +37,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>PRJ-001</td>
-                                    <td>Acme Construction</td>
-                                    <td>Refurb</td>
-                                    <td>Emily Carter</td>
-                                    <td class="text-center">
-                                        <a type="submit" href="{{url('projects/edit/project-detail/1')}}" class="btn btn-sm btn-outline-primary" title="Edit Project">
-                                                <i class="fa fa-pen"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                              
+                                @foreach ($projects as $project )
+                                    <tr>
+                                        <td>{{"PRJ-" . str_pad($project->id, 5, '0', STR_PAD_LEFT)}}</td>
+                                        <td>{{$project->client->business_name}}</td>
+                                        <td>{{$project->project_type->name}}</td>
+                                        <td>{{$project->project_director}}</td>
+                                        <td class="text-center">
+                                            <a type="submit" href='{{ url("projects/edit/project-detail/$project->id") }}' class="btn btn-sm btn-outline-primary" title="Edit Project">
+                                                    <i class="fa fa-pen"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

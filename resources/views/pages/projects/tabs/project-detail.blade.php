@@ -2,7 +2,9 @@
 @section('project-detail-tab')
     <form action="{{ isset($project) ? route('projects.update', $project->id) : route("projects.store") }}" method="POST">
         @csrf
-        @method('PUT')
+        @isset($project)
+            @method("PUT")
+        @endisset
 
         <div class="card-body">
             <div class="row">
@@ -10,12 +12,14 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="project_description">Project Description</label>
-                        <textarea name="project_description" id="project_description" class="form-control" rows="3">{{ isset($project) ? $project->project_description : old("project_description") }}</textarea>
+                        <textarea name="project_description" id="project_description" class="form-control" rows="3">{{ isset($project) ? $project->description : old("project_description") }}</textarea>
                     </div>
                 </div>
 
-                {{-- Project Reference --}}
-                <div class="col-md-6">
+                {{-- Project Reference  --}}
+                {{-- $number = 1;
+                $result = str_pad($number, 5, '0', STR_PAD_LEFT); --}}
+                {{-- <div class="col-md-6">
                     <div class="form-group">
                         @php
                             $old_project_reference = isset($project) ? $project->project_reference : old("project_reference");
@@ -24,7 +28,7 @@
                         <input type="text" name="project_reference" id="project_reference" class="form-control"
                             value="{{$old_project_reference}}" readonly>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- Client --}}
                 <div class="col-md-6">
@@ -51,13 +55,13 @@
                         <label for="project_type">Project Type</label>
                         <select name="project_type" id="project_type" class="form-control">
                             @php
-                                $old_project_type = isset($project) ? $project->project_type : old("project_type");
+                                $old_project_type = isset($project) ? $project->project_type_id : old("project_type");
                             @endphp
                             <option value="">-- Select Type --</option>
                             @foreach ($project_types as $project_type )
-                                <option value="{{$project_type}}" 
-                                    {{ $old_project_type == $project_type ? 'selected' : '' }}>
-                                    {{$project_type}}</option>                                
+                                <option value="{{$project_type->id}}" 
+                                    {{ $old_project_type == $project_type->id ? 'selected' : '' }}>
+                                    {{$project_type->name}}</option>                                
                             @endforeach
                         </select>
                     </div>
@@ -68,7 +72,7 @@
                     <div class="form-group">
                         <label for="project_size">Size (sqft)</label>
                         <input type="number" name="project_size" id="project_size" class="form-control"
-                            value="{{ isset($project) ? $project->project_size : old("project_size") }}">
+                            value="{{ isset($project) ? $project->size : old("project_size") }}">
                     </div>
                 </div>
 
@@ -160,7 +164,11 @@
                 </div>
             </div>
         </div>
-
-
+        <div class="card-footer mt-4 d-flex justify-content-end">
+            <a href="{{ route('projects.index') }}" class="btn btn-secondary px-5 mr-2">Cancel</a>
+            <button type="submit" class="btn btn-primary px-5">
+                {{ isset($project) ? 'Update' : 'Create' }}
+            </button>
+        </div>
     </form>
 @endsection
