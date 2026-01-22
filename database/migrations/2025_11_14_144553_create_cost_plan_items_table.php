@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cost_plan_section_id')->constrained('cost_plan_sections')->cascadeOnDelete();
             $table->string('item_code')->nullable();
-            $table->string('description');
+            $table->longText('description');
             $table->float('quantity', 2)->nullable();
             $table->float('mark_up', 2)->nullable();
             $table->string('unit')->nullable();
