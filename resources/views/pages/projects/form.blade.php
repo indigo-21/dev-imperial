@@ -33,6 +33,9 @@
             .select-box:hover {
                 border-color: #28a745;
             }
+            textarea{
+                resize: none;
+            }
         </style>
     @endsection
 
@@ -122,7 +125,7 @@
     </x-slot>
 
     @section('scripts')
-        <script src="{{ asset('assets/custom/js/project.js') }}"></script>
+        {{-- <script src="{{ asset('assets/custom/js/project.js') }}"></script> --}}
     @endsection
 
 </x-app-layout>
