@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cost_plan_sections', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
+            $table->boolean('for_adjudication')->nullable();
             $table->string('section_code')->nullable();
             $table->string('section_name');
             $table->float('mark_up', 2)->nullable();
