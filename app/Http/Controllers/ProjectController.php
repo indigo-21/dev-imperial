@@ -23,7 +23,8 @@ class ProjectController extends Controller
             "project-files",
             "cost-plan",
             "variation-order",
-            "adjudication"
+            "adjudication",
+            "purchase-orders"
         ];
 
         $project_types   = ProjectType::all();
