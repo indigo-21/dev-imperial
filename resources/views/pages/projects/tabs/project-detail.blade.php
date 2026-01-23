@@ -12,7 +12,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="project_description">Project Description</label>
-                        <textarea name="project_description" id="project_description" class="form-control" rows="3">{{ isset($project) ? $project->description : old("project_description") }}</textarea>
+                        <textarea name="project_description" id="project_description" class="form-control" rows="3" >{{ isset($project) ? $project->description : old("project_description") }}</textarea>
+                        <span class="text-danger error">{{$errors->first('project_description')}}</span>
                     </div>
                 </div>
 
@@ -37,15 +38,14 @@
                             $old_client_id = isset($project) ? $project->client_id : old("client_id");
                         @endphp
                         <label for="client_id">Client</label>
-                        <select name="client_id" id="client_id" class="form-control">
+                        <select name="client_id" id="client_id" class="form-control" >
                             <option value="">-- Select Client --</option>
-                            <option value="1" {{ $old_client_id == 1 ? 'selected' : '' }}>
-                                John Doe Ltd</option>
-                            <option value="2" {{ $old_client_id == 2 ? 'selected' : '' }}>
-                                Acme Construction</option>
-                            <option value="3" {{ $old_client_id == 3 ? 'selected' : '' }}>
-                                Sunrise Developers</option>
+                            @foreach ($clients as $client )
+                            <option value="{{$client->id}}" {{ $old_client_id == $client->id ? 'selected' : '' }}>
+                                {{$client->business_name}}</option>
+                            @endforeach
                         </select>
+                        <span class="text-danger error">{{$errors->first('client_id')}}</span>
                     </div>
                 </div>
 
@@ -53,7 +53,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="project_type">Project Type</label>
-                        <select name="project_type" id="project_type" class="form-control">
+                        <select name="project_type" id="project_type" class="form-control" >
                             @php
                                 $old_project_type = isset($project) ? $project->project_type_id : old("project_type");
                             @endphp
@@ -64,6 +64,7 @@
                                     {{$project_type->name}}</option>                                
                             @endforeach
                         </select>
+                        <span class="text-danger error">{{$errors->first('project_type')}}</span>
                     </div>
                 </div>
 
@@ -116,7 +117,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="project_status">Project Status</label>
-                        <select name="project_status" id="project_status" class="form-control">
+                        <select name="project_status" id="project_status" class="form-control" >
                             @php
                                 $selectedStatus = old('project_status', $project->project_status ?? '');
                             @endphp
@@ -129,6 +130,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <span class="text-danger error">{{$errors->first('project_status')}}</span>
                     </div>
                 </div>
 
