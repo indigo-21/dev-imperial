@@ -1,17 +1,17 @@
 <x-app-layout>
     <x-slot name="pageTitle">
-        Create Client
+        {{ isset($client) ? 'Edit' : 'Create' }} Client
     </x-slot>
 
     <x-slot name="content">
         <div class="row">
+            
             <!-- LEFT CARD -->
             <div class="col-md-6">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
                         <h3 class="card-title">Client Information</h3>
                     </div>
-
                     <div class="card-body">
                         <div class="form-group">
                             <label for="business_name">Business Name</label>

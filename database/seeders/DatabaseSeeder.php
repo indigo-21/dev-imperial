@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             TemplateSectionSeeder::class,
             TemplateItemSeeder::class,
             ProjectTypeSeeder::class,
+            ClientTypeSeeder::class,
+            ClientSeeder::class,
         ]);
     }
 }
