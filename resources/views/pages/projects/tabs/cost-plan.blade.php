@@ -1,6 +1,6 @@
 @extends('pages.projects.form')
 @section('cost-plan-tab')
-    <form action="{{ route('projects.costplan_store') }}" method="POST">
+    <form id="cost_plan_form" action="{{ route('projects.costplan_store') }}" method="POST">
         @csrf
         <input type="hidden" name="project_id" value="{{$project->id}}">
         @foreach ($cost_plan as $section_index => $cost_plan_section )
@@ -17,18 +17,27 @@
                     </h5>
 
                     <div class="d-flex align-items-center ml-auto" onclick="event.stopPropagation(200);">
-                        <label class="mb-0 me-2"><strong>Mark Up % &nbsp;
-                            </strong></label>
-                        <input type="number" step="0.1" min="0" class="form-control section-markup-input"
+                        <div class="adjudication-section d-flex align-items-center">
+                            <div class="mark-up-section d-flex align-items-center">
+                                <label class="mb-0 me-2"><strong>Adjudication&nbsp;</strong></label>
+                                 <select name="adjudication" class="form-control select2bs4" id="adjudication" style="width:100px;">
+                                    <option value="1">Show</option>
+                                    <option value="0">Hide</option>
+                                </select> 
+                            </div>
+                        </div>
+                        <div class="mark-up-section mx-5 d-flex align-items-center">
+                            <label class="mb-0 me-2"><strong>Mark Up % &nbsp;</strong></label>
+                            <input type="number" step="0.1" min="0" class="form-control section-markup-input"
                             style="width:90px;" data-section-id="test-id" name="section_markup[{{$section_index}}]" value="20">
+                        </div>
                     </div>
                 </div>
 
                 <div id="section-{{$cost_plan_section->id}}" class="collapse show">
-                    <div class="card-body section-card" data-section="test-id">
+                    <div class="card-body section-card" data-section="{{$section_index}}">
                         @foreach ($cost_plan_section->items as $item_index => $cost_plan_item )
                             <div class="section-items">
-                                {{-- Preloaded template items --}}
                                 <div class="form-group row mb-3 section-item-row">
 
                                     <div class="col-md-6 d-flex">
@@ -39,15 +48,18 @@
                                         </div>
 
                                         <div class="col">
+                                            @php
+                                                $description_name = "description[$section_index][$item_index]";
+                                            @endphp
                                             <label>Item Description</label>
-                                            <textarea name="description[{{$section_index}}][{{$item_index}}]" class="form-control " rows="10">{{$cost_plan_item->description}}</textarea>
+                                            <textarea required name="{{$description_name}}" class="form-control item-description" rows="10">{{$cost_plan_item->description}}</textarea>
+                                            <span class="text-danger error">{{ $errors->first($description_name) }}</span>
                                         </div>
 
                                     </div>
 
                                     <div class="col-md-6 row">
                                         <div class="col-12 row">
-                                            <!-- Qty (small auto width) -->
                                             <div class="col-md-2">
                                                 <label>Qty</label>
                                                 <input type="number" name="quantity[{{$section_index}}][{{$item_index}}]"
@@ -55,28 +67,24 @@
                                                     value="{{$cost_plan_item->quantity}}">
                                             </div>
 
-                                            <!-- Unit (small auto width) -->
                                             <div class="col-md-2">
                                                 <label>Unit</label>
                                                 <input type="text" name="unit[{{$section_index}}][{{$item_index}}]"
                                                     class="form-control unit-input" value="{{$cost_plan_item->unit}}">
                                             </div>
 
-                                            <!-- Rate (small auto width) -->
                                             <div class="col-md-2">
                                                 <label>Rate</label>
                                                 <input type="number" step="0.01" name="rate[{{$section_index}}][{{$item_index}}]"
                                                     class="form-control calc-field item-input rate-input" value="{{$cost_plan_item->rate}}">
                                             </div>
 
-                                            <!-- Cost (auto-expand) -->
                                             <div class="col-md-3">
                                                 <label>Cost</label>
                                                 <input type="text" name="cost[{{$section_index}}][{{$item_index}}]" value="100"
                                                     class="form-control cost-output" readonly>
                                             </div>
 
-                                            <!-- Total (auto-expand) -->
                                             <div class="col-md-3">
                                                 <label>Total</label>
                                                 <input type="text" name="total[{{$section_index}}][{{$item_index}}]"
@@ -84,49 +92,28 @@
                                             </div>
                                         </div>
                                         <div class="col-12 row">
-                                            <!-- Markup (small auto width) -->
                                             <div class="col-md-4 mt-3">
                                                 <label>Mark Up %</label>
                                                 <input type="number" step="0.1" min="0"
                                                     name="mark_up[{{$section_index}}][{{$item_index}}]"
                                                     class="form-control calc-field item-input markup-input" value="20">
                                             </div>
-                                            <!-- Supplier (full width on wrap) -->
                                             <div class="col-md-8 mt-3">
                                                 <label>Supplier</label>
-
-                                                <select name="supplier_id"
+                                                @php
+                                                    $old_supplier_id = $cost_plan_item?->supplier_id ?? null;
+                                                @endphp
+                                                <select name="supplier_id[{{$section_index}}][{{$item_index}}]"
                                                     class="form-control select2bs4">
                                                     <option value="">Select
                                                         Supplier</option>
+                                                    @foreach ($suppliers as $supplier)
+                                                           <option 
+                                                                {{$old_supplier_id == $supplier->id ? "selected" : ""}}
+                                                                value="{{$supplier->id}}">
+                                                                {{$supplier->business_name}}</option> 
+                                                    @endforeach
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 row">
-                                            <!-- Purchase Order Number -->
-                                            <div class="col-md-3 mt-3">
-                                                <label>PO Number</label>
-                                                <input type="text" name="po_number"
-                                                    class="form-control" placeholder="PO-001">
-                                            </div>
-                                            <!-- Purchase Order Value -->
-                                            <div class="col-md-3 mt-3">
-                                                <label>PO Value</label>
-                                                <input type="number" step="0.01" name="po_value"
-                                                    class="form-control" placeholder="0.00">
-                                            </div>
-                                            <!-- Invoice Reference Number -->
-                                            <div class="col-md-3 mt-3">
-                                                <label>Invoice Ref</label>
-                                                <input type="text" name="invoice_refs"
-                                                    class="form-control" placeholder="INV-001">
-                                            </div>
-                                            <!-- Invoice Value -->
-                                            <div class="col-md-3 mt-3">
-                                                <label>Invoice Value</label>
-                                                <input type="number" step="0.01"
-                                                    name="invoice_value" class="form-control"
-                                                    placeholder="0.00">
                                             </div>
                                         </div>
                                         <div class="col-12 row">
