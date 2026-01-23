@@ -8,6 +8,7 @@ use App\Models\TemplateItem;
 use App\Models\TemplateSection;
 use App\Models\Supplier;
 use App\Models\ProjectType;
+use App\Models\Client;
 use App\Http\Controllers\Controller;
 use App\Models\CostPlanItem;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ class ProjectController extends Controller
 
         $result = [
             "tabs" => $tabs,
+            "clients" => Client::all(),
             "suppliers" =>  Supplier::orderBy('business_name')->get(),
             "project_types" => $project_types,
 
@@ -74,6 +76,24 @@ class ProjectController extends Controller
         return $result;
     }
 
+    public function form_rule($id = false){
+           return [
+                "project_description" => ["required", "string","min:2"],
+                "client_id" => ["required"],
+                "project_type" => ["required"],
+                "project_status" => ["required"],
+           ];
+    }
+
+    public function change_field_name(){
+        return [
+                "project_description" => "Project Description",
+                "client_id" => "Client",
+                "project_type" => "Project Type",
+                "project_status" => "Project Status",
+        ];
+    }
+
     public function index()
     {
         $data = self::default_data();
@@ -101,6 +121,8 @@ class ProjectController extends Controller
 
     public function upsertProject(Request $request, $id = false)
     {
+        $request->validate(self::form_rule(),[], self::change_field_name());
+
         $project = !$id ? new Project : Project::findOrFail($id);
 
         $project->description = $request->project_description;
