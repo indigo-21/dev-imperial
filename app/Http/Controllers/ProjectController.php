@@ -53,13 +53,14 @@ class ProjectController extends Controller
         ];
 
         if ($type == "form") {
-            $has_cost_plan = CostPlanSection::where("project_id", $id)->get();
+            $has_cost_plan = CostPlanSection::where("project_id", $id)->count();
             $result += [
                         "statuses" => $statuses,
                         "cost_plan" => TemplateSection::with('items')->get(),
                         ];
 
             if ($id) {
+                // dd($has_cost_plan);
                 if($has_cost_plan){
                     $result["cost_plan"] = "";
                     $result["cost_plan"] = $has_cost_plan ? CostPlanSection::where("project_id", $id)->get() : TemplateSection::with('items')->get();
