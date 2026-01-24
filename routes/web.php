@@ -41,9 +41,11 @@ Route::middleware('auth')->group(function () {
     // ->name('projects.edit');
 
     Route::group(["prefix" => "projects", "as" => "projects."], function(){
-        Route::get('/index', [ProjectController::class, 'index'])->name("index");
-        Route::get('/create', [ProjectController::class, 'create'])->name("create");
+        Route::get('/', [ProjectController::class, 'index'])
+            ->name("index");
         Route::get('/edit/{tab?}/{project_id?}', [ProjectController::class, 'edit']);
+        Route::get('/create', [ProjectController::class, 'create'])
+            ->name("create");
         Route::post('/', [ProjectController::class, 'upsertProject'])
             ->name('store');
         Route::put('/{id}', [ProjectController::class, 'upsertProject'])
@@ -52,6 +54,10 @@ Route::middleware('auth')->group(function () {
             ->name('costplan_store');
          Route::put('/costplan_update/{id}', [ProjectController::class, 'upsertCostPlan'])
             ->name('costplan_update');
+        Route::put('/project_file_upsert/{id}', [ProjectController::class, 'upsertProjectFile'])
+            ->name('project_file_upsert');
+        Route::delete('/project_file_destroy/{id}', [ProjectController::class, 'destroyProjectFile'])
+            ->name('project_file_destroy');
     });
 
     
