@@ -3,10 +3,10 @@
     <div class="row">
         {{-- Upload Form --}}
         <div class="col-md-12">
-
-            <form action="{{ route('projects.update', $project->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('projects.project_file_upsert', $project->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-
+                @method("PUT")
+                <input type="hidden" name="project_file_id" value="">
                 <div class="col-md-6">
                     {{-- File Description --}}
                     <div class="form-group">
@@ -20,12 +20,12 @@
                     {{-- File Upload --}}
                     <div class="form-group">
                         <label for="document">Select Document</label>
-                        <input type="file" name="document" id="document" class="form-control-file">
+                        <input type="file" name="file" id="document" class="form-control-file">
                     </div>
                     {{-- Buttons --}}
                     <div class="form-group mt-3">
-                        <button type="reset" class="btn btn-outline-secondary">Cancel</button>
-                        <button type="submit" class="btn btn-primary ml-2">Upload</button>
+                        <button type="reset" class="btn btn-outline-secondary form-btn-cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary ml-2" id="upload_btn">Submit</button>
                     </div>
                 </div>
             </form>
@@ -38,30 +38,46 @@
                 <thead>
                     <tr>
                         <th width="5%">ID</th>
-                        <th width="25%">Description</th>
-                        <th width="25%">File Name</th>
-                        <th width="20%">Uploaded By</th>
-                        <th width="15%">Date</th>
+                        <th>Description</th>
+                        <th width="15%">File Name</th>
+                        <th width="10%">Uploaded By</th>
+                        <th width="10%">Date</th>
                         <th width="10%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Example demo data --}}
-                    <tr>
-                        <td>1</td>
-                        <td>Site Layout Plan</td>
-                        <td><a href="#">layout_plan.pdf</a></td>
-                        <td>Sarah Thompson</td>
-                        <td>2025-10-20</td>
-                        <td>
-                            <a href="#" class="btn btn-sm btn-outline-primary" title="View"><i
-                                    class="fas fa-eye"></i></a>
-                            <a href="#" class="btn btn-sm btn-outline-danger" title="Delete"><i
-                                    class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
+                    @if (count($project_files) > 0)
+                        @foreach ($project_files as $project_file )
+                            <tr class="project-file-row">
+                                <td>{{$loop->iteration}}</td>
+                                <td><span class="project-file-description">{{$project_file->description}}</span></td>
+                                <td><a href="{{ asset('storage/uploads/' . $project_file->filename) }}" download>{{$project_file->filename}}</a></td>
+                                <td>{{$project_file->created_user->firstname}} {{$project_file->created_user->lastname}}</td>
+                                <td>{{$project_file->created_at->format("F d, Y")}}</td>
+                                <td class="text-center d-flex justify-content-center align-items-center">
+                                    <button class="btn btn-sm btn-outline-primary edit-document mr-3" data-project-id="{{$project_file->id}}" title="View"><i
+                                            class="fas fa-eye"></i></button>
+                                    <form action="{{ route("projects.project_file_destroy", $project_file->id) }}" method="POST"> 
+                                        @csrf
+                                        @method("DELETE")
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" data-project-id="{{$project_file->id}}" title="Delete"><i
+                                            class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                            <tr>
+                                <td colspan="6" class="text-center">No Data Result...</td>
+                            </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
+@endsection
+
+
+@section("scripts")
+        <script src="{{ asset('assets/custom/js/pages/projects/tabs/project-file.js') }}"></script>
 @endsection
