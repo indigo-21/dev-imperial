@@ -9,10 +9,12 @@ use App\Models\TemplateSection;
 use App\Models\Supplier;
 use App\Models\ProjectType;
 use App\Models\Client;
+use App\Models\ProjectFile;
 use App\Http\Controllers\Controller;
 use App\Models\CostPlanItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -68,7 +70,8 @@ class ProjectController extends Controller
                 }
                 $result += [
                     "project"   => Project::findOrFail($id),
-                    "has_cost_plan" => CostPlanSection::where("project_id", $id)->get()
+                    "has_cost_plan" => CostPlanSection::where("project_id", $id)->get(),
+                    "project_files" => ProjectFile::where("project_id",$id)->get()
                 ];
             }
         }else{
@@ -142,8 +145,7 @@ class ProjectController extends Controller
         return view($view, $data);
     }
 
-    public function upsertProject(Request $request, $id = false)
-    {
+    public function upsertProject(Request $request, $id = false){
         $request->validate(self::form_rule("project-detail", $id),[], self::change_field_name());
 
         $project = !$id ? new Project : Project::findOrFail($id);
@@ -174,8 +176,48 @@ class ProjectController extends Controller
         return redirect("projects/edit/project-detail/$project->id");
     }
 
+    public function upsertProjectFile(Request $request, $project_id){
+        
+        // $request->validate([
+        //     "project_id" => ["required"],
+        //     "file" => ["required", "file", "max:3048"],
+        //     "description" => ["required"],
+        // ]);
+
+        // $project_id = $request->project_id;
+        $project_file_id = $request->project_file_id;
+        $project_file = !$project_file_id ? new ProjectFile() : ProjectFile::findOrFail($project_file_id);
+
+        if($request->file("file")){
+            $file = $request->file("file");
+            $filename = time()."_".$file->getClientOriginalName();
+            // $path = $file->storeAs("public/uploads", $filename);
+            $path = $file->storeAs('uploads', $filename, 'public');
+            $project_file->filename = $filename;
+        }
+
+        $project_file->project_id = $project_id;
+        $project_file->description = $request->description;
+        $project_file->{!$project_file_id ? "created_by" : "updated_by"} = Auth::id();
+
+        if($project_file->save()){
+            return redirect("projects/edit/project-files/$project_id")->with("success", "File Upload Successfully ".$project_file->description);
+        }else{
+            return redirect("projects/edit/project-files/$project_id")->with("error", "No file selected.");
+        }
+    }
+
+    public function destroyProjectFile($id){
+        $project_file = ProjectFile::findOrFail($id);
+        $project_id = $project_file->project_id;
+        $filename = $project_file->filename;
+        $project_file->deleted_by = Auth::id();
+        $project_file->save();
+        $project_file->delete();
+        return redirect("projects/edit/project-files/$project_id")->with("success", $filename." deleted successfully ");
+    }
+
     public function upsertCostPlan(Request $request, $id = false){ 
-        // dd($request);
         $request->validate(self::form_rule("cost-plan", $id));
         $result = true;
         $project_id = $request->project_id;
@@ -245,4 +287,8 @@ class ProjectController extends Controller
 
         return redirect("projects/edit/cost-plan/$project_id");
     }
+
+
+
+
 }
