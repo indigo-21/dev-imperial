@@ -13,8 +13,12 @@ use App\Http\Controllers\VariationOrderController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TemplateSection;
 use App\Http\Controllers\TemplateItem;
-
-
+use App\Models\CostPlanSection;
+use App\Http\Controllers\CostPlanSectionController;
+use App\Models\CostPlanItem;
+use App\Http\Controllers\CostPlanItemController;
+use App\Models\PurchaseOrderItem;
+use App\Http\Controllers\PurchaseOrderItemController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -58,7 +62,14 @@ Route::middleware('auth')->group(function () {
             ->name('project_file_upsert');
         Route::delete('/project_file_destroy/{id}', [ProjectController::class, 'destroyProjectFile'])
             ->name('project_file_destroy');
+        Route::post('/purchase_order_upsert', [ProjectController::class, 'upsertPurchaseOrder'])
+            ->name('purchase_order_upsert');
     });
+
+    Route::post('/get_items_by_supplier', [CostPlanItemController::class, 'getItemsBySupplier'])
+            ->name('get_items_by_supplier');
+    Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
+            ->name('get_po_item');
 
     
 
