@@ -10,12 +10,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
         <title>{{ config('app.name', 'Imperial') }}</title>
 
         @yield('style')
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" base_url="{{url("/")}}">
         <div class="wrapper">
             @include('includes.navigation')
             @include('includes.aside')
@@ -56,6 +55,7 @@
        
             @include('includes.footer')
             @include('includes.script')
+            <script src="{{ asset('assets/custom/js/global/variables.js') }}"></script>
             @yield('scripts')
     </body>
 </html>
