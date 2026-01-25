@@ -63,4 +63,10 @@ class CostPlanItemController extends Controller
     {
         //
     }
+
+    public function getItemsBySupplier(Request $request){
+        $supplier_id = $request->supplier_id;
+        $data = CostPlanItem::where("supplier_id", $supplier_id)->get();
+        return json_encode($data);
+    }
 }
