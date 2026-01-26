@@ -18,7 +18,7 @@ $(function () {
         getCostPlanItems(supplier_id);
     })
 
-    $(document).on("keyup, change", ".compute-total", function () {
+    $(document).on("keyup", ".compute-total", function () {
         let table_row = $(this).closest("tr");
         let quantity = parseFloat(table_row.find(".qty-input").val() ?? 0);
         let rate = parseFloat(table_row.find(".price-input").val() ?? 0);
