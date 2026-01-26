@@ -115,7 +115,11 @@ $(function () {
                         </div>
                     </div>`;
 
-        section_items.last().after(html);
+        if(section_items){
+            section_items.last().after(html);
+        }else{
+            section_items.append(html);
+        }
         // ISSUE IN TEXTAREA
         // $("#cost_plan_form").append(`<input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >`);
 
