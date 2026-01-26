@@ -1,20 +1,15 @@
 $(function () {
 
     $(document).on("click", "#create-po-btn", function () {
-        $("#purchase-order-form").show();
-        $("#line-items-container").hide();
-        $("#line-items-table-container").hide();
+        sectionAnimation();
     });
 
     $(document).on("click", "#cancel-btn-from-checklist", function () {
-        $("#line-items-container").hide();
-        $("#purchase-order-form").hide();
-
+       sectionAnimation("cancel-btn-from-checklist");
     });
 
     $(document).on("click", "#cancel-btn-from-tablelist", function () {
-        $("#line-items-table-container").hide();
-        $("#line-items-container").show();
+       sectionAnimation("cancel-btn-from-tablelist");
     });
 
     $(document).on("change", "#supplier_id", function () {
@@ -33,12 +28,14 @@ $(function () {
     });
 
     $(document).on("click", "#proceed-btn-from-checklist", function () {
+        sectionAnimation("proceed-btn-from-checklist");
         getPurchaseOrderItems();
     });
 
     $(document).on("click",".edit-purchase-order", function(){
-        let purchase_order_id = $(this).attr("data-purchase-order-id");
-        getPurchaseOrderItems(purchase_order_id);
+        let purchase_order_element = $(this);
+        sectionAnimation("edit-purchase-order");
+        getPurchaseOrderItems(purchase_order_element);
     })
 
     function getCostPlanItems(supplier_id = false) {
@@ -50,8 +47,6 @@ $(function () {
             data: { supplier_id },
             dataType: 'json',
             beforeSend: function () {
-                $("#line-items-container").show();
-                $("#line-items-table-container").hide();
                 let html = `<span>Loading...</span>`;
                 line_item_container.html(html);
             },
@@ -79,16 +74,17 @@ $(function () {
 
     }
 
-    function getPurchaseOrderItems(purchase_order_id = false){
-        $("#line-items-container").hide();
-        $("#line-items-table-container").show();
+    function getPurchaseOrderItems(purchase_order_element = false){
         let html = "";
         let line_item_tbody = $("#line-items-table-body");
         let loading_screen = `<tr><td class="text-center" colspan="5"><span>Loading...</span></td></tr>`;
         line_item_tbody.html(loading_screen);
 
-        if(purchase_order_id){
+        if(purchase_order_element){
+            let purchase_order_id = purchase_order_element.attr("data-purchase-order-id");
+            let supplier_id = purchase_order_element.attr("data-supplier-id");
             $("[name=purchase_order_id]").val(purchase_order_id);
+            $("[name=supplier_id]").val(supplier_id);
             $.ajax({
                 headers: {'X-CSRF-Token': CSRF_TOKEN},
                 url:`${BASE_URL}/get_po_item`,
@@ -100,11 +96,11 @@ $(function () {
                     response.map((item, index)=>{
                         let data = {
                             index,
-                            item_code:response.item_code,
-                            item_description:response.description,
-                            item_quantity: response.quantity,
-                            item_unit_price:response.unit_price,
-                            total: response.total  
+                            item_code:item.item_code,
+                            item_description:item.description,
+                            item_quantity: item.quantity,
+                            item_unit_price:item.unit_price,
+                            total: item.total  
                         }
                         html += itemTableRow(data);
                     })
@@ -153,5 +149,38 @@ $(function () {
                     <td class="total-cell">${total.toFixed(2)}</td>
                 </tr>`;
     };
+
+    function sectionAnimation(from = "create-button-order"){
+        $("#purchase-order-form").hide();
+        $("[name=purchase_order_id]").val("");
+        $("[name=supplier_id]").val("");
+        switch (from) {
+            case "cancel-btn-from-checklist":
+                    $("#purchase-order-form").hide();
+                    $("#line-items-container").hide();
+                    $("#line-items-table-container").hide();
+                break;
+            case "proceed-btn-from-checklist":
+                    $("#purchase-order-form").show();
+                    $("#line-items-container").hide();
+                    $("#line-items-table-container").show();
+                break;
+            case "cancel-btn-from-tablelist":
+                    $("#purchase-order-form").show();
+                    $("#line-items-container").show();
+                    $("#line-items-table-container").hide();
+                break;        
+            case "edit-purchase-order":
+                    $("#purchase-order-form").show();
+                    $("#line-items-container").hide();
+                    $("#line-items-table-container").show();
+                break;                    
+            default:
+                $("#purchase-order-form").show();
+                $("#line-items-container").show();
+                $("#line-items-table-container").hide();
+                break;
+        }
+    }
 
 })
