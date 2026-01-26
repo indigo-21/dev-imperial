@@ -6,26 +6,27 @@
         </button>
     </div>
 
-    <div id="purchase-order-form" class="mt-3" style="display: none;">
+    <div id="purchase-order-form" class="mt-3" style="display:none;">
         <div class="card border">
             <div class="card-header">
                 <strong>Create Purchase Order</strong>
             </div>
 
             <div class="card-body">
-                <div class="form-group">
-                    <label for="supplier_id">Supplier</label>
-                    <select id="supplier_id" class="form-control">
-                        <option value="">-- Select Supplier --</option>
-                        @foreach ($for_po_suppliers as $for_po_supplier)
-                            <option value="{{ $for_po_supplier->supplier_id }}">{{ $for_po_supplier->business_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
 
                 <!-- LINE ITEMS -->
                 <div id="line-items-container">
+                    <div class="form-group supplier-content">
+                    <label for="supplier_id">Supplier</label>
+                        <select id="supplier_id" class="form-control">
+                            <option value="">-- Select Supplier --</option>
+                            @foreach ($for_po_suppliers as $for_po_supplier)
+                                <option value="{{ $for_po_supplier->supplier_id }}">{{ $for_po_supplier->business_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <label class="font-weight-bold mb-2">Line Items</label>
 
                     <div id="line-items-list">
@@ -107,7 +108,9 @@
                             <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
                             <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary edit-purchase-order mr-3" data-purchase-order-id="{{$purchase_order->id}}" title="View"><i
+                                <button class="btn btn-sm btn-outline-primary edit-purchase-order mr-3" 
+                                    data-purchase-order-id="{{$purchase_order->id}}"
+                                    data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
                                             class="fas fa-eye"></i></button>
                             </td>
                         </tr>
