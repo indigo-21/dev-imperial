@@ -25,15 +25,17 @@ $(function () {
         let last_section_item = 0;
         let supplier_options = "";
 
-        section_items.each((index, section_item) => {
-            supplier_options = "";
-            $(this).attr("name", `[${this_section_length}][${index}]`);
-            supplier_options = $(section_item).find(`[name="supplier_id[${this_section_length}][${index}]"] option`);
-            supplier_options.each((option_index, option) => {
-                supplier_options += `<option value="${option.value}">${option.label}</option>`;
-            });
-            last_section_item = index + 1;
-        });
+        if(section_items.length > 0 ){
+            section_items.each((index, section_item) => {
+                supplier_options = "";
+                $(this).attr("name", `[${this_section_length}][${index}]`);
+                supplier_options = $(section_item).find(`[name="supplier_id[${this_section_length}][${index}]"] option`);
+                supplier_options.each((option_index, option) => {
+                    supplier_options += `<option value="${option.value}">${option.label}</option>`;
+                });
+                last_section_item = index + 1;
+            }); 
+        }
 
         let item_code_last = parseFloat(last_section_item) + 1;
         let item_code = `${parseFloat(this_section_length) + 1}.${item_code_last.toString().padStart(2, '0')}`;
@@ -115,10 +117,10 @@ $(function () {
                         </div>
                     </div>`;
 
-        if(section_items){
+        if(section_items.length > 0){
             section_items.last().after(html);
         }else{
-            section_items.append(html);
+            parent.prepend(html);
         }
         // ISSUE IN TEXTAREA
         // $("#cost_plan_form").append(`<input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >`);
