@@ -322,13 +322,14 @@ class ProjectController extends Controller
         }
 
         for ($i=0; $i < count($request->item_code) ; $i++) { 
+            $total = floatval($request?->quantity[$i] ?? 0) * floatval($request?->unit_price[$i] ?? 0);
             $items = [
                     "purchase_order_id" => $purchase_order_id,
                     "item_code" => $request->item_code[$i],
                     "description" => $request->item_description[$i],
                     "quantity" => $request->quantity[$i],
                     "unit_price" => $request->unit_price[$i],
-                    "total" => $request->total[$i],
+                    "total" => $total,
                 ];  
             array_push($item_data, $items);
         }
