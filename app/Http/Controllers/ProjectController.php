@@ -302,10 +302,10 @@ class ProjectController extends Controller
     public function upsertPurchaseOrder(Request $request){
         $project_id = $request->project_id;
         $supplier_id = $request->supplier_id;
-        $purchase_order_id = $request->project_order_id;
+        $purchase_order_id = $request->purchase_order_id;
         $item_data = [];
         $exist_purchase_order_items = [];
-
+        
         $purchase_order = !$purchase_order_id ? new PurchaseOrder() : PurchaseOrder::findOrFail($purchase_order_id);
         $purchase_order->project_id = $project_id;
         $purchase_order->supplier_id = $supplier_id;
@@ -335,9 +335,8 @@ class ProjectController extends Controller
 
         $purchase_order_item_result = DB::table("purchase_order_items")
                                                 ->insert($item_data);
-
         if($purchase_order_item_result){
-            PurchaseOrderItem::whereIn("id", $exist_purchase_order_items);
+            PurchaseOrderItem::whereIn("id", $exist_purchase_order_items)->delete();
         }   
         
         $po_number = "PO-" . str_pad($purchase_order_id, 5, '0', STR_PAD_LEFT);
