@@ -18,11 +18,11 @@ $(function () {
         getCostPlanItems(supplier_id);
     })
 
-    $(document).on("keyup", ".compute-total", function () {
+    $(document).on("keyup, change", ".compute-total", function () {
         let table_row = $(this).closest("tr");
         let quantity = parseFloat(table_row.find(".qty-input").val() ?? 0);
         let rate = parseFloat(table_row.find(".price-input").val() ?? 0);
-        let total = parseFloat(quantity * rate);
+        let total = parseFloat(quantity * rate) ?? 0;
         table_row.find("[name=total]").val(total.toFixed(2));
         table_row.find(".total-cell").text(total.toFixed(2));
     });
@@ -153,7 +153,7 @@ $(function () {
     function sectionAnimation(from = "create-button-order"){
         $("#purchase-order-form").hide();
         $("[name=purchase_order_id]").val("");
-        $("[name=supplier_id]").val("");
+        // $("[name=supplier_id]").val("");
         switch (from) {
             case "cancel-btn-from-checklist":
                     $("#purchase-order-form").hide();
