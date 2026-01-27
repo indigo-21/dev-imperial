@@ -102,19 +102,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($purchase_orders as $purchase_order )
+                    @if ($purchase_orders->count())
+                        @foreach ($purchase_orders as $purchase_order )
+                            <tr>
+                                <td>{{"PO-" . str_pad($purchase_order->id, 5, '0', STR_PAD_LEFT)}}</td>
+                                <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
+                                <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-primary edit-purchase-order mr-3" 
+                                        data-purchase-order-id="{{$purchase_order->id}}"
+                                        data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
+                                                class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
                         <tr>
-                            <td>{{"PO-" . str_pad($purchase_order->id, 5, '0', STR_PAD_LEFT)}}</td>
-                            <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
-                            <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary edit-purchase-order mr-3" 
-                                    data-purchase-order-id="{{$purchase_order->id}}"
-                                    data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
-                                            class="fas fa-eye"></i></button>
+                            <td colspan="4" class="text-center">
+                                No data result...
                             </td>
                         </tr>
-                    @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
