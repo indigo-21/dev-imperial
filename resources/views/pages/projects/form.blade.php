@@ -124,8 +124,4 @@
         </div>
     </x-slot>
 
-    @section('scripts')
-        {{-- <script src="{{ asset('assets/custom/js/project.js') }}"></script> --}}
-    @endsection
-
 </x-app-layout>
