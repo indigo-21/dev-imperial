@@ -57,5 +57,18 @@
             @include('includes.script')
             <script src="{{ asset('assets/custom/js/global/variables.js') }}"></script>
             @yield('scripts')
+            @if (session('success'))
+                <script>
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: @json(session('success')),
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                </script>
+            @endif
     </body>
 </html>
