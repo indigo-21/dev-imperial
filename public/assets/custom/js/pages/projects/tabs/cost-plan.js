@@ -134,6 +134,21 @@ $(function () {
         $(`[name="${this_name}"]`).val(this_val);
     });
 
+    $(document).on("click", ".remove-row",  function(){
+        let section_item = $(this).closest(".section-items");
+        let parent_section = section_item.closest(".section-card");
+        let section_id = parseFloat(parent_section.attr("data-section")) + 1;
+        
+        section_item.remove();
+
+        parent_section.find(".code-input").each((index, element)=>{
+            let item_code = `${section_id}.${index.toString().padStart(2, '0')}`;
+            let item_attr = `[${section_id}][${index}]`;
+            $(element).val(item_code);
+            $(element).attr("name", `item_code${item_attr}`);
+        });
+
+    });
 
 
     function compute_section_item(element) {
