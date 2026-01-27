@@ -47,11 +47,9 @@
                     </section>
                  </div>
             @endisset
-
-            <!-- Page Content -->
-            {{-- <main>
-                {{ $slot }}
-            </main> --}}
+            
+            @yield("modal")
+    
        
             @include('includes.footer')
             @include('includes.script')
@@ -70,5 +68,6 @@
                     });
                 </script>
             @endif
+        </div>
     </body>
 </html>
