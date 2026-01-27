@@ -20,16 +20,19 @@
                         <div class="adjudication-section d-flex align-items-center">
                             <div class="mark-up-section d-flex align-items-center">
                                 <label class="mb-0 me-2"><strong>Adjudication&nbsp;</strong></label>
-                                 <select name="adjudication" class="form-control select2bs4" id="adjudication" style="width:100px;">
-                                    <option value="1">Show</option>
-                                    <option value="0">Hide</option>
+                                @php
+                                    $adjudication = $cost_plan_section->for_adjudication;
+                                @endphp
+                                 <select name="adjudication[{{$section_index}}]" class="form-control select2bs4" id="adjudication" style="width:100px;">
+                                     <option {{$adjudication == 0 ? "selected": ""}} value="0">No</option>
+                                     <option {{$adjudication == 1 ? "selected": ""}} value="1">Yes</option>
                                 </select> 
                             </div>
                         </div>
                         <div class="mark-up-section mx-5 d-flex align-items-center">
                             <label class="mb-0 me-2"><strong>Mark Up % &nbsp;</strong></label>
                             <input type="number" step="0.1" min="0" class="form-control section-markup-input"
-                            style="width:90px;" data-section-id="test-id" name="section_markup[{{$section_index}}]" value="20">
+                            style="width:90px;" data-section-id="test-id" name="section_markup[{{$section_index}}]" value="{{ $cost_plan_section?->mark_up ?? "20" }}">
                         </div>
                     </div>
                 </div>
@@ -44,7 +47,7 @@
                                         <div class="short-input">
                                             <label>Code</label>
                                             <input type="text" name="item_code[{{$section_index}}][{{$item_index}}]"
-                                                class="form-control code-input" readonly value="{{$cost_plan_item->item_code}}">
+                                                class="form-control code-input" readonly value="{{ $cost_plan_item->item_code }}">
                                         </div>
 
                                         <div class="col">
@@ -81,14 +84,14 @@
 
                                             <div class="col-md-3">
                                                 <label>Cost</label>
-                                                <input type="text" name="cost[{{$section_index}}][{{$item_index}}]" value="100"
+                                                <input type="text" name="cost[{{$section_index}}][{{$item_index}}]" value="{{ $cost_plan_item?->cost ?? "100"}}"
                                                     class="form-control cost-output" readonly>
                                             </div>
 
                                             <div class="col-md-3">
                                                 <label>Total</label>
                                                 <input type="text" name="total[{{$section_index}}][{{$item_index}}]"
-                                                    class="form-control total-output" readonly>
+                                                    class="form-control total-output" readonly value="{{$cost_plan_item?->total ?? "0.00"}}">
                                             </div>
                                         </div>
                                         <div class="col-12 row">
@@ -96,7 +99,7 @@
                                                 <label>Mark Up %</label>
                                                 <input type="number" step="0.1" min="0"
                                                     name="mark_up[{{$section_index}}][{{$item_index}}]"
-                                                    class="form-control calc-field item-input markup-input" value="20">
+                                                    class="form-control calc-field item-input markup-input" value="{{$cost_plan_item?->mark_up ?? "20"}}">
                                             </div>
                                             <div class="col-md-8 mt-3">
                                                 <label>Supplier</label>
@@ -153,7 +156,7 @@
             </div>
         @endforeach
 
-        <button type="submit" class="btn btn-success">Save All Sections</button>
+        <button type="submit" class="btn btn-success">{{ isset($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
     </form>
 @endsection
 
