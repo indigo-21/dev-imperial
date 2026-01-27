@@ -95,7 +95,7 @@ class ProjectController extends Controller
                     $result["cost_plan"] = $cost_plan_sections->get();
                     $result["for_po_suppliers"] = $for_po_suppliers; 
                     $result["purchase_orders"] = PurchaseOrder::where("project_id", $id)->get();
-
+                    
                 }
                 $result += [
                     "project"   => Project::findOrFail($id),
