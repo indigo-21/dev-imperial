@@ -22,13 +22,21 @@ use Illuminate\Support\Facades\DB;
 class ProjectController extends Controller
 {
     public function default_data($type = "index", $id = false){
+        // $tabs = [
+        //     "project-detail",
+        //     "project-files",
+        //     "cost-plan",
+        //     "variation-order",
+        //     "adjudication",
+        //     "purchase-orders"
+        // ];
         $tabs = [
             "project-detail",
             "project-files",
             "cost-plan",
-            "variation-order",
-            "adjudication",
-            "purchase-orders"
+            // "variation-order",
+            // "adjudication",
+            // "purchase-orders"
         ];
 
         $project_types   = ProjectType::all();
@@ -50,11 +58,9 @@ class ProjectController extends Controller
         ];
 
         $result = [
-            "tabs" => $tabs,
             "clients" => Client::all(),
             "suppliers" =>  Supplier::orderBy('business_name')->get(),
             "project_types" => $project_types,
-
         ];
 
         if ($type == "form") {
@@ -66,6 +72,7 @@ class ProjectController extends Controller
 
             if ($id) {
                 if($has_cost_plan){
+                    array_push($tabs,"variation-order");
                     $cost_plan_sections = CostPlanSection::where("project_id", $id);
                     $cost_plan_section_ids = [];
                     foreach ($cost_plan_sections->get() as $key => $cost_plan_section) {
@@ -77,6 +84,13 @@ class ProjectController extends Controller
                                                     ->groupBy('supplier_id')
                                                     ->orderBy("business_name",'asc')
                                                     ->get();
+                    
+                    if($for_po_suppliers->count()){
+                        array_push($tabs,"purchase-orders");
+                        array_push($tabs,"adjudication");
+                        // dd($tabs);
+                    }
+
                     $result["cost_plan"] = "";
                     $result["cost_plan"] = $cost_plan_sections->get();
                     $result["for_po_suppliers"] = $for_po_suppliers; 
@@ -88,11 +102,13 @@ class ProjectController extends Controller
                     "has_cost_plan" => CostPlanSection::where("project_id", $id)->get(),
                     "project_files" => ProjectFile::where("project_id",$id)->get()
                 ];
+
+                
             }
         }else{
             $result += ["projects" => Project::all()];
         }
-
+        $result["tabs"] = $tabs;
         return $result;
     }
 
@@ -185,7 +201,7 @@ class ProjectController extends Controller
         }
         $success_message = ["success" => $result, "message" => $message];
         $data += $success_message;
-        return redirect("projects/edit/project-detail/$project->id");
+        return redirect("projects/edit/project-detail/$project->id")->with("success", $success_message["message"]);
     }
 
     public function upsertProjectFile(Request $request, $project_id){
@@ -228,10 +244,11 @@ class ProjectController extends Controller
         return redirect("projects/edit/project-files/$project_id")->with("success", $filename." deleted successfully ");
     }
 
-    public function upsertCostPlan(Request $request, $id = false){ 
+    public function upsertCostPlan(Request $request, $id = false){
         $request->validate(self::form_rule("cost-plan", $id));
         $result = true;
         $project_id = $request->project_id;
+        $section_for_adjudiction = $request->adjudication;
         $section_codes = $request->section_code;
         $section_names = $request->section_name;
         $section_markups = $request->section_markup;
@@ -255,6 +272,7 @@ class ProjectController extends Controller
                 $items = $request->item_code[$i];
                 $cost_plan_section = new CostPlanSection();
                 $cost_plan_section->project_id = $project_id;
+                $cost_plan_section->for_adjudication = $section_for_adjudiction[$i];
                 $cost_plan_section->section_code = $section_codes[$i];
                 $cost_plan_section->section_name = $section_names[$i];
                 $cost_plan_section->mark_up = $section_markups[$i];
@@ -295,8 +313,9 @@ class ProjectController extends Controller
             CostPlanSection::whereIn("id", $cost_plan_section_ids)->delete();
             CostPlanItem::whereIn("id", $cost_plan_item_ids)->delete();
         }
-
-        return redirect("projects/edit/cost-plan/$project_id");
+        $project_reference = "PRJ-" . str_pad($project_id, 5, '0', STR_PAD_LEFT);
+        $message = count($cost_plan_section_ids) ? $project_reference." Update Successfully" : "New Costplan created on ".$project_reference; 
+        return redirect("projects/edit/cost-plan/$project_id")->with("success", $message);
     }
     
     public function upsertPurchaseOrder(Request $request){
@@ -341,7 +360,8 @@ class ProjectController extends Controller
         }   
         
         $po_number = "PO-" . str_pad($purchase_order_id, 5, '0', STR_PAD_LEFT);
-        return redirect("projects/edit/purchase-orders/$project_id")->with("success", $po_number);
+        $message = count($exist_purchase_order_items) ? $po_number." Update Successfully" : "New Purchase Order ".$po_number; 
+        return redirect("projects/edit/purchase-orders/$project_id")->with("success", $message);
 
     }
     
