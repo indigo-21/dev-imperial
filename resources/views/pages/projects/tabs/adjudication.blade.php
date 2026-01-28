@@ -27,21 +27,26 @@
                             @if ($section->for_adjudication == "1")
                                 @php
                                     $number_of_items = floatval($section->items->count());
-                                    $section_markup = 0;
+                                    // $section_markup = 0;
                                     $section_rate = 0;
                                     $section_cost = 0;
                                     $section_total = 0;
 
                                     foreach ($section->items as $key => $item) {
-                                        $section_markup += floatval($item->mark_up);
+                                        // $section_markup += floatval($item->mark_up);
                                         $section_rate += floatval($item->rate);
                                         $section_cost += floatval($item->cost);
                                         $section_total += floatval($item->total);
                                     }
                                     
-                                    $section_markup_amount = $section_total - $section_cost;
+                                    // $section_markup_amount = $section_total - $section_cost;
+                                    // $average_markup = ($section_markup /$number_of_items );
+                                    // $section_profit = $section_cost * ($average_markup / 100);
+
+                                    $section_profit = $section_total - $section_cost;
+                                    $section_markup = ($section_profit / $section_cost) * 100;
                                     $average_markup = ($section_markup /$number_of_items );
-                                    $section_profit = $section_cost * ($average_markup / 100);
+                                    $gross_profit = ($section_profit / $section_total) * 100    ;
                                     
                                     
                                 @endphp  
@@ -49,9 +54,9 @@
                                     <td>{{$section->section_code}}</td>
                                     <td>{{$section->section_name}}</td>
                                     <td class="text-right">{{ number_format($section_cost, 2, '.', ',') }}</td>
-                                    <td class="text-right">{{ number_format($section_markup_amount, 2, '.', ',') }}</td>
+                                    <td class="text-right">{{ round($section_markup) }}%</td>
                                     <td class="text-right">{{ number_format($section_profit, 2, '.', ',') }}</td>
-                                    <td class="text-right"> {{ $average_markup }} % </td>
+                                    <td class="text-right"> {{ round($gross_profit) }}% </td>
                                     <td class="text-right">{{number_format($section_total, 2, '.', ',') }}</td>
                                     <td class="text-center">
                                         <button 
