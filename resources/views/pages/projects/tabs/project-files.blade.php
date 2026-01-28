@@ -13,6 +13,7 @@
                         <label for="description">File Description</label>
                         <input type="text" name="description" id="description" class="form-control"
                             placeholder="Enter a brief description">
+                        <span class="text-danger error">{{$errors->first('description')}}</span>
                     </div>
                 </div>
 
@@ -21,6 +22,8 @@
                     <div class="form-group">
                         <label for="document">Select Document</label>
                         <input type="file" name="file" id="document" class="form-control-file">
+                        <span class="text-danger error">{{$errors->first('file')}}</span>
+
                     </div>
                     {{-- Buttons --}}
                     <div class="form-group mt-3">
