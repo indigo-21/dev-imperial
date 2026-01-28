@@ -29,17 +29,39 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Business Name</th>
                                     <th>Business Address</th>
                                     <th>Industry</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Acme Property Holdings Ltd.</td>
-                                    <td>22 King Street, London, W1A 1AA</td>
-                                    <td>Real Estate</td>
-                                </tr>
+                                @foreach ($clients as $client)
+                                    <tr>
+                                        <td>{{ $client->id }}</td>
+                                        <td>{{ $client->business_name }}</td>
+                                        <td>{{ $client->business_address }}</td>
+                                        <td>{{ $client->industry }}</td>
+                                        <td>
+                                            <a href="{{ route('clients.edit', $client->id) }}"
+                                               class="btn btn-sm btn-primary">
+                                                <i class="fa fa-pen"></i> Edit
+                                            </a>
+
+                                            <form action="{{ route('clients.destroy', $client->id) }}"
+                                                  method="POST"
+                                                  class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Delete this client?')">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -51,5 +73,19 @@
     @section('scripts')
         @include('includes.datatables-scripts')
         <script src="{{ asset('assets/js/datatables.js') }}"></script>
+
+        @if (session('success'))
+            <script>
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: @json(session('success')),
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            </script>
+        @endif
     @endsection
 </x-app-layout>

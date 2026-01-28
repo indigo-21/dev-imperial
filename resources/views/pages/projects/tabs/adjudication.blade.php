@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-    <div class="card mt-3">
+    {{-- <div class="card mt-3">
         <div class="card-header bg-primary text-white">
             <strong>SUMMARY SHEET</strong>
         </div>
@@ -220,7 +220,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 
