@@ -51,7 +51,7 @@
                                     <td class="text-right">{{ number_format($section_cost, 2, '.', ',') }}</td>
                                     <td class="text-right">{{ number_format($section_markup_amount, 2, '.', ',') }}</td>
                                     <td class="text-right">{{ number_format($section_profit, 2, '.', ',') }}</td>
-                                    <td class="text-right"> {{ $average_markup }} </td>
+                                    <td class="text-right"> {{ $average_markup }} % </td>
                                     <td class="text-right">{{number_format($section_total, 2, '.', ',') }}</td>
                                     <td class="text-center">
                                         <button 
@@ -63,7 +63,7 @@
                                     <td class="text-right">5,800.00</td>
                                     <td class="text-center">                                       
                                          <button 
-                                            class="btn btn-sm btn-outline-primary view-purchase-order mr-3"  
+                                            class="btn btn-sm btn-outline-primary view-invoice-order mr-3"  
                                             title="View">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -221,17 +221,24 @@
 
 @section("modal")
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <h5 class="modal-title" id="purchaseOrderModalTitle">List of Purchase Order</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            ...
+            <table class="table table-bordered mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        
+                    </tr>
+                </thead>
+
+            </table>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -242,6 +249,6 @@
     </div>
 @endsection
 
-@section("scripts")
-
+@section("scripts") 
+        <script src="{{ asset('assets/custom/js/pages/projects/tabs/adjudication.js') }}"></script>
 @endsection
