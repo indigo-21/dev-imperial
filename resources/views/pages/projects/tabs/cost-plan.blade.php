@@ -156,7 +156,8 @@
             </div>
         @endforeach
 
-        <button type="submit" class="btn btn-success">{{ isset($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
+        <button type="submit" class="btn btn-success">{{ count($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
+        
     </form>
 @endsection
 
