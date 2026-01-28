@@ -104,6 +104,7 @@ class ProjectController extends Controller
                 ];
 
                 
+                
             }
         }else{
             $result += ["projects" => Project::all()];
@@ -205,16 +206,21 @@ class ProjectController extends Controller
     }
 
     public function upsertProjectFile(Request $request, $project_id){
-        
+            
+        // dd
         $request->validate([
-            "project_id" => ["required"],
-            "file" => ["required", "file", "max:3048"],
+            // "project_id" => ["required"],
+            // "file" => ["required", "file"],
             "description" => ["required"],
-        ]);
+            ]);
+        // dd($request->validate([
+        //     "project_id" => ["required"],
+        //     "file" => ["required", "file"],
+        //     "description" => ["required"],
+        //     ]));
 
         $project_file_id = $request->project_file_id;
         $project_file = !$project_file_id ? new ProjectFile() : ProjectFile::findOrFail($project_file_id);
-
         if($request->file("file")){
             $file = $request->file("file");
             $filename = time()."_".$file->getClientOriginalName();
