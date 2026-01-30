@@ -17,7 +17,7 @@
                     </h5>
 
                     <div class="d-flex align-items-center ml-auto" onclick="event.stopPropagation(200);">
-                        <div class="adjudication-section d-flex align-items-center">
+                        {{-- <div class="adjudication-section d-flex align-items-center">
                             <div class="mark-up-section d-flex align-items-center">
                                 <label class="mb-0 me-2"><strong>Adjudication&nbsp;</strong></label>
                                 @php
@@ -28,10 +28,10 @@
                                      <option {{$adjudication == 1 ? "selected": ""}} value="1">Yes</option>
                                 </select> 
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="mark-up-section mx-5 d-flex align-items-center">
                             <label class="mb-0 me-2"><strong>Mark Up % &nbsp;</strong></label>
-                            <input type="number" step="0.1" min="0" class="form-control section-markup-input"
+                            <input type="number" step="1" min="0" class="form-control section-markup-input"
                             style="width:90px;" data-section-id="test-id" name="section_markup[{{$section_index}}]" value="{{ $cost_plan_section?->mark_up ?? "20" }}">
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                             <div class="col-md-2">
                                                 <label>Qty</label>
                                                 <input type="number" name="quantity[{{$section_index}}][{{$item_index}}]"
-                                                    class="form-control calc-field item-input quantity-input" min="1"
+                                                    class="form-control calc-field item-input quantity-input" min="0" step="1"
                                                     value="{{$cost_plan_item->quantity}}">
                                             </div>
 
@@ -78,7 +78,7 @@
 
                                             <div class="col-md-2">
                                                 <label>Rate</label>
-                                                <input type="number" step="0.01" name="rate[{{$section_index}}][{{$item_index}}]"
+                                                <input type="number" step="0.01" name="rate[{{$section_index}}][{{$item_index}}]" step="1"
                                                     class="form-control calc-field item-input rate-input" value="{{$cost_plan_item->rate}}">
                                             </div>
 

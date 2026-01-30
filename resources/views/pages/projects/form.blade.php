@@ -52,11 +52,11 @@
                     </div>
                     <div class="card-body">
                         @isset($project)
-                            @if ($project->high_risk_building == 1)
+                            @if ($project->high_risk_building >= 1)
                                  <div class="row">
                                     <!-- Project Reference -->
                                     <div class="col-md-4 mb-2 p-2 bg-danger text-white rounded">
-                                        <strong>High Risk Building: Yes</strong>
+                                        <strong>High Risk Building: {{$project->high_risk_building == 1 ? "Yes" : "Unsure"}}</strong>
                                     </div>
                                 </div>
                             @endif

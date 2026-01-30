@@ -130,10 +130,13 @@ $(function () {
     function itemTableRow(data = {}){
         let {
             index, item_code, item_description, item_quantity, item_unit_price, total
-        } = data;
+        } = data;   
+
+        let section_code = item_code.split(".");
 
         return `<tr>
                     <td>
+                        <input type="hidden" name="section_code[${index}]" value="${section_code[0]}">
                         <input type="hidden" name="item_code[${index}]" value="${item_code}">
                         <input type="hidden" name="item_description[${index}]" value="${item_description}" >
                         <strong>${item_code}</strong>

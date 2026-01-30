@@ -146,13 +146,18 @@
 
                 {{-- High Risk Building --}}
                 <div class="col-md-6">
-                    <div class="form-group form-check mt-4">
+                    <div class="form-group">
                         @php
                             $old_is_high_risk_building = isset($project) ? $project->high_risk_building : old("high_risk_building");
                         @endphp
-                        <input type="checkbox" name="high_risk_building" id="high_risk_building"
-                            class="form-check-input" {{ $old_is_high_risk_building ? 'checked' : '' }}>
-                        <label class="form-check-label" for="high_risk_building">High Risk Building</label>
+                        <label for="high_risk_building">High Risk Building</label>
+                        <select name="high_risk_building" id="high_risk_building" class="form-control">
+                            <option value="">-- Select Type --</option>     
+                            <option value="0" {{ $old_is_high_risk_building == "0"? 'selected' : '' }} >-- No --</option>                        
+                            <option value="1" {{ $old_is_high_risk_building == "1"? 'selected' : '' }} >-- Yes --</option>  
+                            <option value="2" {{ $old_is_high_risk_building == "2"? 'selected' : '' }} >-- Unsure --</option>  
+                        </select>
+                        <span class="text-danger error">{{$errors->first('high_risk_building')}}</span>
                     </div>
                 </div>
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->float('client_budget', 2)->nullable();
             $table->string('lead_owner')->nullable();
             $table->string('project_status')->nullable();
-            $table->boolean('high_risk_building')->default(false);
+            $table->integer('high_risk_building');
             $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
             $table->float('size', 2)->nullable();
             $table->string('lead_source')->nullable();

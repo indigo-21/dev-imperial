@@ -3,14 +3,14 @@ $(function () {
         $(".markup-input").trigger("change");
     }, 2000);
 
-    $(document).on("keyup", ".section-markup-input", function () {
+    $(document).on("keyup, change", ".section-markup-input", function () {
         let this_val = parseFloat($(this).val() || 0);
         let parent = $(this).closest(".item-container").find(".section-card");
         parent.find(".markup-input").val(this_val);
         $(".markup-input").trigger("change");
     });
 
-    $(document).on("keyup", ".item-input", function () {
+    $(document).on("keyup, change", ".item-input", function () {
         compute_section_item($(this));
     });
 
