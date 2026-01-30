@@ -155,6 +155,8 @@ class ProjectController extends Controller
     public function index(){
         $data = self::default_data();
         return view('pages.projects.index', $data);
+
+        // return view('pages.projects.pdf-purchase-order', $data);
     }
 
     public function create(){
