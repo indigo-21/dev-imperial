@@ -4,7 +4,7 @@
         @csrf
         <input type="hidden" name="project_id" value="{{$project->id}}">
         @foreach ($cost_plan as $section_index => $cost_plan_section )
-            <div class="card card-primary card-outline item-container mb-4">
+            <div class="card card-primary card-outline item-container mb-4 section-container">
                 <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse"
                     data-target="#section-{{$cost_plan_section->id}}" aria-expanded="true"
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
@@ -132,25 +132,27 @@
                             </div>
                         @endforeach
 
-                        {{-- Subtotal row --}}
-                        <div class="form-group row mb-3 section-subtotal-row d-flex justify-content-end">
-                            <div class="col-auto text-end">
-                                <label><strong>Subtotal</strong></label>
-                            </div>
-                            <div class="col-auto">
-                                <input type="text" class="form-control subtotal-cost" readonly placeholder="Cost">
-                            </div>
-                            <div class="col-auto">
-                                <input type="text" class="form-control subtotal-total" readonly placeholder="Total">
-                            </div>
-                        </div>
-
                         {{-- Add new item --}}
                         <button type="button" class="btn btn-primary add-section-item mb-3"
                             data-section-id="test-id" data-section-code="section-code">
                             <i class="fas fa-plus"></i>&nbsp; Add Item
                         </button>
 
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    {{-- Subtotal row --}}
+                    <div class="form-group row mb-3 section-subtotal-row d-flex justify-content-end align-items-center">
+                        <div class="col-auto text-end">
+                            <label><strong>Subtotal</strong></label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" class="form-control subtotal-cost" readonly placeholder="Cost">
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" class="form-control subtotal-total" readonly placeholder="Total">
+                        </div>
                     </div>
                 </div>
             </div>

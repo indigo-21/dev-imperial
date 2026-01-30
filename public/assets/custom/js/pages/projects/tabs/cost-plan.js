@@ -152,7 +152,7 @@ $(function () {
 
 
     function compute_section_item(element) {
-        let parent_card = element.closest(".section-card");
+        let parent_card = element.closest(".section-container");
         let section_items = parent_card.find(".section-item-row");
         let cost_output = parent_card.find(".cost-output");
         let total_output = parent_card.find(".total-output");
