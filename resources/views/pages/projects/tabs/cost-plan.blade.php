@@ -10,29 +10,17 @@
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
 
                     <h5 class="card-title mb-0">
-                        <input type="hidden" name="section_code[{{$section_index}}]" value="{{$cost_plan_section->section_code}}">
-                        <input type="hidden" name="section_name[{{$section_index}}]" value="{{$cost_plan_section->section_name}}">
+                        <input type="hidden" name="section_code" value="{{$cost_plan_section->section_code}}">
+                        <input type="hidden" name="section_name" value="{{$cost_plan_section->section_name}}">
                         {{$cost_plan_section->section_code}} -
                         {{$cost_plan_section->section_name}}
                     </h5>
 
                     <div class="d-flex align-items-center ml-auto" onclick="event.stopPropagation(200);">
-                        {{-- <div class="adjudication-section d-flex align-items-center">
-                            <div class="mark-up-section d-flex align-items-center">
-                                <label class="mb-0 me-2"><strong>Adjudication&nbsp;</strong></label>
-                                @php
-                                    $adjudication = $cost_plan_section->for_adjudication;
-                                @endphp
-                                 <select name="adjudication[{{$section_index}}]" class="form-control select2bs4" id="adjudication" style="width:100px;">
-                                     <option {{$adjudication == 0 ? "selected": ""}} value="0">No</option>
-                                     <option {{$adjudication == 1 ? "selected": ""}} value="1">Yes</option>
-                                </select> 
-                            </div>
-                        </div> --}}
                         <div class="mark-up-section mx-5 d-flex align-items-center">
                             <label class="mb-0 me-2"><strong>Mark Up % &nbsp;</strong></label>
                             <input type="number" step="1" min="0" class="form-control section-markup-input"
-                            style="width:90px;" data-section-id="test-id" name="section_markup[{{$section_index}}]" value="{{ $cost_plan_section?->mark_up ?? "20" }}">
+                            style="width:90px;" data-section-id="test-id" name="section_markup" value="{{ $cost_plan_section?->mark_up ?? "20" }}">
                         </div>
                     </div>
                 </div>
@@ -42,21 +30,17 @@
                         @foreach ($cost_plan_section->items as $item_index => $cost_plan_item )
                             <div class="section-items">
                                 <div class="form-group row mb-3 section-item-row">
-
                                     <div class="col-md-6 d-flex">
                                         <div class="short-input">
                                             <label>Code</label>
-                                            <input type="text" name="item_code[{{$section_index}}][{{$item_index}}]"
+                                            <input type="text" name="item_code"
                                                 class="form-control code-input" readonly value="{{ $cost_plan_item->item_code }}">
                                         </div>
 
                                         <div class="col form-group">
-                                            @php
-                                                $description_name = "description[$section_index][$item_index]";
-                                            @endphp
                                             <label>Item Description</label>
-                                            <textarea required name="{{$description_name}}" class="form-control item-description" rows="10">{{$cost_plan_item->description}}</textarea>
-                                            <span class="text-danger item-description-error error">{{ $errors->first($description_name) }}</span>
+                                            <textarea required name="description" class="form-control item-description" rows="10">{{$cost_plan_item->description}}</textarea>
+                                            <span class="text-danger item-description-error error"></span>
                                         </div>
 
                                     </div>
@@ -65,40 +49,40 @@
                                         <div class="col-12 row">
                                             <div class="col-md-2">
                                                 <label>Qty</label>
-                                                <input type="number" name="quantity[{{$section_index}}][{{$item_index}}]"
+                                                <input type="number" name="quantity"
                                                     class="form-control calc-field item-input quantity-input" min="0" step="1"
                                                     value="{{$cost_plan_item->quantity}}">
                                             </div>
 
                                             <div class="col-md-2">
                                                 <label>Unit</label>
-                                                <input type="text" name="unit[{{$section_index}}][{{$item_index}}]"
+                                                <input type="text" name="unit"
                                                     class="form-control unit-input" value="{{$cost_plan_item->unit}}">
                                             </div>
 
                                             <div class="col-md-2">
                                                 <label>Rate</label>
-                                                <input type="number" step="0.01" name="rate[{{$section_index}}][{{$item_index}}]" step="1"
+                                                <input type="number" step="0.01" name="rate" step="1"
                                                     class="form-control calc-field item-input rate-input" value="{{$cost_plan_item->rate}}">
                                             </div>
 
                                             <div class="col-md-3">
                                                 <label>Cost</label>
-                                                <input type="text" name="cost[{{$section_index}}][{{$item_index}}]" value="{{ $cost_plan_item?->cost ?? "100"}}"
+                                                <input type="text" name="cost" value="{{ $cost_plan_item?->cost ?? "100"}}"
                                                     class="form-control cost-output" readonly>
                                             </div>
 
                                             <div class="col-md-3">
                                                 <label>Total</label>
-                                                <input type="text" name="total[{{$section_index}}][{{$item_index}}]"
+                                                <input type="text" name="total"
                                                     class="form-control total-output" readonly value="{{$cost_plan_item?->total ?? "0.00"}}">
                                             </div>
                                         </div>
                                         <div class="col-12 row">
                                             <div class="col-md-4 mt-3">
                                                 <label>Mark Up %</label>
-                                                <input type="number" step="0.1" min="0"
-                                                    name="mark_up[{{$section_index}}][{{$item_index}}]"
+                                                <input type="number" step="0.5" min="0"
+                                                    name="mark_up"
                                                     class="form-control calc-field item-input markup-input" value="{{$cost_plan_item?->mark_up ?? "20"}}">
                                             </div>
                                             <div class="col-md-8 mt-3">
@@ -106,7 +90,7 @@
                                                 @php
                                                     $old_supplier_id = $cost_plan_item?->supplier_id ?? null;
                                                 @endphp
-                                                <select name="supplier_id[{{$section_index}}][{{$item_index}}]"
+                                                <select name="supplier_id"
                                                     class="form-control select2bs4">
                                                     <option value="">Select
                                                         Supplier</option>

@@ -23,12 +23,60 @@ $(function () {
         });
         
         if(!error_found){
-            form.submit();
+            let project_id = $("[name=project_id]").val();
+            let data = { project_id, sections: [] };
+            $(".section-container").each((index, section)=>{
+                let section_id = $(section).attr("data-section");
+                let section_code = $(section).find("[name=section_code]").val();
+                let section_name = $(section).find("[name=section_name]").val();
+                let section_markup = $(section).find("[name=section_markup]").val();
+                let sections = {project_id, section_code, section_name, section_markup, items:[]};
+                let section_items_container = $(section).find(".section-items");
+                section_items_container.each((index, item_row)=>{
+                    let item_code = $(item_row).find("[name=item_code]").val(); 
+                    let description = $(item_row).find("[name=description]").val();
+                    let quantity = $(item_row).find("[name=quantity]").val(); 
+                    let unit = $(item_row).find("[name=unit]").val(); 
+                    let rate = $(item_row).find("[name=rate]").val(); 
+                    let cost = $(item_row).find("[name=cost]").val(); 
+                    let total = $(item_row).find("[name=total]").val(); 
+                    let mark_up = $(item_row).find("[name=mark_up]").val(); 
+                    let supplier_id = $(item_row).find("[name=supplier_id]").val();
+                    sections.items.push({item_code, description, quantity, unit, rate, cost, total, mark_up, supplier_id});
+                });
+                data.sections.push(sections);
+            });
+           $.ajax({
+                url: form.attr("action"),
+                method: "POST",
+                data,
+                dataType: 'json', 
+                beforeSend: function(){
+                    $(".preloader").show();
+                },
+                success: function(response){
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: response["message"],
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                },
+                complete: function(){
+                    // $(".preloader").hide();
+                    // submit_button.attr("disabled", false);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }
+            });
         }else{
             form.find(".is-invalid").first().focus();
             submit_button.attr("disabled", false);
         }
-
     });
 
     $(document).on("keyup, change", ".section-markup-input", function () {
@@ -57,7 +105,7 @@ $(function () {
             section_items.each((index, section_item) => {
                 supplier_options = "";
                 $(this).attr("name", `[${this_section_length}][${index}]`);
-                supplier_options = $(section_item).find(`[name="supplier_id[${this_section_length}][${index}]"] option`);
+                supplier_options = $(section_item).find(`[name="supplier_id"] option`);
                 supplier_options.each((option_index, option) => {
                     supplier_options += `<option value="${option.value}">${option.label}</option>`;
                 });
@@ -73,15 +121,15 @@ $(function () {
                             <div class="col-md-6 d-flex">
                                 <div class="short-input">
                                     <label>Code</label>
-                                    <input type="text" name="item_code[${this_section_length}][${last_section_item}]" class="form-control code-input"
+                                    <input type="text" name="item_code" class="form-control code-input"
                                         readonly value="${item_code}">
                                 </div>
 
                                 <div class="col">
                                     <label>Item Description</label>
-                                    <textarea required name="description[${this_section_length}][${last_section_item}]" class="form-control item-description"
+                                    <textarea required name="description" class="form-control item-description"
                                         rows="10"></textarea>
-                                    <input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >
+                                    <input type="hidden" id="description" name="description" >
                                     <span class="text-danger item-description-error error"></span>
                                 </div>
 
@@ -91,44 +139,44 @@ $(function () {
                                 <div class="col-12 row">
                                     <div class="col-md-2">
                                         <label>Qty</label>
-                                        <input type="number" name="quantity[${this_section_length}][${last_section_item}]"
+                                        <input type="number" name="quantity"
                                             class="form-control calc-field item-input quantity-input" min="1"
                                             value="1">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label>Unit</label>
-                                        <input type="text" name="unit[${this_section_length}][${last_section_item}]" class="form-control unit-input"
+                                        <input type="text" name="unit" class="form-control unit-input"
                                             value="item">
                                     </div>
 
                                     <div class="col-md-2">
                                         <label>Rate</label>
-                                        <input type="number" step="0.01" name="rate[${this_section_length}][${last_section_item}]"
+                                        <input type="number" step="0.01" name="rate"
                                             class="form-control calc-field item-input rate-input" value="0.00">
                                     </div>
 
                                     <div class="col-md-3">
                                         <label>Cost</label>
-                                        <input type="text" name="cost[${this_section_length}][${last_section_item}]" value="0.00"
+                                        <input type="text" name="cost" value="0.00"
                                             class="form-control cost-output" readonly>
                                     </div>
 
                                     <div class="col-md-3">
                                         <label>Total</label>
-                                        <input type="text" name="total[${this_section_length}][${last_section_item}]"
+                                        <input type="text" name="total"
                                             class="form-control total-output" readonly value="0.00">
                                     </div>
                                 </div>
                                 <div class="col-12 row">
                                     <div class="col-md-4 mt-3">
                                         <label>Mark Up %</label>
-                                        <input type="number" step="0.1" min="0" name="mark_up[${this_section_length}][${last_section_item}]"
+                                        <input type="number" step="0.1" min="0" name="mark_up"
                                             class="form-control calc-field item-input markup-input" value="20">
                                     </div>
                                     <div class="col-md-8 mt-3">
                                         <label>Supplier</label>
-                                        <select name="supplier_id[${this_section_length}][${last_section_item}]" class="form-control select2bs4">
+                                        <select name="supplier_id" class="form-control select2bs4">
                                             ${supplier_options}
                                         </select>
                                     </div>
@@ -174,7 +222,7 @@ $(function () {
             let item_code = `${section_id}.${item_index.toString().padStart(2, '0')}`;
             let item_attr = `[${section_id}][${index}]`;
             $(element).val(item_code);
-            $(element).attr("name", `item_code${item_attr}`);
+            $(element).attr("name", `item_code`);
         });
 
     });

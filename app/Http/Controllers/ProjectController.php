@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Casts\Json;
 
 class ProjectController extends Controller
 {
@@ -119,8 +120,6 @@ class ProjectController extends Controller
                 return [
                     "section_markup.*" => ["required"],
                     "item_code.*" => ["required"],
-                    'description'   => ['required', 'array', 'min:1'],
-                    "description.*" => ["required"],
                     "quantity.*" => ["required"],
                     "unit.*" => ["required"],
                     "rate.*" => ["required"],
@@ -254,13 +253,9 @@ class ProjectController extends Controller
     }
 
     public function upsertCostPlan(Request $request, $id = false){
-        $request->validate(self::form_rule("cost-plan", $id));
         $result = true;
         $project_id = $request->project_id;
-        $section_for_adjudiction = $request->adjudication;
-        $section_codes = $request->section_code;
-        $section_names = $request->section_name;
-        $section_markups = $request->section_markup;
+        $sections = $request->sections;
         $cost_plan_section_ids = [];
         $cost_plan_item_ids = [];
 
@@ -275,46 +270,75 @@ class ProjectController extends Controller
                 array_push($cost_plan_item_ids, $cost_plan_item->id);
             }
         }
+        
+        foreach ($sections as $key => $section) {
+            $cost_plan_section = new CostPlanSection();
+            $cost_plan_section->project_id = $project_id;
+            $cost_plan_section->section_code = $section["section_code"];
+            $cost_plan_section->section_name = $section["section_name"];
+            $cost_plan_section->mark_up = $section["section_markup"];
+            $result = $cost_plan_section->save();
+            if($result && isset($section["items"])){
+              foreach ($section["items"] as $key => $item) {
+                    $cost_plan_item = new CostPlanItem();
+                    $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
+                    $cost_plan_item->item_code  = $item["item_code"];
+                    $cost_plan_item->description  = $item["description"];
+                    $cost_plan_item->quantity  = $item["quantity"];
+                    $cost_plan_item->mark_up  = $item["mark_up"];
+                    $cost_plan_item->unit  = $item["unit"];
+                    $cost_plan_item->rate  = $item["rate"] != "" ? $item["rate"] : null ;
+                    $cost_plan_item->cost  = $item["cost"];
+                    $cost_plan_item->total  = $item["total"];
+                    $cost_plan_item->supplier_id  = $item["supplier_id"];
+                    $result = $cost_plan_item->save() ? true : false;
+              }
+            }
 
-        for ($i=0; $i < count($section_codes); $i++) { 
-                if($result){
-                    
-                    $cost_plan_section = new CostPlanSection();
-                    $cost_plan_section->project_id = $project_id;
-                    $cost_plan_section->section_code = $section_codes[$i];
-                    $cost_plan_section->section_name = $section_names[$i];
-                    $cost_plan_section->mark_up = $section_markups[$i];
-                    $result = $cost_plan_section->save();
-                    
-                    if($result && isset($request->item_code[$i]) ){
-                        $items = $request->item_code[$i];
-                        for ($j=0; $j < count($items) ; $j++) {
-                            $cost_plan_item = new CostPlanItem();
-                            $item_code = $request?->item_code[$i][$j] ?? null;
-                            $description = $request?->description[$i][$j] ?? null;
-                            $quantity = $request?->quantity[$i][$j] ?? null;
-                            $unit = $request?->unit[$i][$j] ?? null;
-                            $rate = $request?->rate[$i][$j] ?? null;
-                            $cost = $request?->cost[$i][$j] ?? null;
-                            $total = $request?->total[$i][$j] ?? null;
-                            $mark_up = $request?->mark_up[$i][$j] ?? null;
-                            $supplier_id = $request?->supplier_id[$i][$j] ?? null;
 
-                            $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
-                            $cost_plan_item->item_code  = $item_code;
-                            $cost_plan_item->description  = $description;
-                            $cost_plan_item->quantity  = $quantity;
-                            $cost_plan_item->mark_up  = $mark_up;
-                            $cost_plan_item->unit  = $unit;
-                            $cost_plan_item->rate  = $rate != "" ? $rate : null ;
-                            $cost_plan_item->cost  = $cost;
-                            $cost_plan_item->total  = $total;
-                            $cost_plan_item->supplier_id  = $supplier_id;
-                            $result = $description && $cost_plan_item->save();
-                        }
-                    }
-                }
+
         }
+
+
+        // for ($i=0; $i < count($section_codes); $i++) { 
+        //         if($result){
+                    
+        //             $cost_plan_section = new CostPlanSection();
+        //             $cost_plan_section->project_id = $project_id;
+        //             $cost_plan_section->section_code = $section_codes[$i];
+        //             $cost_plan_section->section_name = $section_names[$i];
+        //             $cost_plan_section->mark_up = $section_markups[$i];
+        //             $result = $cost_plan_section->save();
+                    
+        //             if($result && isset($request->item_code[$i]) ){
+        //                 $items = $request->item_code[$i];
+        //                 for ($j=0; $j < count($items) ; $j++) {
+        //                     $cost_plan_item = new CostPlanItem();
+        //                     $item_code = $request?->item_code[$i][$j] ?? null;
+        //                     $description = $request?->description[$i][$j] ?? null;
+        //                     $quantity = $request?->quantity[$i][$j] ?? null;
+        //                     $unit = $request?->unit[$i][$j] ?? null;
+        //                     $rate = $request?->rate[$i][$j] ?? null;
+        //                     $cost = $request?->cost[$i][$j] ?? null;
+        //                     $total = $request?->total[$i][$j] ?? null;
+        //                     $mark_up = $request?->mark_up[$i][$j] ?? null;
+        //                     $supplier_id = $request?->supplier_id[$i][$j] ?? null;
+
+        //                     $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
+        //                     $cost_plan_item->item_code  = $item_code;
+        //                     $cost_plan_item->description  = $description;
+        //                     $cost_plan_item->quantity  = $quantity;
+        //                     $cost_plan_item->mark_up  = $mark_up;
+        //                     $cost_plan_item->unit  = $unit;
+        //                     $cost_plan_item->rate  = $rate != "" ? $rate : null ;
+        //                     $cost_plan_item->cost  = $cost;
+        //                     $cost_plan_item->total  = $total;
+        //                     $cost_plan_item->supplier_id  = $supplier_id;
+        //                     $result = $description && $cost_plan_item->save();
+        //                 }
+        //             }
+        //         }
+        // }
 
         if($result){
             CostPlanSection::whereIn("id", $cost_plan_section_ids)->delete();
@@ -322,7 +346,7 @@ class ProjectController extends Controller
         }
         $project_reference = "PRJ-" . str_pad($project_id, 5, '0', STR_PAD_LEFT);
         $message = count($cost_plan_section_ids) ? $project_reference." Update Successfully" : "New Costplan created on ".$project_reference; 
-        return redirect("projects/edit/cost-plan/$project_id")->with("success", $message);
+        return Json::encode(["success" => $result, "message" => $message]);
     }
     
     public function upsertPurchaseOrder(Request $request){
