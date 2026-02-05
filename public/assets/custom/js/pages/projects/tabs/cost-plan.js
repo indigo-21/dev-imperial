@@ -3,6 +3,34 @@ $(function () {
         $(".markup-input").trigger("change");
     }, 2000);
 
+    $(document).on("click","#cost-plan-submit-button", function(e){
+        $(".item-description").removeClass("is-invalid");
+        e.preventDefault();
+        let error_found = false;
+        let form = $("#cost_plan_form");
+        let submit_button = $(this);
+        submit_button.attr("disabled", true);
+        form.find("textarea.item-description").each((index, element)=>{
+            let is_empty = $(element).val().trim() === "";
+            let error_span = $(element).closest(".form-group").find(".item-description-error");
+            if(is_empty){
+                $(element).addClass("is-invalid");
+                error_span.text("The item description field is required.");
+                error_found = true;
+            }else{
+                error_span.text("");
+            }
+        });
+        
+        if(!error_found){
+            form.submit();
+        }else{
+            form.find(".is-invalid").first().focus();
+            submit_button.attr("disabled", false);
+        }
+
+    });
+
     $(document).on("keyup, change", ".section-markup-input", function () {
         let this_val = parseFloat($(this).val() || 0);
         let parent = $(this).closest(".item-container").find(".section-card");
@@ -54,7 +82,7 @@ $(function () {
                                     <textarea required name="description[${this_section_length}][${last_section_item}]" class="form-control item-description"
                                         rows="10"></textarea>
                                     <input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >
-                                    <span class="text-danger error"></span>
+                                    <span class="text-danger item-description-error error"></span>
                                 </div>
 
                             </div>
@@ -142,7 +170,8 @@ $(function () {
         section_item.remove();
 
         parent_section.find(".code-input").each((index, element)=>{
-            let item_code = `${section_id}.${index.toString().padStart(2, '0')}`;
+            let item_index = parseFloat(index) + 1;
+            let item_code = `${section_id}.${item_index.toString().padStart(2, '0')}`;
             let item_attr = `[${section_id}][${index}]`;
             $(element).val(item_code);
             $(element).attr("name", `item_code${item_attr}`);

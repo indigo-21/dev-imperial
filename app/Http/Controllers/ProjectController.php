@@ -352,6 +352,7 @@ class ProjectController extends Controller
             $items = [
                     "purchase_order_id" => $purchase_order_id,
                     "section_code" => $request->section_code[$i],
+                    "cost_plan_section_id" => $request->cost_plan_section_id[$i],
                     "item_code" => $request->item_code[$i],
                     "description" => $request->item_description[$i],
                     "quantity" => $request->quantity[$i],
@@ -371,6 +372,11 @@ class ProjectController extends Controller
         $message = count($exist_purchase_order_items) ? $po_number." Update Successfully" : "New Purchase Order ".$po_number; 
         return redirect("projects/edit/purchase-orders/$project_id")->with("success", $message);
 
+    }
+
+    public function viewItemFromAdjudication($id){
+        $cost_plan_item = CostPlanItem::findOrFail($id);
+        return response()->json($cost_plan_item);
     }
     
 

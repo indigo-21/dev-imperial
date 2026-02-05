@@ -50,13 +50,13 @@
                                                 class="form-control code-input" readonly value="{{ $cost_plan_item->item_code }}">
                                         </div>
 
-                                        <div class="col">
+                                        <div class="col form-group">
                                             @php
                                                 $description_name = "description[$section_index][$item_index]";
                                             @endphp
                                             <label>Item Description</label>
                                             <textarea required name="{{$description_name}}" class="form-control item-description" rows="10">{{$cost_plan_item->description}}</textarea>
-                                            <span class="text-danger error">{{ $errors->first($description_name) }}</span>
+                                            <span class="text-danger item-description-error error">{{ $errors->first($description_name) }}</span>
                                         </div>
 
                                     </div>
@@ -158,7 +158,7 @@
             </div>
         @endforeach
 
-        <button type="submit" class="btn btn-success">{{ count($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
+        <button type="submit" class="btn btn-success cost-plan-submit" id="cost-plan-submit-button">{{ count($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
         
     </form>
 @endsection

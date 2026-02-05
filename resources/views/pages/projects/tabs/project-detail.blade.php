@@ -16,21 +16,7 @@
                         <span class="text-danger error">{{$errors->first('project_description')}}</span>
                     </div>
                 </div>
-
-                {{-- Project Reference  --}}
-                {{-- $number = 1;
-                $result = str_pad($number, 5, '0', STR_PAD_LEFT); --}}
-                {{-- <div class="col-md-6">
-                    <div class="form-group">
-                        @php
-                            $old_project_reference = isset($project) ? $project->project_reference : old("project_reference");
-                        @endphp
-                        <label for="project_reference">Project Reference</label>
-                        <input type="text" name="project_reference" id="project_reference" class="form-control"
-                            value="{{$old_project_reference}}" readonly>
-                    </div>
-                </div> --}}
-
+                
                 {{-- Client --}}
                 <div class="col-md-6">
                     <div class="form-group">

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('purchase_order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('purchase_order_id')->constrained('purchase_orders')->cascadeOnDelete();
+            $table->foreignId('cost_plan_section_id')->constrained('cost_plan_sections')->cascadeOnDelete();
             $table->string('section_code');
             $table->string('item_code');
             $table->longText('description');

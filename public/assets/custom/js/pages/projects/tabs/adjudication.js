@@ -1,12 +1,9 @@
 $(function(){
     
-    $(document).on("click",".view-purchase-order", function(){
+    $(document).on("click",".view-items", function(){
         $("#purchaseOrderModal").modal("show");
     });
+    
 
 
-
-    function getPurchaseOrders(){
-
-    }
 });

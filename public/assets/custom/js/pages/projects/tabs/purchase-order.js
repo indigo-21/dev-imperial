@@ -55,7 +55,8 @@ $(function () {
                 response.map((item, index) => {
                     html += `<label class="d-flex align-items-center mb-2 selectable-label">
                                     <input type="checkbox"
-                                        class="cost-plan-item" 
+                                        class="cost-plan-item"
+                                        data-section-id="${item.cost_plan_section_id}" 
                                         data-item-code="${item.item_code}" 
                                         data-item-description="${item.description}" 
                                         data-quantity="${item.quantity}" 
@@ -96,6 +97,7 @@ $(function () {
                     response.map((item, index)=>{
                         let data = {
                             index,
+                            cost_plan_section_id:item.cost_plan_section_id,
                             item_code:item.item_code,
                             item_description:item.description,
                             item_quantity: item.quantity,
@@ -112,12 +114,13 @@ $(function () {
             })
         }else{
             $(".cost-plan-item:checked").each((index, item) => {
+                let cost_plan_section_id = $(item).attr("data-section-id");
                 let item_code = $(item).attr("data-item-code");
                 let item_description = $(item).attr("data-item-description");
                 let item_quantity = $(item).attr("data-quantity");
                 let item_unit_price = parseFloat($(item).attr("data-unit-price") ?? 0);
                 let total = parseFloat(item_quantity ?? 0) * parseFloat(item_unit_price ?? 0);
-                let data = {index,item_code,item_description,item_quantity,item_unit_price, total};
+                let data = {index, cost_plan_section_id, item_code,item_description,item_quantity,item_unit_price, total};
                 html += itemTableRow(data);
             });
         }
@@ -129,7 +132,7 @@ $(function () {
 
     function itemTableRow(data = {}){
         let {
-            index, item_code, item_description, item_quantity, item_unit_price, total
+            index, cost_plan_section_id, item_code, item_description, item_quantity, item_unit_price, total
         } = data;   
 
         let section_code = item_code.split(".");
@@ -137,6 +140,7 @@ $(function () {
         return `<tr>
                     <td>
                         <input type="hidden" name="section_code[${index}]" value="${section_code[0]}">
+                        <input type="hidden" name="cost_plan_section_id[${index}]" value="${cost_plan_section_id}">
                         <input type="hidden" name="item_code[${index}]" value="${item_code}">
                         <input type="hidden" name="item_description[${index}]" value="${item_description}" >
                         <strong>${item_code}</strong>
