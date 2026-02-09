@@ -64,10 +64,6 @@ $(function () {
                         timer: 3000,
                         timerProgressBar: true,
                     });
-                },
-                complete: function(){
-                    // $(".preloader").hide();
-                    // submit_button.attr("disabled", false);
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
@@ -205,9 +201,10 @@ $(function () {
 
     $(document).on("keyup",".item-description", function(){
         let this_val = $(this).val();
-        let this_name = $(this).attr("name")
+        let this_name = $(this).attr("name");
         $(this).html(this_val);
-        $(`[name="${this_name}"]`).val(this_val);
+        // $(`[name="${this_name}"]`).val(this_val);
+        $(this).val(this_val);
     });
 
     $(document).on("click", ".remove-row",  function(){
