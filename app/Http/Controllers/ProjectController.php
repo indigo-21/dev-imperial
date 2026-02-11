@@ -278,7 +278,8 @@ class ProjectController extends Controller
             $cost_plan_section->section_name = $section["section_name"];
             $cost_plan_section->mark_up = $section["section_markup"];
             $result = $cost_plan_section->save();
-            if($result && isset($section["items"])){
+            // if($result && isset($section["items"])){
+            if($result && count($section["items"]) > 0){
               foreach ($section["items"] as $key => $item) {
                     $cost_plan_item = new CostPlanItem();
                     $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
@@ -298,47 +299,6 @@ class ProjectController extends Controller
 
 
         }
-
-
-        // for ($i=0; $i < count($section_codes); $i++) { 
-        //         if($result){
-                    
-        //             $cost_plan_section = new CostPlanSection();
-        //             $cost_plan_section->project_id = $project_id;
-        //             $cost_plan_section->section_code = $section_codes[$i];
-        //             $cost_plan_section->section_name = $section_names[$i];
-        //             $cost_plan_section->mark_up = $section_markups[$i];
-        //             $result = $cost_plan_section->save();
-                    
-        //             if($result && isset($request->item_code[$i]) ){
-        //                 $items = $request->item_code[$i];
-        //                 for ($j=0; $j < count($items) ; $j++) {
-        //                     $cost_plan_item = new CostPlanItem();
-        //                     $item_code = $request?->item_code[$i][$j] ?? null;
-        //                     $description = $request?->description[$i][$j] ?? null;
-        //                     $quantity = $request?->quantity[$i][$j] ?? null;
-        //                     $unit = $request?->unit[$i][$j] ?? null;
-        //                     $rate = $request?->rate[$i][$j] ?? null;
-        //                     $cost = $request?->cost[$i][$j] ?? null;
-        //                     $total = $request?->total[$i][$j] ?? null;
-        //                     $mark_up = $request?->mark_up[$i][$j] ?? null;
-        //                     $supplier_id = $request?->supplier_id[$i][$j] ?? null;
-
-        //                     $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
-        //                     $cost_plan_item->item_code  = $item_code;
-        //                     $cost_plan_item->description  = $description;
-        //                     $cost_plan_item->quantity  = $quantity;
-        //                     $cost_plan_item->mark_up  = $mark_up;
-        //                     $cost_plan_item->unit  = $unit;
-        //                     $cost_plan_item->rate  = $rate != "" ? $rate : null ;
-        //                     $cost_plan_item->cost  = $cost;
-        //                     $cost_plan_item->total  = $total;
-        //                     $cost_plan_item->supplier_id  = $supplier_id;
-        //                     $result = $description && $cost_plan_item->save();
-        //                 }
-        //             }
-        //         }
-        // }
 
         if($result){
             CostPlanSection::whereIn("id", $cost_plan_section_ids)->delete();

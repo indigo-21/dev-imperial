@@ -49,7 +49,8 @@ $(function () {
            $.ajax({
                 url: form.attr("action"),
                 method: "POST",
-                data,
+                data: JSON.stringify(data),
+                contentType: "application/json",
                 dataType: 'json', 
                 beforeSend: function(){
                     $(".preloader").show();
