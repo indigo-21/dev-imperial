@@ -195,6 +195,14 @@ $(function () {
         }else{
             parent.prepend(html);
         }
+        
+        let $newRow = parent.find('.section-items').last();
+        $newRow.find('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Select Supplier",
+            allowClear: true,
+            width: '100%'
+        });
         // ISSUE IN TEXTAREA
         // $("#cost_plan_form").append(`<input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >`);
 

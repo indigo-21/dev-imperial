@@ -149,4 +149,14 @@
 
 @section('scripts')
     <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2bs4').select2({
+                theme: 'bootstrap4',
+                placeholder: "Select Supplier",
+                allowClear: true
+            });
+        });
+    </script>
+
 @endsection
