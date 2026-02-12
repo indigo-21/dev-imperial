@@ -98,14 +98,13 @@ $(function () {
         let last_section_item = 0;
         let supplier_options = "";
 
+        supplier_options = $(`[name="supplier_id"]`).first().find("option");
+        supplier_options.each((option_index, option) => {
+            supplier_options += `<option value="${option.value}">${option.label}</option>`;
+        });
         if(section_items.length > 0 ){
             section_items.each((index, section_item) => {
-                supplier_options = "";
                 $(this).attr("name", `[${this_section_length}][${index}]`);
-                supplier_options = $(section_item).find(`[name="supplier_id"] option`);
-                supplier_options.each((option_index, option) => {
-                    supplier_options += `<option value="${option.value}">${option.label}</option>`;
-                });
                 last_section_item = index + 1;
             }); 
         }
@@ -195,14 +194,6 @@ $(function () {
         }else{
             parent.prepend(html);
         }
-        
-        let $newRow = parent.find('.section-items').last();
-        $newRow.find('.select2bs4').select2({
-            theme: 'bootstrap4',
-            placeholder: "Select Supplier",
-            allowClear: true,
-            width: '100%'
-        });
         // ISSUE IN TEXTAREA
         // $("#cost_plan_form").append(`<input type="hidden" id="description[${this_section_length}][${last_section_item}]" name="description[${this_section_length}][${last_section_item}]" >`);
 
@@ -231,6 +222,20 @@ $(function () {
             $(element).attr("name", `item_code`);
         });
 
+        parent_section.find(".markup-input").trigger("change");
+
+    });
+
+    $(document).on("click", ".remove-all-items", function(){
+        $(this).closest(".card-footer").find("input").val("0.00");
+        $(this).closest(".card-footer").find("input").val("0.00");
+        let $button = $(this);
+        let section_containter = $button.closest(".section-container");
+        let sectionId = section_containter.find(".card-header").data("target");
+        let $itemsSection = $(sectionId).find(".section-items");
+        $itemsSection.hide(500, function () {
+            $(this).remove();
+        });
     });
 
 
@@ -243,7 +248,6 @@ $(function () {
         let subtotal_total = 0;
 
         section_items.each((index, item_row) => {
-            console.log(item_row);
             let this_element = $(item_row);
             let item_quantity = parseFloat(this_element.find(".quantity-input").val() || 0);
             let item_rate = parseFloat(this_element.find(".rate-input").val() || 0)
@@ -265,16 +269,6 @@ $(function () {
 
         parent_card.find(".subtotal-cost").val(subtotal_cost.toFixed(2));
         parent_card.find(".subtotal-total").val(subtotal_total.toFixed(2));
-
-
-
-
-    }
-
-
-
-    function has_value(element) {
-
     }
 
 

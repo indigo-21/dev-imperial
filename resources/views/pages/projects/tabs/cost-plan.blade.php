@@ -9,14 +9,14 @@
                     data-target="#section-{{$cost_plan_section->id}}" aria-expanded="true"
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
 
-                    <h5 class="card-title mb-0">
+                    <h5 class="card-title mb-0 w-50">
                         <input type="hidden" name="section_code" value="{{$cost_plan_section->section_code}}">
                         <input type="hidden" name="section_name" value="{{$cost_plan_section->section_name}}">
                         {{$cost_plan_section->section_code}} -
                         {{$cost_plan_section->section_name}}
                     </h5>
 
-                    <div class="d-flex align-items-center ml-auto" onclick="event.stopPropagation(200);">
+                    <div class="d-flex justify-content-end align-items-center ml-auto w-50" onclick="event.stopPropagation(200);">
                         <div class="mark-up-section mx-5 d-flex align-items-center">
                             <label class="mb-0 me-2"><strong>Mark Up % &nbsp;</strong></label>
                             <input type="number" step="1" min="0" class="form-control section-markup-input"
@@ -125,9 +125,14 @@
                     </div>
                 </div>
 
-                <div class="card-footer">
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="left w-50 text-start">
+                        <button type="button" class="btn btn-danger ml-3 remove-all-items">
+                            <i class="fas fa-trash"></i> Remove all Items
+                        </button>
+                    </div>
                     {{-- Subtotal row --}}
-                    <div class="form-group row mb-3 section-subtotal-row d-flex justify-content-end align-items-center">
+                    <div class="form-group row mb-3 section-subtotal-row d-flex justify-content-end align-items-center w-50">
                         <div class="col-auto text-end">
                             <label><strong>Subtotal</strong></label>
                         </div>
