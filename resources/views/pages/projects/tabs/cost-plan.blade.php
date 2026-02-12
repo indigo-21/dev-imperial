@@ -145,10 +145,14 @@
         <button type="button" class="btn btn-success cost-plan-submit" id="cost-plan-submit-button">{{ count($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
         
     </form>
+    <!-- Scroll to Bottom Button -->
+    <button id="scrollToBottom" title="Go to bottom">
+        <i class="fas fa-arrow-down"></i>
+    </button>
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}"></script>
+    <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}?v={{ time() }}"></script>
     <script>
         $(document).ready(function() {
             $('.select2bs4').select2({
@@ -156,6 +160,26 @@
                 placeholder: "Select Supplier",
                 allowClear: true
             });
+
+            const scrollBtn = $('#scrollToBottom');
+
+            scrollBtn.on('click', function() {
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 600);
+            });
+
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                    scrollBtn.fadeOut();
+                } else {
+                    scrollBtn.fadeIn();
+                }
+            });
+
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
+                scrollBtn.hide();
+            }
         });
     </script>
 
