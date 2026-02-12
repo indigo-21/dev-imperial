@@ -1384,15 +1384,6 @@ Development of the CDM Health and Safety File.",
         'rate' => 0,
         'mark_up' => 30,
     ],
-    [
-        'template_section_id' => 13,
-        'item_code' => '13.11',
-        'description' => '',
-        'quantity' => 1,
-        'unit' => 'Item',
-        'rate' => 0,
-        'mark_up' => 30,
-    ],
 
       [
         'template_section_id' => 14,
@@ -1466,7 +1457,7 @@ Development of the CDM Health and Safety File.",
         'rate' => 0,
         'mark_up' => 30,
     ],
-
+    
      [
         'template_section_id' => 15,
         'item_code' => '15.01',
@@ -1512,15 +1503,7 @@ Development of the CDM Health and Safety File.",
         'rate' => 0,
         'mark_up' => 30,
     ],
-    [
-        'template_section_id' => 15,
-        'item_code' => '15.06',
-        'description' => '',
-        'quantity' => 1,
-        'unit' => 'Item',
-        'rate' => 0,
-        'mark_up' => 30,
-    ],
+
     [
         'template_section_id' => 16,
         'item_code' => '16.01',
