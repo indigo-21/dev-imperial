@@ -56,8 +56,14 @@
 
                                             <div class="col-md-2">
                                                 <label>Unit</label>
-                                                <input type="text" name="unit"
-                                                    class="form-control unit-input" value="{{$cost_plan_item->unit}}">
+                                                <select name="unit" class="form-control unit-input">
+                                                    @foreach($units as $unit)
+                                                        <option value="{{ $unit }}"
+                                                            {{ old('unit', $cost_plan_item->unit ?? 'item') == $unit ? 'selected' : '' }}>
+                                                            {{ $unit }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
 
                                             <div class="col-md-2">

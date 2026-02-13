@@ -57,6 +57,16 @@ class ProjectController extends Controller
             'Construction Stage',
             'After Care',
         ];
+        
+        $units = [
+            'sqm',
+            'LM',
+            'item',
+            'no',
+            'p. sum',
+            'weeks',
+            'note',
+        ];
 
         $result = [
             "clients" => Client::all(),
@@ -67,6 +77,7 @@ class ProjectController extends Controller
         if ($type == "form") {
             $has_cost_plan = CostPlanSection::where("project_id", $id)->count();
             $result += [
+                        "units" => $units,
                         "statuses" => $statuses,
                         "cost_plan" => TemplateSection::with('items')->get(),
                         ];
