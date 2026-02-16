@@ -26,6 +26,7 @@ $(function(){
                 cost_plan_items.map((items,index)=> {
                     let purchase_order = po_list[items.item_code] || {}
                     let purchase_order_id = purchase_order.purchase_order_id ?? false;
+                    let po_amount = purchase_order_id ? parseFloat(purchase_order.total) : 0.00;
                     html += `
                             <tr>
                                 <td>${items.item_code}</td>
@@ -33,10 +34,10 @@ $(function(){
                                 <td>${items.quantity}</td>
                                 <td>${items.unit}</td>
                                 <td>${items.rate}</td>
-                                <td>${items.cost}</td>
-                                <td>${items.total}</td>
+                                <td>${currencyFormat(items.cost)}</td>
+                                <td>${currencyFormat(items.total)}</td>
                                 <td>${formatPO(purchase_order_id)}</td>
-                                <td>${purchase_order_id ? purchase_order.total : 0.00}</td>
+                                <td>${currencyFormat(po_amount)}</td>
                                 <td>INV-00001</td>
                                 <td>0.00</td>s
                             </tr>
@@ -55,9 +56,7 @@ $(function(){
 
 
 
-    function formatPO(num) {
-        return num ? "PO-" + String(num).padStart(5, '0') : "-";
-    }
+    
     
 
 
