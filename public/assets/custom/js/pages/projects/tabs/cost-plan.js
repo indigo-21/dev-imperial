@@ -97,11 +97,19 @@ $(function () {
         let section_items = parent.find(".section-items");
         let last_section_item = 0;
         let supplier_options = "";
+        let unit_options = "";
 
         supplier_options = $(`[name="supplier_id"]`).first().find("option");
         supplier_options.each((option_index, option) => {
             supplier_options += `<option value="${option.value}">${option.label}</option>`;
         });
+
+        unit_options = $(`[name="unit"]`).first().find("option");
+        unit_options.each((option_index, option) => {
+            unit_options += `<option value="${option.value}">${option.label}</option>`;
+        });
+
+
         if(section_items.length > 0 ){
             section_items.each((index, section_item) => {
                 $(this).attr("name", `[${this_section_length}][${index}]`);
@@ -142,8 +150,9 @@ $(function () {
 
                                     <div class="col-md-2">
                                         <label>Unit</label>
-                                        <input type="text" name="unit" class="form-control unit-input"
-                                            value="item">
+                                        <select name="unit" class="form-control">
+                                            ${unit_options}
+                                        </select>
                                     </div>
 
                                     <div class="col-md-2">
