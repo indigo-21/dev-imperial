@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/get_items_by_supplier', [CostPlanItemController::class, 'getItemsBySupplier'])
             ->name('get_items_by_supplier');
+    Route::post('/get_items', [CostPlanItemController::class, 'getItems'])
+            ->name('get_items');
     Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
             ->name('get_po_item');
 

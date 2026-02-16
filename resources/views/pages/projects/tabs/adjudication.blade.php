@@ -70,7 +70,7 @@
                                 <td class="text-right">0.00</td>
                                 <td class="text-center">
                                     <button 
-                                        class="btn btn-sm btn-outline-primary w-75 view-items" section-id="{{$section->id}}">
+                                        class="btn btn-sm btn-outline-primary w-75 view-items" projectid="{{$section->project_id}}" sectionid="{{$section->id}}">
                                         <i class="fas fa-eye"></i>Items
                                     </button>
                                 </td>
@@ -106,23 +106,47 @@
 
 @section("modal")
     <!-- Modal -->
-    <div class="modal fade" id="purchaseOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="costPlanItems" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="purchaseOrderModalTitle">List of Purchase Order</h5>
+                <h5 class="modal-title" id="purchaseOrderModalTitle">List of Section items</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered mb-0">
+                <table class="table table-bordered mb-0" id="cost-plan-items-table">
                     <thead class="thead-light">
                         <tr>
-                            
+                            <th>Item Code</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Rate</th>
+                            <th>Cost</th>
+                            <th>Total</th>
+                            <th>PO No.</th>
+                            <th>PO Amount</th>
+                            <th>Invoice No.</th>
+                            <th>Invoice Amount</th>
                         </tr>
                     </thead>
-
+                    <tbody id="cost-plan-items-table-body">
+                        <tr>
+                            <td>Item Code</td>
+                            <td>Description</td>
+                            <td>Quantity</td>
+                            <td>Unit</td>
+                            <td>Rate</td>
+                            <td>Cost</td>
+                            <td>Total</td>
+                            <td>PO No.</td>
+                            <td>PO Amount</td>
+                            <td>Invoice No.</td>
+                            <td>Invoice Amount</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <div class="modal-footer">
