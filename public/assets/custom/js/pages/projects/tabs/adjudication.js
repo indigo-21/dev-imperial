@@ -38,7 +38,7 @@ $(function(){
                                 <td>${currencyFormat(items.total)}</td>
                                 <td>${formatPO(purchase_order_id)}</td>
                                 <td>${currencyFormat(po_amount)}</td>
-                                <td>INV-00001</td>
+                                <td>-</td>
                                 <td>0.00</td>s
                             </tr>
                             `;

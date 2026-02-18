@@ -7,7 +7,7 @@ $.ajaxSetup({
 });
 
 function currencyFormat(num){
-    let currency = 0;
+    let currency = 0.00;
     if(num){
         currency = new Intl.NumberFormat('en-US', {
                         minimumFractionDigits: 2,
