@@ -98,6 +98,7 @@ $(function () {
         let last_section_item = 0;
         let supplier_options = "";
         let unit_options = "";
+        let markup_val = parent.closest(".section-container").find("[name=section_markup]").val();
 
         supplier_options = $(`[name="supplier_id"]`).first().find("option");
         supplier_options.each((option_index, option) => {
@@ -177,7 +178,7 @@ $(function () {
                                     <div class="col-md-4 mt-3">
                                         <label>Mark Up %</label>
                                         <input type="number" step="0.1" min="0" name="mark_up"
-                                            class="form-control calc-field item-input markup-input" value="20">
+                                            class="form-control calc-field item-input markup-input" value="${markup_val}">
                                     </div>
                                     <div class="col-md-8 mt-3">
                                         <label>Supplier</label>
