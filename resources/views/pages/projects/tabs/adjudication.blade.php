@@ -22,6 +22,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $total_cost = 0;
+                            $total_profit = 0;
+                            $total_gross = 0;
+                            $total_purchase_order = 0.00;
+                            $total_invoiced = 0.00;
+                        @endphp
                         @foreach ($cost_plan as $section )  
                             @php
                                 $number_of_items = floatval($section->items->count());
@@ -56,17 +63,20 @@
                                     $average_markup =$section_markup /$number_of_items;
                                 }
                                 
-                                
+                                $total_cost += $section_cost;
+                                $total_profit += $section_profit;
+                                $total_gross += $section_total;
+                                // $total_purchase_order += 
                             @endphp  
                             <tr>
                                 <td>{{$section->section_code}}</td>
                                 <td>{{$section->section_name}}</td>
                                 <td class="text-right">{{ number_format($section_cost, 2, '.', ',') }}</td>
-                                <td class="text-right">{{ round($section_markup) }}%</td>
+                                <td class="text-right">{{ round($section_markup) }} %</td>
                                 <td class="text-right">{{ number_format($section_profit, 2, '.', ',') }}</td>
                                 <td class="text-right"> {{ round($gross_profit) }}% </td>
-                                <td class="text-right">{{number_format($section_total, 2, '.', ',') }}</td>
-                                <td class="text-right">5,800.00</td>
+                                <td class="text-right">{{ number_format($section_total, 2, '.', ',') }}</td>
+                                <td class="text-right">0.00</td>
                                 <td class="text-right">0.00</td>
                                 <td class="text-center">
                                     <button 
@@ -87,12 +97,22 @@
 
                         <!-- BUILD TOTAL -->
                         <tr class="table-success">
-                            <td colspan="6"><strong>Build Total ex. VAT</strong>
-                            </td>
+                            @php
+                                $avg_markup = ($total_profit / $total_cost) * 100;
+                                $avg_markup = number_format($avg_markup, 1, ".", ",");
+                                $gross_percentage = ($total_profit / $total_gross) * 100;
+                                $gross_percentage = number_format($gross_percentage, 1, ".", ",");
+
+                            @endphp
+                            <td colspan="2"><strong>Build Total ex. VAT</strong></td>
+                            <td class="text-right">{{number_format($total_cost, 2, '.', ',')}}</td>
+                            <td class="text-center"><strong>{{ $avg_markup }}%</strong></td>
+                            <td class="text-right">{{ number_format($total_profit, 2, '.', ',') }}</td>
+                            <td class="text-center"><strong>{{$gross_percentage}}%</strong></td>
+                            <td class="text-right">{{number_format($total_gross, 2, ".", ",") }}</td>
+                            <td class="text-right">{{number_format($total_purchase_order, 2, ".", ",") }}</td>
+                            <td class="text-right">{{number_format($total_invoiced, 2, ".", ",") }}</td>
                             <td></td>
-                            <td class="text-right"><strong>0.00</strong></td>
-                            <td></td>
-                            <td class="text-right"><strong>0.00</strong></td>
                         </tr>
 
                         
