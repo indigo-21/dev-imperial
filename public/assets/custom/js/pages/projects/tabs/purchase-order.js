@@ -80,6 +80,7 @@ $(function () {
         let line_item_tbody = $("#line-items-table-body");
         let loading_screen = `<tr><td class="text-center" colspan="5"><span>Loading...</span></td></tr>`;
         line_item_tbody.html(loading_screen);
+        let item_total_amount = 0;
 
         if(purchase_order_element){
             let purchase_order_id = purchase_order_element.attr("data-purchase-order-id");
@@ -93,7 +94,6 @@ $(function () {
                 data:{purchase_order_id},
                 dataType:'json',
                 success:function(response){
-                    console.log(response);
                     response.map((item, index)=>{
                         let data = {
                             index,
@@ -104,9 +104,9 @@ $(function () {
                             item_unit_price:item.unit_price,
                             total: item.total  
                         }
+                        item_total_amount += parseFloat(item.total || 0)
                         html += itemTableRow(data);
-                    })
-                    
+                    });
                 },
                 error:function(xhr, status, error){
                     console.log(error);
@@ -120,12 +120,17 @@ $(function () {
                 let item_quantity = $(item).attr("data-quantity");
                 let item_unit_price = parseFloat($(item).attr("data-unit-price") ?? 0);
                 let total = parseFloat(item_quantity ?? 0) * parseFloat(item_unit_price ?? 0);
+                item_total_amount += parseFloat(total);
                 let data = {index, cost_plan_section_id, item_code,item_description,item_quantity,item_unit_price, total};
                 html += itemTableRow(data);
             });
         }
-
-         setTimeout(() => {
+        
+        setTimeout(() => {
+            html += `tr>
+                        <td colspan="4">Total</td>
+                        <td class="text-right">${currencyFormat(item_total_amount)}</td>
+                    </tr>`;
             line_item_tbody.html(html);
         }, 2000);
     }
@@ -153,7 +158,7 @@ $(function () {
                         <input type="number" name="unit_price[${index}]" class="form-control compute-total price-input" value="${item_unit_price.toFixed(2)}" min="0" step="0.01">
                         <input type="hidden" name="total[${index}]" value="${total.toFixed(2)}" >
                     </td>
-                    <td class="total-cell">${total.toFixed(2)}</td>
+                    <td class="total-cell text-right">${total.toFixed(2)}</td>
                 </tr>`;
     };
 
