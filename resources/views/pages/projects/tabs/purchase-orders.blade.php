@@ -98,7 +98,7 @@
                     <tr>
                         <th style="width:10%">PO Number</th>
                         <th>Supplier</th>
-                        <th style="width:10%">Created By</th>
+                        <th style="width:20%">Created By</th>
                         <th class="text-center" style="width:10%">View</th>
                         <th class="text-center" style="width:10%">PDF</th>
                     </tr>

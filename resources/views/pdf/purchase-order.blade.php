@@ -5,7 +5,7 @@
     <title>Purchase Order #{{ $purchaseOrder->id }}</title>
 
     <style>
-        @page { margin: 20mm; }
+        @page { margin: 15mm; }
         body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #000; position: relative; min-height: 100vh; }
 
         .header { margin-bottom: 20px; }
@@ -23,7 +23,15 @@
         /* Table header colors and alignment */
         .items-table th { 
             text-align: center; 
-            background-color: #cce5ff; /* light blue */
+            background-color: #11e9b6; /* light blue */
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        .terms {
+            background: #000;
+            color: #FFF;
         }
 
         /* Column alignment */
@@ -49,7 +57,7 @@
 <body>
 
     {{-- HEADER --}}
-    <h1>CONSTRUCTION PURCHASE ORDER - {{ $purchaseOrder->id }}</h1>
+    <h2>CONSTRUCTION PURCHASE ORDER - {{ $purchaseOrder->id }}</h2>
     
     <div class="header">
 
@@ -68,7 +76,7 @@
                     {{-- Logo on top --}}
                     <img src="{{ public_path('assets/images/imperial-logo.png') }}" 
                          alt="Logo" 
-                         style="height:50px; width:auto; display:block; margin-bottom:5px;">
+                         style="height:65px; width:auto; display:block; margin-bottom:5px;">
                         <br>
                 
                     {{-- Date & Project Ref under logo --}}
@@ -125,6 +133,132 @@
             </tr>
         </table>
     </div>
+
+    <div style="page-break-before: always;"></div>
+    <div style = "text-align:right;"> <img src="{{ public_path('assets/images/imperial-logo.png') }}" 
+        alt="Logo" 
+        style="height:40px; width:auto; display:block;"></div>
+   
+   <br>
+    <div class="terms">
+        <h3 style="margin-bottom: 10px; margin-top: -15px;" class="text-center">Terms & Conditions</h3>
+    </div>
+
+    <p>
+    <i>
+    All works executed under this Purchase Order (“PO”) are subject to 
+    <strong>Imperial Building Solutions Ltd Subcontract Terms & Conditions</strong>.  
+    <br>
+    <br>
+    By accepting this PO or commencing works, the Subcontractor confirms agreement to the following key terms.
+    </i>
+    </p>
+    
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <tbody>
+    
+            <tr>
+                <td width="30" valign="top"><strong>1.</strong></td>
+                <td>
+                    <strong>Scope of Works</strong><br>
+                    The Subcontractor shall carry out and complete the Works described in this PO in accordance with all drawings, specifications, programme and written instructions issued by Imperial.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>2.</strong></td>
+                <td>
+                    <strong>Subcontract Sum</strong><br>
+                    The Subcontract Sum shall be the value stated on this PO and may only be varied by written instruction from Imperial.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>3.</strong></td>
+                <td>
+                    <strong>Payment</strong><br>
+                    Payment shall be made by interim valuations every 4 weeks, commencing from the Project Start Date and continuing until Practical Completion of the Subcontractor’s Works.
+                    <ul style="margin: 5px 0 5px 15px;">
+                        <li>Valuations to be submitted every 4 weeks</li>
+                        <li>Payment Due Date: Date of valuation submission</li>
+                        <li>Final Date for Payment: 30 days from Due Date</li>
+                        <li>Imperial may issue a Pay Less Notice up to 5 days before the Final Date for Payment</li>
+                    </ul>
+                    A 5% retention applies to all payments (2.5% released at Practical Completion, 2.5% upon expiry of the Defects Liability Period).
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>4.</strong></td>
+                <td>
+                    <strong>Programme</strong><br>
+                    The Subcontractor shall comply with the project programme and shall not cause delay or disruption.
+                    Imperial reserves the right to recover losses caused by subcontractor delay.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>5.</strong></td>
+                <td>
+                    <strong>Variations</strong><br>
+                    No variation shall be valid unless instructed in writing by Imperial.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>6.</strong></td>
+                <td>
+                    <strong>Health & Safety</strong><br>
+                    The Subcontractor shall comply fully with CDM Regulations and Imperial’s Construction Phase Plan and site safety procedures.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>7.</strong></td>
+                <td>
+                    <strong>Insurance</strong><br>
+                    The Subcontractor must maintain:
+                    <ul style="margin: 5px 0 5px 15px;">
+                        <li>Public Liability: £10,000,000</li>
+                        <li>Employers Liability: £10,000,000</li>
+                        <li>Professional Indemnity (if design): £5,000,000</li>
+                    </ul>
+                    Evidence to be provided on request.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>8.</strong></td>
+                <td>
+                    <strong>Defects</strong><br>
+                    A 6-month Defects Liability Period applies.
+                    All defects due to workmanship, materials or design shall be rectified at the Subcontractor’s cost.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>9.</strong></td>
+                <td>
+                    <strong>Termination</strong><br>
+                    Imperial may terminate the subcontract for breach, delay, safety failure or insolvency.
+                </td>
+            </tr>
+    
+            <tr>
+                <td valign="top"><strong>10.</strong></td>
+                <td>
+                    <strong>Dispute Resolution</strong><br>
+                    Disputes shall be referred to Adjudication (RICS or TECSA) under the Scheme for Construction Contracts and governed by the laws of England & Wales.
+                </td>
+            </tr>
+
+          
+        </tbody>
+    </table>
+    
+
+    <p><i>  All works are governed by Imperial Building Solutions Ltd Subcontract Terms & Conditions. Acceptance or commencement of works constitutes
+        full agreement </i> </p>        
 
 </body>
 </html>
