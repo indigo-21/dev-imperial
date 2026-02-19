@@ -49,6 +49,7 @@
                     <form action="{{ route('projects.purchase_order_upsert') }}" method="POST">
                         @csrf
                         <input type="hidden" name="project_id" value="{{ $project->id }}">
+                        <input type="hidden" name="project_reference" value="{{ $project->reference }}">
                         <input type="hidden" name="purchase_order_id" value="">
                         <input type="hidden" name="supplier_id" value="">
                         <label class="font-weight-bold mb-2">Purchase Order Line Items</label>
@@ -99,6 +100,7 @@
                         <th>Supplier</th>
                         <th style="width:10%">Created By</th>
                         <th class="text-center" style="width:10%">View</th>
+                        <th class="text-center" style="width:10%">PDF</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,7 +116,15 @@
                                         data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
                                                 class="fas fa-eye"></i></button>
                                 </td>
-                            </tr>
+                                <td>
+                                    <a href="{{ route('purchase-orders.pdf', $purchase_order->id) }}"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </td>
+                                </tr>
                         @endforeach
                     @else
                         <tr>

@@ -21,10 +21,15 @@ use App\Models\PurchaseOrderItem;
 use App\Http\Controllers\PurchaseOrderItemController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     return redirect()->route('login');
     
 });
+
+Route::get('/purchase-orders/{id}/pdf',
+    [PurchaseOrderItemController::class, 'generatePdf']
+)->name('purchase-orders.pdf');
 
 Route::middleware('auth')->group(function () {
 

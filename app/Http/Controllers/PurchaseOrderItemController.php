@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PurchaseOrderItem;
 use App\Models\PurchaseOrder;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderItemController extends Controller
 {
@@ -26,6 +27,19 @@ class PurchaseOrderItemController extends Controller
                             })
                             ->get();
         dd($purchase_orders);
+    }
+
+    public function generatePdf($id)
+    {
+        $purchaseOrder = PurchaseOrder::with('po_items', 'supplier')
+        ->findOrFail($id);
+
+        $project_reference = "PRJ-" . str_pad($purchaseOrder->project_id, 5, '0', STR_PAD_LEFT);
+
+        $pdf = Pdf::loadView('pdf.purchase-order', compact('purchaseOrder', 'project_reference'))
+        ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('purchase-order-'.$purchaseOrder->id.'.pdf');
     }
 
 }
