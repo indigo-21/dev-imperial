@@ -27,18 +27,48 @@ $(function () {
         table_row.find(".total-cell").text(total.toFixed(2));
     });
 
-    $(document).on("click", "#proceed-btn-from-checklist", function () {
-        sectionAnimation("proceed-btn-from-checklist");
-        getPurchaseOrderItems();
+    $(document).on("click", "#proceed-btn-from-checklist", async function () {
+        let purchase_order_id = $(this).attr("purchaseorderid");
+        
+        await sectionAnimation("proceed-btn-from-checklist");
+        await getPurchaseOrderItems();
+
+        if(purchase_order_id){
+            let line_item_tbody = $("#line-items-table-body");
+             $(".cost-plan-item:checked").each((index, item) => {
+                if( $(this).attr("disabled") != true  ){
+                    let cost_plan_section_id = $(item).attr("data-section-id");
+                    let item_code = $(item).attr("data-item-code");
+                    let item_description = $(item).attr("data-item-description");
+                    let item_quantity = $(item).attr("data-quantity");
+                    let item_unit_price = parseFloat($(item).attr("data-unit-price") ?? 0);
+                    let total = parseFloat(item_quantity ?? 0) * parseFloat(item_unit_price ?? 0);
+                    item_total_amount += parseFloat(total);
+                    let data = {index, cost_plan_section_id, item_code,item_description,item_quantity,item_unit_price, total};
+                    line_item_tbody.append(itemTableRow(data));
+                }
+            });
+            
+            $("[name=purchase_order_id]").val(purchase_order_id);
+        }
+
+
+    });
+
+    $(document).on("click",".view-purchase-order", function(){
+        let purchase_order_element = $(this);
+        sectionAnimation("view-purchase-order");
+        getPurchaseOrderItems(purchase_order_element);
     });
 
     $(document).on("click",".edit-purchase-order", function(){
         let purchase_order_element = $(this);
+        let is_edit = true;
         sectionAnimation("edit-purchase-order");
-        getPurchaseOrderItems(purchase_order_element);
-    })
+        getPurchaseOrderItems(purchase_order_element, is_edit);
+    });
 
-    function getCostPlanItems(supplier_id = false) {
+    function getCostPlanItems(supplier_id = false, existed_ids = []) {
         let line_item_container = $("#line-items-list");
         $.ajax({
             headers: { 'X-CSRF-Token': CSRF_TOKEN },
@@ -53,6 +83,7 @@ $(function () {
             success: function (response) {
                 let html = "";
                 response.map((item, index) => {
+                    let is_checked = existed_ids.includes(item.item_code); 
                     html += `<label class="d-flex align-items-center mb-2 selectable-label">
                                     <input type="checkbox"
                                         class="cost-plan-item"
@@ -60,7 +91,7 @@ $(function () {
                                         data-item-code="${item.item_code}" 
                                         data-item-description="${item.description}" 
                                         data-quantity="${item.quantity}" 
-                                        data-unit-price="${item.rate}" >
+                                        data-unit-price="${item.rate}" ${is_checked ? 'checked disabled' : ''}>
                                     <span class="mx-2">
                                         <strong>${item.item_code}</strong> — ${item.description}
                                     </span>
@@ -75,7 +106,7 @@ $(function () {
 
     }
 
-    function getPurchaseOrderItems(purchase_order_element = false){
+    function getPurchaseOrderItems(purchase_order_element = false, is_edit = false){
         let html = "";
         let line_item_tbody = $("#line-items-table-body");
         let loading_screen = `<tr><td class="text-center" colspan="5"><span>Loading...</span></td></tr>`;
@@ -94,7 +125,9 @@ $(function () {
                 data:{purchase_order_id},
                 dataType:'json',
                 success:function(response){
-                    response.map((item, index)=>{
+                    let {purchase_order, purchase_order_items } = response;
+                    let purchase_order_items_ids = [];
+                    purchase_order_items.map((item, index)=>{
                         let data = {
                             index,
                             cost_plan_section_id:item.cost_plan_section_id,
@@ -104,9 +137,20 @@ $(function () {
                             item_unit_price:item.unit_price,
                             total: item.total  
                         }
+                        purchase_order_items_ids.push(item.item_code);
                         item_total_amount += parseFloat(item.total || 0)
                         html += itemTableRow(data);
                     });
+
+                    if(is_edit){
+                        let {id, supplier_id} = purchase_order;
+                        $("#supplier_id").val(supplier_id).attr("disabled", true);
+                        getCostPlanItems(supplier_id, purchase_order_items_ids);
+                        $("#proceed-btn-from-checklist").attr("purchaseorderid", id);
+                        // getCostPlanItems(supplier_id);
+                        
+                    }
+
                 },
                 error:function(xhr, status, error){
                     console.log(error);
@@ -182,10 +226,15 @@ $(function () {
                     $("#line-items-container").show();
                     $("#line-items-table-container").hide();
                 break;        
-            case "edit-purchase-order":
+            case "view-purchase-order":
                     $("#purchase-order-form").show();
                     $("#line-items-container").hide();
                     $("#line-items-table-container").show();
+                break;
+            case "edit-purchase-order":
+                    $("#purchase-order-form").show();
+                    $("#line-items-container").show();
+                    $("#line-items-table-container").hide();
                 break;                    
             default:
                 $("#purchase-order-form").show();

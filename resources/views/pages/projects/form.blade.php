@@ -1,5 +1,9 @@
 <x-app-layout>
 
+     <x-slot name="importedLinks">
+       <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+    </x-slot>
+    
     @section('style')
         <style>
             .short-input {
@@ -36,6 +40,9 @@
             textarea{
                 resize: none;
             }
+            .section-items { cursor: move; }
+            .ui-state-highlight { height: 200px; background: #f0f0f0; border: 1px dashed #ccc; }
+            .section-item-row { background: #ffffff;}
         </style>
     @endsection
 

@@ -72,6 +72,10 @@ class ProjectController extends Controller
             "clients" => Client::all(),
             "suppliers" =>  Supplier::orderBy('business_name')->get(),
             "project_types" => $project_types,
+            "divisions" => [
+                                ["id"=>1, "name"=>"Test 1"],
+                                ["id"=>2, "name"=>"Test 2"],
+                            ]
         ];
 
         if ($type == "form") {
@@ -321,6 +325,7 @@ class ProjectController extends Controller
     }
     
     public function upsertPurchaseOrder(Request $request){
+        // dd($request);
         $project_id = $request->project_id;
         $supplier_id = $request->supplier_id;
         $purchase_order_id = $request->purchase_order_id;

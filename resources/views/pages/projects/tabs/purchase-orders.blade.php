@@ -111,10 +111,15 @@
                                 <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
                                 <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-primary edit-purchase-order" 
+                                    <button class="btn btn-sm btn-outline-primary view-purchase-order" 
                                         data-purchase-order-id="{{$purchase_order->id}}"
                                         data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
                                                 class="fas fa-eye"></i></button>
+
+                                    <button class="btn btn-sm btn-outline-primary edit-purchase-order" 
+                                        data-purchase-order-id="{{$purchase_order->id}}"
+                                        data-supplier-id="{{$purchase_order->supplier_id}}"  title="Edit"><i
+                                                class="fas fa-pen"></i></button>
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ route('purchase-orders.pdf', $purchase_order->id) }}"

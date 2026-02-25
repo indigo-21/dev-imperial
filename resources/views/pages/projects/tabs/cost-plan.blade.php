@@ -1,4 +1,5 @@
 @extends('pages.projects.form')
+
 @section('cost-plan-tab')
     <form id="cost_plan_form" action="{{ route('projects.costplan_store') }}" method="POST">
         @csrf
@@ -26,7 +27,7 @@
                 </div>
 
                 <div id="section-{{$cost_plan_section->id}}" class="collapse show">
-                    <div class="card-body section-card" data-section="{{$section_index}}">
+                    <div class="card-body section-card drag-drop-sortable drag-drop-sortable-{{$section_index}}" data-section="{{$section_index}}">
                         @foreach ($cost_plan_section->items as $item_index => $cost_plan_item )
                             <div class="section-items">
                                 <div class="form-group row mb-3 section-item-row">
@@ -166,6 +167,7 @@
     <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}?v={{ time() }}"></script>
     <script>
         $(document).ready(function() {
+            const SECTION_COUNT = $(".section-card").length;
             $('.select2bs4').select2({
                 theme: 'bootstrap4',
                 placeholder: "Select Supplier",
@@ -191,6 +193,15 @@
             if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
                 scrollBtn.hide();
             }
+
+            for (let index = 0; index < SECTION_COUNT; index++) {
+                $(`.drag-drop-sortable-${index}`).sortable({
+                    connectWith: `.drag-drop-sortable-${index}`,
+                    placeholder: "ui-state-highlight",
+                    forcePlaceholderSize: true
+                }).disableSelection();
+            }
+            
         });
     </script>
 

@@ -11,8 +11,13 @@ class PurchaseOrderItemController extends Controller
 {
     
     public function getPurchaseOrderItems(Request $request){
-        $purchase_order_id = $request->purchase_order_id;
-        $data = PurchaseOrderItem::where("purchase_order_id", $purchase_order_id)->get();
+        $purchase_order_id = $request->purchase_order_id;   
+        $purchase_order_items = PurchaseOrderItem::where("purchase_order_id", $purchase_order_id)->get();
+        $purchase_order = PurchaseOrder::find($purchase_order_id);
+        $data = [
+                    "purchase_order" => $purchase_order, 
+                    "purchase_order_items" => $purchase_order_items
+                ];
         return json_encode($data);
     }
 
