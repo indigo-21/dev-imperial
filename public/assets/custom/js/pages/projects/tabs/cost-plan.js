@@ -25,14 +25,16 @@ $(function () {
         if(!error_found){
             let project_id = $("[name=project_id]").val();
             let data = { project_id, sections: [] };
-            $(".section-container").each((index, section)=>{
-                let section_id = $(section).attr("data-section");
+            $(".section-container").each((index, section) => {
+                // let section_id = $(section).attr("data-section");
+                let section_id = $(section).find("[name=section_id]").val();
                 let section_code = $(section).find("[name=section_code]").val();
                 let section_name = $(section).find("[name=section_name]").val();
                 let section_markup = $(section).find("[name=section_markup]").val();
-                let sections = {project_id, section_code, section_name, section_markup, items:[]};
+                let sections = {section_id, project_id, section_code, section_name, section_markup, items:[]};
                 let section_items_container = $(section).find(".section-items");
                 section_items_container.each((index, item_row)=>{
+                    let item_id = $(item_row).find("[name=item_id]").val(); 
                     let item_code = $(item_row).find("[name=item_code]").val(); 
                     let description = $(item_row).find("[name=description]").val();
                     let quantity = $(item_row).find("[name=quantity]").val(); 
@@ -42,12 +44,12 @@ $(function () {
                     let total = $(item_row).find("[name=total]").val(); 
                     let mark_up = $(item_row).find("[name=mark_up]").val(); 
                     let supplier_id = $(item_row).find("[name=supplier_id]").val();
-                    sections.items.push({item_code, description, quantity, unit, rate, cost, total, mark_up, supplier_id});
+                    sections.items.push({item_id, item_code, description, quantity, unit, rate, cost, total, mark_up, supplier_id});
                 });
                 data.sections.push(sections);
             });
            $.ajax({
-                url: form.attr("action"),
+                url: `${BASE_URL}/costplan_upsert`,
                 method: "POST",
                 data: JSON.stringify(data),
                 contentType: "application/json",
@@ -121,8 +123,8 @@ $(function () {
         let item_code_last = parseFloat(last_section_item) + 1;
         let item_code = `${parseFloat(this_section_length) + 1}.${item_code_last.toString().padStart(2, '0')}`;
         let html = `<div class="section-items">
+                        <input type="hidden" name="item_id" value="">
                         <div class="form-group row mb-3 section-item-row">
-
                             <div class="col-md-6 d-flex">
                                 <div class="short-input">
                                     <label>Code</label>

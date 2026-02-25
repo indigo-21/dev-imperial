@@ -1,7 +1,7 @@
 @extends('pages.projects.form')
 
 @section('cost-plan-tab')
-    <form id="cost_plan_form" action="{{ route('projects.costplan_store') }}" method="POST">
+    <form id="cost_plan_form" method="POST">
         @csrf
         <input type="hidden" name="project_id" value="{{$project->id}}">
         @foreach ($cost_plan as $section_index => $cost_plan_section )
@@ -11,6 +11,7 @@
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
 
                     <h5 class="card-title mb-0 w-50">
+                        <input type="hidden" name="section_id" value="{{ $has_costplan ? $cost_plan_section->id : '' }}">
                         <input type="hidden" name="section_code" value="{{$cost_plan_section->section_code}}">
                         <input type="hidden" name="section_name" value="{{$cost_plan_section->section_name}}">
                         {{$cost_plan_section->section_code}} -
@@ -30,6 +31,7 @@
                     <div class="card-body section-card drag-drop-sortable drag-drop-sortable-{{$section_index}}" data-section="{{$section_index}}">
                         @foreach ($cost_plan_section->items as $item_index => $cost_plan_item )
                             <div class="section-items">
+                                <input type="hidden" name="item_id" value="{{ $has_costplan ? $cost_plan_item->id : '' }}">
                                 <div class="form-group row mb-3 section-item-row">
                                     <div class="col-md-6 d-flex">
                                         <div class="short-input">

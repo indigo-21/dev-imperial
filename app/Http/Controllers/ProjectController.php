@@ -72,10 +72,6 @@ class ProjectController extends Controller
             "clients" => Client::all(),
             "suppliers" =>  Supplier::orderBy('business_name')->get(),
             "project_types" => $project_types,
-            "divisions" => [
-                                ["id"=>1, "name"=>"Test 1"],
-                                ["id"=>2, "name"=>"Test 2"],
-                            ]
         ];
 
         if ($type == "form") {
@@ -84,6 +80,7 @@ class ProjectController extends Controller
                         "units" => $units,
                         "statuses" => $statuses,
                         "cost_plan" => TemplateSection::with('items')->get(),
+                        "has_costplan" => false
                         ];
 
             if ($id) {
@@ -108,6 +105,7 @@ class ProjectController extends Controller
                     }
 
                     $result["cost_plan"] = "";
+                    $result["has_costplan"] = true;
                     $result["cost_plan"] = $cost_plan_sections->get();
                     $result["for_po_suppliers"] = $for_po_suppliers; 
                     $result["purchase_orders"] = PurchaseOrder::where("project_id", $id)->get();
@@ -265,63 +263,6 @@ class ProjectController extends Controller
         $project_file->save();
         $project_file->delete();
         return redirect("projects/edit/project-files/$project_id")->with("success", $filename." deleted successfully ");
-    }
-
-    public function upsertCostPlan(Request $request, $id = false){
-        $result = true;
-        $project_id = $request->project_id;
-        $sections = $request->sections;
-        $cost_plan_section_ids = [];
-        $cost_plan_item_ids = [];
-
-        if(CostPlanSection::where("project_id", $project_id)->count()){
-            $exist_cost_plan_sections = CostPlanSection::where("project_id", $project_id)->get();
-            foreach ($exist_cost_plan_sections as $key => $cost_plan_section) {
-                array_push($cost_plan_section_ids, $cost_plan_section->id);
-            }
-
-            $exist_cost_plan_items = CostPlanItem::whereIn("cost_plan_section_id", $cost_plan_section_ids)->get();
-            foreach ($exist_cost_plan_items as $key => $cost_plan_item) {
-                array_push($cost_plan_item_ids, $cost_plan_item->id);
-            }
-        }
-        
-        foreach ($sections as $key => $section) {
-            $cost_plan_section = new CostPlanSection();
-            $cost_plan_section->project_id = $project_id;
-            $cost_plan_section->section_code = $section["section_code"];
-            $cost_plan_section->section_name = $section["section_name"];
-            $cost_plan_section->mark_up = $section["section_markup"];
-            $result = $cost_plan_section->save();
-            // if($result && isset($section["items"])){
-            if($result && count($section["items"]) > 0){
-              foreach ($section["items"] as $key => $item) {
-                    $cost_plan_item = new CostPlanItem();
-                    $cost_plan_item->cost_plan_section_id  = $cost_plan_section->id;
-                    $cost_plan_item->item_code  = $item["item_code"];
-                    $cost_plan_item->description  = $item["description"];
-                    $cost_plan_item->quantity  = $item["quantity"];
-                    $cost_plan_item->mark_up  = $item["mark_up"];
-                    $cost_plan_item->unit  = $item["unit"];
-                    $cost_plan_item->rate  = $item["rate"] != "" ? $item["rate"] : null ;
-                    $cost_plan_item->cost  = $item["cost"];
-                    $cost_plan_item->total  = $item["total"];
-                    $cost_plan_item->supplier_id  = $item["supplier_id"];
-                    $result = $cost_plan_item->save() ? true : false;
-              }
-            }
-
-
-
-        }
-
-        if($result){
-            CostPlanSection::whereIn("id", $cost_plan_section_ids)->delete();
-            CostPlanItem::whereIn("id", $cost_plan_item_ids)->delete();
-        }
-        $project_reference = "PRJ-" . str_pad($project_id, 5, '0', STR_PAD_LEFT);
-        $message = count($cost_plan_section_ids) ? $project_reference." Update Successfully" : "New Costplan created on ".$project_reference; 
-        return Json::encode(["success" => $result, "message" => $message]);
     }
     
     public function upsertPurchaseOrder(Request $request){

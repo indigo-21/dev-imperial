@@ -71,6 +71,10 @@ Route::middleware('auth')->group(function () {
             ->name('purchase_order_upsert');
     });
 
+    Route::post('costplan_upsert', [CostPlanController::class, 'upsert'])
+    ->name('costplan_upsert');
+
+
     Route::post('/get_items_by_supplier', [CostPlanItemController::class, 'getItemsBySupplier'])
             ->name('get_items_by_supplier');
     Route::post('/get_items', [CostPlanItemController::class, 'getItems'])
