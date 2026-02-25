@@ -10,6 +10,7 @@
                     data-target="#section-{{$cost_plan_section->id}}" aria-expanded="true"
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
 
+                    
                     <h5 class="card-title mb-0 w-50">
                         <input type="hidden" name="section_id" value="{{ $has_costplan ? $cost_plan_section->id : '' }}">
                         <input type="hidden" name="section_code" value="{{$cost_plan_section->section_code}}">
