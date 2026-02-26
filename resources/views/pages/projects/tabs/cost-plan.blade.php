@@ -201,7 +201,21 @@
                 $(`.drag-drop-sortable-${index}`).sortable({
                     connectWith: `.drag-drop-sortable-${index}`,
                     placeholder: "ui-state-highlight",
-                    forcePlaceholderSize: true
+                    forcePlaceholderSize: true,
+                    update: function(event, ui) {
+                        // ui.sender == null means item was reordered within the same list
+                        if (!ui.sender) {
+                            let section_index = parseFloat($(this).attr("data-section")) + 1;
+                            let item_code = $(this).find("[name=item_code]");
+                            let item_code_sequence = 1;
+
+                            item_code.each((index, element)=>{
+                                let item_code_val = `${section_index}.${item_code_sequence.toString().padStart(2, '0')}`;
+                                $(element).val(item_code_val);
+                                item_code_sequence ++;
+                            });
+                        }
+                    },
                 }).disableSelection();
             }
             
