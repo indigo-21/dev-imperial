@@ -29,9 +29,10 @@
             text-align: center;
         }
 
-        .terms {
-            background: #000;
-            color: #FFF;
+        .terms, .heading{
+            background: #11e9b6;
+            color: #000;
+           
         }
 
         /* Column alignment */
@@ -57,7 +58,9 @@
 <body>
 
     {{-- HEADER --}}
-    <h2>CONSTRUCTION PURCHASE ORDER - {{ $purchaseOrder->id }}</h2>
+    <div class="heading">
+        <h2>PURCHASE ORDER - {{ $purchaseOrder->id }}</h2>
+    </div>
     
     <div class="header">
 
@@ -66,6 +69,7 @@
                 {{-- Left column: PO Number --}}
                 <td style="width:50%; text-align:left; vertical-align:top;">
                     <strong>PO Number:</strong> PO-{{ str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT) }}
+                    <br>
                     <br>
                     <strong>Supplier:</strong><br>
                     {{ $purchaseOrder->supplier->business_name ?? 'N/A' }}<br>
@@ -89,8 +93,7 @@
 
     {{-- LINE ITEMS --}}
     <div class="section">
-        <strong>Purchase Order Line Items</strong>
-
+        <strong>Site Address:</strong>
         <table class="items-table">
             <thead>
                 <tr>
