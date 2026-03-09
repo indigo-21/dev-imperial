@@ -98,17 +98,22 @@
                                             <div class="col-md-8 mt-3">
                                                 <label>Supplier</label>
                                                 @php
-                                                    $old_supplier_id = $cost_plan_item?->supplier_id ?? null;
+                                                    $selectedSuppliers = isset($cost_plan_item) && $cost_plan_item->supplier_id
+                                                        ? explode(',', $cost_plan_item->supplier_id)
+                                                        : [];
                                                 @endphp
-                                                <select name="supplier_id"
-                                                    class="form-control select2bs4">
-                                                    <option value="">Select
-                                                        Supplier</option>
+                                            
+                                                <select name="supplier_id[]"
+                                                    class="form-control select2bs4"
+                                                    multiple
+                                                    style="width:100%;">
+                                            
                                                     @foreach ($suppliers as $supplier)
-                                                           <option 
-                                                                {{$old_supplier_id == $supplier->id ? "selected" : ""}}
-                                                                value="{{$supplier->id}}">
-                                                                {{$supplier->business_name}}</option> 
+                                                        <option value="{{ $supplier->id }}"
+                                                            {{ in_array($supplier->id, $selectedSuppliers) ? 'selected' : '' }}>
+                                            
+                                                            {{ $supplier->business_name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -169,6 +174,12 @@
 @section('scripts')
     <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}?v={{ time() }}"></script>
     <script>
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Select Supplier(s)",
+            allowClear: true
+        });
+
         $(document).ready(function() {
             const SECTION_COUNT = $(".section-card").length;
             $('.select2bs4').select2({
