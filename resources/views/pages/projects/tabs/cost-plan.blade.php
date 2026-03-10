@@ -174,13 +174,13 @@
 @section('scripts')
     <script src="{{ asset('assets/custom/js/pages/projects/tabs/cost-plan.js') }}?v={{ time() }}"></script>
     <script>
-        $('.select2bs4').select2({
-            theme: 'bootstrap4',
-            placeholder: "Select Supplier(s)",
-            allowClear: true
-        });
-
         $(document).ready(function() {
+            $('.select2bs4').select2({
+                theme: 'bootstrap4',
+                placeholder: "Select Supplier(s)",
+                allowClear: true
+            });
+            
             const SECTION_COUNT = $(".section-card").length;
             $('.select2bs4').select2({
                 theme: 'bootstrap4',

@@ -43,7 +43,7 @@ $(function () {
                     let cost = $(item_row).find("[name=cost]").val(); 
                     let total = $(item_row).find("[name=total]").val(); 
                     let mark_up = $(item_row).find("[name=mark_up]").val(); 
-                    let supplier_id = $(item_row).find("[name=supplier_id]").val();
+                    let supplier_id = $(item_row).find("[name='supplier_id[]']").val() ? $(item_row).find("[name='supplier_id[]']").val().join(",") : "";
                     sections.items.push({item_id, item_code, description, quantity, unit, rate, cost, total, mark_up, supplier_id});
                 });
                 data.sections.push(sections);
