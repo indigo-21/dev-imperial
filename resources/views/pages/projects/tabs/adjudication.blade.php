@@ -1,7 +1,7 @@
 @extends('pages.projects.form')
 @section("adjudication-tab")
     <div class="card mt-3">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header text-black">
             <strong>SUMMARY SHEET</strong>
         </div>
         <div class="card-body p-0">
@@ -79,10 +79,13 @@
                                 <td class="text-right">0.00</td>
                                 <td class="text-right">0.00</td>
                                 <td class="text-center">
-                                    <button 
+                                    <a href="{{ route('projects.cost-plan-items', $project->id) }}" class="btn btn-primary" target="_blank">
+                                        View Items
+                                    </a>
+                                    {{-- <button 
                                         class="btn btn-sm btn-outline-primary w-75 view-items" projectid="{{$section->project_id}}" sectionid="{{$section->id}}">
                                         <i class="fas fa-eye"></i>Items
-                                    </button>
+                                    </button> --}}
                                 </td>
                             </tr>
                         @endforeach

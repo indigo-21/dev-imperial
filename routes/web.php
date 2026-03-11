@@ -82,7 +82,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
             ->name('get_po_item');
 
-    
+    Route::get('/projects/{id}/cost-plan-items', [ProjectController::class, 'costPlanItems'])
+    ->name('projects.cost-plan-items');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

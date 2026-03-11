@@ -112,3 +112,8 @@ li.user-footer {
 #scrollToBottom i {
     animation: bounce 2s infinite;
 }
+
+thead.thead-light th {
+    background-color: #4682b4 !important;
+    color: #FFF !important;
+}

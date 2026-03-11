@@ -319,6 +319,11 @@ class ProjectController extends Controller
         $cost_plan_item = CostPlanItem::findOrFail($id);
         return response()->json($cost_plan_item);
     }
+
+    public function costPlanItems($project_id)
+    {
+        return view('pages.projects.cost-plan-items');
+    }
     
 
 
