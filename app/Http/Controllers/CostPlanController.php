@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\CostPlanSection;
 use App\Models\CostPlanItem;
 use Illuminate\Database\Eloquent\Casts\Json;
+use App\Exports\CostPlanItemsExport;
+use App\Exports\CostPlanProjectExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Project;
 
 class CostPlanController extends Controller
 {
@@ -18,6 +22,23 @@ class CostPlanController extends Controller
     public function create()
     {
         return view('pages.costPlans.form');
+    }
+
+    public function export()
+    {
+        return Excel::download(new CostPlanItemsExport, 'cost-plan-items.xlsx');
+    }
+
+    public function exportProject($projectId)
+    {
+        $project_reference = "PRJ-" . str_pad($projectId, 5, '0', STR_PAD_LEFT);
+    
+        $filename = $project_reference . ' - Cost Plan.xlsx';
+    
+        return Excel::download(
+            new CostPlanProjectExport($projectId),
+            $filename
+        );
     }
 
     public function upsert(Request $request){

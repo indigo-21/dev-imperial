@@ -4,7 +4,13 @@
     <form id="cost_plan_form" method="POST">
         @csrf
         <input type="hidden" name="project_id" value="{{$project->id}}">
+        <a href="{{ route('costplan.export.project', $project->id) }}"
+            class="btn btn-success mb-3">
+            <i class="fas fa-file-excel"></i> Download Excel
+         </a>
         @foreach ($cost_plan as $section_index => $cost_plan_section )
+
+         
             <div class="card card-primary card-outline item-container mb-4 section-container">
                 <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse"
                     data-target="#section-{{$cost_plan_section->id}}" aria-expanded="true"
@@ -27,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-
+               
                 <div id="section-{{$cost_plan_section->id}}" class="collapse show">
                     <div class="card-body section-card drag-drop-sortable drag-drop-sortable-{{$section_index}}" data-section="{{$section_index}}">
                         @foreach ($cost_plan_section->items as $item_index => $cost_plan_item )
