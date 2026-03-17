@@ -88,20 +88,39 @@ class ProjectController extends Controller
                     // array_push($tabs,"variation-order");
                     $cost_plan_sections = CostPlanSection::where("project_id", $id);
                     $cost_plan_section_ids = [];
+                    $cost_plan_supplier_ids = [];
+
                     foreach ($cost_plan_sections->get() as $key => $cost_plan_section) {
                         array_push($cost_plan_section_ids, $cost_plan_section->id);
+                        $items = $cost_plan_section->items()->get();
+
+                        if($items->count()){
+                            foreach ($items as $key => $item) {
+                                $item_suppliers = explode(",", $item->supplier_id);
+                                for ($i=0; $i < count($item_suppliers); $i++) { 
+                                    $item_supplier_id = $item_suppliers[$i];
+                                    if(!in_array($item_supplier_id, $cost_plan_supplier_ids, true) ){
+                                        array_push($cost_plan_supplier_ids, $item_supplier_id);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    $for_po_suppliers = CostPlanItem::whereIn("cost_plan_section_id", $cost_plan_section_ids)
-                                                    ->join('suppliers', 'suppliers.id', '=', 'cost_plan_items.supplier_id')
-                                                    ->select('supplier_id', DB::raw('MIN(suppliers.business_name) as business_name'))
-                                                    ->groupBy('supplier_id')
-                                                    ->orderBy("business_name",'asc')
-                                                    ->get();
+
+                    // dd($cost_plan_supplier_ids);
+
+                    $for_po_suppliers = Supplier::whereIn('id', $cost_plan_supplier_ids)->get();
+
+                    // $for_po_suppliers = CostPlanItem::whereIn("cost_plan_section_id", $cost_plan_section_ids)
+                    //                                 ->join('suppliers', 'suppliers.id', '=', 'cost_plan_items.supplier_id')
+                    //                                 ->select('supplier_id', DB::raw('MIN(suppliers.business_name) as business_name'))
+                    //                                 ->groupBy('supplier_id')
+                    //                                 ->orderBy("business_name",'asc')
+                    //                                 ->get();
                     
                     if($for_po_suppliers->count()){
                         array_push($tabs,"purchase-orders");
                         array_push($tabs,"adjudication");
-                        // dd($tabs);
                     }
 
                     $result["cost_plan"] = "";

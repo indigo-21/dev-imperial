@@ -21,7 +21,7 @@
                         <select id="supplier_id" class="form-control">
                             <option value="">-- Select Supplier --</option>
                             @foreach ($for_po_suppliers as $for_po_supplier)
-                                <option value="{{ $for_po_supplier->supplier_id }}">{{ $for_po_supplier->business_name }}
+                                <option value="{{ $for_po_supplier->id }}">{{ $for_po_supplier->business_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -57,10 +57,11 @@
                         <table class="table table-bordered">
                             <thead class="thead-light">
                                 <tr>
+                                    <th> - </th>
                                     <th>Item</th>
                                     <th>Description</th>
-                                    <th width="120">Qty</th>
-                                    <th width="150">Unit Price</th>
+                                    <th style="width:10%;">Qty</th>
+                                    <th style="width:10%;">Unit Price</th>
                                     <th width="150">Total</th>
                                 </tr>
                             </thead>
@@ -73,7 +74,7 @@
 
                     <!-- ACTIONS -->
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="submit" id="proceed-btn-from-tablelist" class="btn btn-success btn-sm ">
+                        <button type="button" id="proceed-btn-from-tablelist" class="btn btn-success btn-sm ">
                             Proceed
                         </button>
                         <button type="button" id="cancel-btn-from-tablelist" class="btn btn-secondary btn-sm ml-2">
