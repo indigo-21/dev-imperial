@@ -34,6 +34,7 @@
                         <span class="text-danger error">{{$errors->first('client_id')}}</span>
                     </div>
                 </div>
+                
 
                 {{-- Project Type --}}
                 <div class="col-md-6">
@@ -51,6 +52,16 @@
                             @endforeach
                         </select>
                         <span class="text-danger error">{{$errors->first('project_type')}}</span>
+                    </div>
+                </div>
+
+
+                {{-- Project Address --}}
+                 <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="project_address">Project Address</label>
+                        <input type="text" name="project_address" id="project_address" class="form-control"
+                            value="{{ isset($project) ? $project->project_address : old("project_address") }}">
                     </div>
                 </div>
 

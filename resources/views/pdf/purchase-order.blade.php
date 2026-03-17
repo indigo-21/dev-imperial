@@ -93,7 +93,7 @@
 
     {{-- LINE ITEMS --}}
     <div class="section">
-        <strong>Site Address:</strong>
+        <strong>Project Address: {{ $purchaseOrder->project->project_address ?? ''}}</strong>
         <table class="items-table">
             <thead>
                 <tr>

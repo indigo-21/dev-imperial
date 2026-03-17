@@ -85,6 +85,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{id}/cost-plan-items', [ProjectController::class, 'costPlanItems'])
     ->name('projects.cost-plan-items');
 
+    Route::get('/cost-plan/export', [CostPlanController::class, 'export'])
+    ->name('costplan.export');
+
+    Route::get(
+        '/projects/{project}/cost-plan/export',
+        [CostPlanController::class, 'exportProject']
+    )->name('costplan.export.project');
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
