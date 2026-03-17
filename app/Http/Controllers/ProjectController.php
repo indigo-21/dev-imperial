@@ -196,6 +196,7 @@ class ProjectController extends Controller
 
         $project->description = $request->project_description;
         $project->project_type_id = $request->project_type;
+        $project->project_address = $request->project_address;
         $project->client_budget = $request->client_budget;
         $project->lead_owner = $request->lead_owner;
         $project->project_status = $request->project_status;

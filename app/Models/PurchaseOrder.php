@@ -14,6 +14,10 @@ class PurchaseOrder extends Model
         return $this->belongsTo(Supplier::class, "supplier_id");
     }
 
+    public function project(){
+        return $this->belongsTo(Project::class, "project_id");
+    }
+
     public function created_user(){
         return $this->belongsTo(User::class,"created_by");
     }
@@ -21,6 +25,5 @@ class PurchaseOrder extends Model
     public function po_items(){
         return $this->hasMany(PurchaseOrderItem::class, "purchase_order_id");
     }
-
 
 }

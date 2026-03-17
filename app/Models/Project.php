@@ -10,6 +10,7 @@ class Project extends Model
         'description',
         'reference',
         'project_type_id',
+        'project_address',
         'client_budget',
         'lead_owner',
         'pre_construction',

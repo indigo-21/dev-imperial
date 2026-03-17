@@ -36,8 +36,7 @@ class PurchaseOrderItemController extends Controller
 
     public function generatePdf($id)
     {
-        $purchaseOrder = PurchaseOrder::with('po_items', 'supplier')
-        ->findOrFail($id);
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
 
         $project_reference = "PRJ-" . str_pad($purchaseOrder->project_id, 5, '0', STR_PAD_LEFT);
 
