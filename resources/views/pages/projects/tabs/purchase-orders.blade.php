@@ -52,7 +52,7 @@
                         <input type="hidden" name="project_reference" value="{{ $project->reference }}">
                         <input type="hidden" name="purchase_order_id" value="">
                         <input type="hidden" name="supplier_id" value="">
-                        <label class="font-weight-bold mb-2">Purchase Order Line Items</label>
+                        <span class="font-weight-bold mb-2">Purchase Order Line Items</span>
 
                         <table class="table table-bordered">
                             <thead class="thead-light">
@@ -148,5 +148,6 @@
 
 
 @section('scripts')
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/custom/js/pages/projects/tabs/purchase-order.js') }}"></script>
 @endsection

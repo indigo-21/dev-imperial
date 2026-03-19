@@ -1,276 +1,437 @@
-$(function(){
-    $(document).on("click", "#create-po-btn", function () {
-        sectionAnimation();
+$(function () {
+    // Centralized Event Handlers
+    const clickHandlers = {
+        "#create-po-btn": () => sectionAnimation(),
+        "#cancel-btn-from-checklist": () => sectionAnimation("cancel-btn-from-checklist"),
+        "#proceed-btn-from-checklist": proceedToTable,
+        "#cancel-btn-from-tablelist": () => sectionAnimation("cancel-btn-from-tablelist"),
+        ".add-purchase-order-item-row": handleAddRow,
+        ".remove-purchase-order-item-row": handleRemoveRow,
+        "#proceed-btn-from-tablelist": () => upsert(),
+        ".edit-purchase-order": handleEdit,
+    };
+
+    Object.entries(clickHandlers).forEach(([selector, handler]) => {
+        $(document).on("click", selector, handler);
     });
 
-    $(document).on("click", "#cancel-btn-from-checklist", function () {
-       sectionAnimation("cancel-btn-from-checklist");
-    });
-
-    $(document).on("click", "#proceed-btn-from-checklist", function () {
-        sectionAnimation("proceed-btn-from-checklist");
-        displayLineItems();
-    });
-
-    $(document).on("click", "#cancel-btn-from-tablelist", function () {
-       sectionAnimation("cancel-btn-from-tablelist");
-    });
-
+    // Supplier change
     $(document).on("change", "#supplier_id", function () {
-        let supplier_id = $(this).val();
-        $("[name=supplier_id]").val(supplier_id);
-        displaySupplierItems(supplier_id);
+        const supplierId = $(this).val();
+        $("[name=supplier_id]").val(supplierId);
+        displaySupplierItems(supplierId);
     });
 
-    $(document).on("click",".add-purchase-order-item-row", function(){
-        let table_row = $(this).closest(".purchase-order-item");
-        let data = {
-            index: $(".purchase-order-item").length > 0 ? (parseFloat($(".purchase-order-item").length) + 1) : 1,
-            cost_plan_section_id: table_row.find(".cost_plan_section_id").val(),
-            item_code: table_row.find(".item_code").val(),
-            is_sub_row: true
-        };
-        table_row.after(itemTableRow(data));
-
-        updateNameAttrLineItems();
-    });
-
-    $(document).on("click", ".remove-purchase-order-item-row", function(){
-        let table_row = $(this).closest(".purchase-order-item");
-        table_row.hide(()=>{
-            table_row.remove();
-            updateNameAttrLineItems();
-        })
-    });
-
-    $(document).on("keyup", ".compute-total", function () {
-        let table_row = $(this).closest(".purchase-order-item");
-        let quantity_element = table_row.find(".qty-input").val() != "" ? table_row.find(".qty-input").val() : 0;
-        let rate_element = table_row.find(".price-input").val() != "" ? table_row.find(".price-input").val() : 0;
-        let quantity = parseFloat(quantity_element ?? 0);
-        let rate = parseFloat(rate_element ?? 0);
-        let total = parseFloat(quantity * rate) ?? 0;
-        table_row.find("[name=total]").val(currencyFormat(total));
-        table_row.find(".total-cell").text(currencyFormat(total));
-
-        updateNameAttrLineItems();
-    });
-
+    // Recompute totals
+    $(document).on("keyup", ".compute-total", handleRecomputeTotal);
 });
 
-function sectionAnimation(from = "create-button-order"){
-    $("#purchase-order-form").hide();
-    $("[name=purchase_order_id]").val("");
-    // $("[name=supplier_id]").val("");
-    switch (from) {
-        case "cancel-btn-from-checklist":
-                $("#purchase-order-form").hide();
-                $("#line-items-container").hide();
-                $("#line-items-table-container").hide();
-            break;
-        case "proceed-btn-from-checklist":
-                $("#purchase-order-form").show();
-                $("#line-items-container").hide();
-                $("#line-items-table-container").show();
-            break;
-        case "cancel-btn-from-tablelist":
-                $("#purchase-order-form").show();
-                $("#line-items-container").show();
-                $("#line-items-table-container").hide();
-            break;        
-        case "view-purchase-order":
-                $("#purchase-order-form").show();
-                $("#line-items-container").hide();
-                $("#line-items-table-container").show();
-            break;
-        case "edit-purchase-order":
-                $("#purchase-order-form").show();
-                $("#line-items-container").show();
-                $("#line-items-table-container").hide();
-            break;                    
-        default:
-            $("#purchase-order-form").show();
-            $("#line-items-container").show();
-            $("#line-items-table-container").hide();
-            break;
-    }
+/* -----------------------------
+    Row Add / Remove
+----------------------------- */
+
+function handleAddRow() {
+    const tableRow = $(this).closest(".purchase-order-item");
+    const index = $(".purchase-order-item").length + 1;
+
+    const data = {
+        index,
+        cost_plan_section_id: tableRow.find(".cost_plan_section_id").val(),
+        item_code: tableRow.find(".item_code").val().toString(),
+        is_sub_row: true
+    };
+
+    tableRow.after(itemTableRow(data));
+    updateNameAttrLineItems();
 }
 
-async function displaySupplierItems(supplier_id, existed_ids = []){
-    let line_item_container = $("#line-items-list");
-    let html = "<span>Loading...</span>";
-    let cost_plan_items = await getSupplierItems(supplier_id);
-    line_item_container.html(html);
-
-    if(cost_plan_items){
-        html = "";
-        cost_plan_items.map((cost_plan_item, index)=>{
-            let is_checked = existed_ids.includes(cost_plan_item.item_code); 
-            html += `
-                        <label class="d-flex align-items-center mb-2 selectable-label">
-                            <input type="checkbox"
-                                class="cost-plan-item"
-                                data-section-id="${cost_plan_item.cost_plan_section_id}" 
-                                data-item-code="${cost_plan_item.item_code}" 
-                                data-item-description="${cost_plan_item.description}" 
-                                data-quantity="${cost_plan_item.quantity}" 
-                                data-unit-price="${cost_plan_item.rate}" ${is_checked ? 'checked disabled' : ''}
-                                data-item-total="${cost_plan_item.total}"
-                            >
-                            <span class="mx-2">
-                                <strong>${cost_plan_item.item_code}</strong> — ${cost_plan_item.description}
-                            </span>
-                        </label>
-                    `;
-        }); 
-
-        setTimeout(() => {
-            line_item_container.html(html);
-        }, 2000);
-    }
+function handleRemoveRow() {
+    const row = $(this).closest(".purchase-order-item");
+    row.fadeOut(150, () => {
+        row.remove();
+        updateNameAttrLineItems();
+    });
 }
 
-async function displayLineItems(){
+/* -----------------------------
+    Compute Totals
+----------------------------- */
+
+function handleRecomputeTotal() {
+    const row = $(this).closest(".purchase-order-item");
+    const qty = parseFloat(row.find(".qty-input").val()) || 0;
+    const rate = parseFloat(row.find(".price-input").val()) || 0;
+    const total = qty * rate;
+
+    row.find("[name=total]").val(total.toFixed(2));
+    row.find(".total-cell").text(total.toFixed(2));
+
+    updateNameAttrLineItems();
+}
+
+/* -----------------------------
+    Handling Proceed to Display in Table
+----------------------------- */
+async function proceedToTable(){
+    const isFromEdit = $(this).attr("data-is-from-edit");
+    sectionAnimation("proceed-btn-from-checklist");
+    displayLineItems();
+    $("#proceed-btn-from-checklist").attr("data-is-from-edit", isFromEdit);
+}
+/* -----------------------------
+    Handling Edit Button from the table
+----------------------------- */
+
+async function handleEdit(){
+    const purchaseOrderId = $(this).attr("data-purchase-order-id");
+    const supplierId = $(this).attr("data-supplier-id");
+    await displaySupplierItems(supplierId, purchaseOrderId);
+    sectionAnimation("edit-purchase-order");
+
+    $("#supplier_id").attr("disabled", true);
+    $("#proceed-btn-from-checklist").attr("data-is-from-edit", true);
+
+    $("#supplier_id").val(supplierId);
+    $("[name=purchase_order_id]").val(purchaseOrderId);
+}
+
+/* -----------------------------
+    Section Animation
+----------------------------- */
+
+function sectionAnimation(from = "create-button-order") {
+    const form = $("#purchase-order-form");
+    const list = $("#line-items-container");
+    const table = $("#line-items-table-container");
+
+    // reset
+    form.hide();
+    list.hide();
+    table.hide();
+    // $("[name=purchase_order_id]").val("");
+    
+    const states = {
+        "cancel-btn-from-checklist": () => {},
+        "proceed-btn-from-checklist": () => { form.show() & table.show()},
+        "cancel-btn-from-tablelist": () => form.show() & list.show(),
+        "view-purchase-order": () => table.show(),
+        "edit-purchase-order": () => {form.show() & list.show()}
+    }; 
+    
+    (states[from] ?? ( () => {
+                                    form.show();
+                                    list.show();
+                                }) 
+    ) ();
+
+}
+
+/* -----------------------------
+    Fetch & Display Supplier Items
+----------------------------- */
+
+async function displaySupplierItems(supplierId, purchaseOrderId = false) {
+    const poItems = await getPoItems({supplierId, purchaseOrderId});
+    const existItemCode = poItems.map( item => { return item.item_code } );
+
+    const container = $("#line-items-list");
+    container.html("<span>Loading...</span>");
+
+    const items = await getSupplierItems(supplierId);
+    if (!items) return container.html("<span>No items found.</span>");
+
+    const html = items
+        .map(item => {
+            const checked = existItemCode.includes(item.item_code) ? "checked disabled" : "";
+            return `
+                <label class="d-flex align-items-center mb-2 selectable-label">
+                    <input type="checkbox"
+                        class="cost-plan-item"
+                        data-section-id="${item.cost_plan_section_id}" 
+                        data-item-code="${item.item_code}" 
+                        data-item-description="${item.description}" 
+                        data-quantity="${item.quantity}" 
+                        data-unit-price="${item.rate}"
+                        data-item-total="${item.total}"
+                        ${checked}
+                    >
+                    <span class="mx-2">
+                        <strong>${item.item_code}</strong> — ${item.description}
+                    </span>
+                </label>`;
+        })
+        .join("");
+
+    container.html(html);
+}
+
+/* -----------------------------
+    Display Selected Line Items
+----------------------------- */
+
+async function displayLineItems() {
+    const isFromEdit = $("#proceed-btn-from-checklist").attr("data-is-from-edit");
+    const tbody = $("#line-items-table-body");
+    
+    let countRow = 0;
+
+    tbody.html(`<tr><td colspan="5" class="text-center">Loading...</td></tr>`);
+
+    let totalAmount = 0;
+    const dataItem = [];
     let html = "";
-    let line_item_tbody = $("#line-items-table-body");
-    let loading_screen = `<tr><td class="text-center" colspan="5"><span>Loading...</span></td></tr>`;
-    line_item_tbody.html(loading_screen);
-    let item_total_amount = 0;
 
-    $(".cost-plan-item").each((index, item) => {
-        if($(item).prop("disabled") != true){
-            let cost_plan_section_id = $(item).attr("data-section-id");
-            let item_code = $(item).attr("data-item-code");
-            let item_description = $(item).attr("data-item-description");
-            let item_quantity = $(item).attr("data-quantity");
-            let item_unit_price = parseFloat($(item).attr("data-unit-price") ?? 0);
-            let total = parseFloat(item_quantity ?? 0) * parseFloat(item_unit_price ?? 0);
-            item_total_amount += parseFloat(total);
-            let data = {index, cost_plan_section_id, item_code,item_description,item_quantity,item_unit_price, total};
-            html += itemTableRow(data);
-        }
+    if(isFromEdit){
+        const supplierId = $("#supplier_id").val();
+        const purchaseOrderId = $("[name=purchase_order_id]").val();
+        const poItems = await getPoItems({supplierId, purchaseOrderId});
+        
+        poItems.map( item => {
+            const qty = item.quantity;
+            const price = item.unit_price;
+            const data = {
+                index: countRow,
+                cost_plan_section_id: item.section_code,
+                item_code: item.item_code,
+                item_description: item.description,
+                item_quantity: qty,
+                item_unit_price: price,
+                total: qty * price
+            };
+
+            totalAmount += data.total;
+            
+            dataItem.push(data);
+
+            countRow++;
+        });
+        
+    }
+
+    $(`.cost-plan-item:not(:disabled)`).each((i, item) => {
+        const el = $(item);
+        const qty = parseFloat(el.data("quantity")) || 0;
+        const price = parseFloat(el.data("unit-price")) || 0;
+
+        const data = {
+            index: countRow,
+            cost_plan_section_id: el.data("section-id"),
+            item_code: el.data("item-code").toString(),
+            item_description: el.data("item-description"),
+            item_quantity: qty,
+            item_unit_price: price,
+            total: qty * price
+        };
+
+        totalAmount += data.total;
+        // html += itemTableRow(data);
+
+        dataItem.push(data);
+
+        countRow++;
     });
 
-    setTimeout(() => {
-        html += `tr>
-                <td colspan="5">Total</td>
-                <td class="text-right total-table">${currencyFormat(item_total_amount)}</td>
-            </tr>`;
-        line_item_tbody.html(html); 
-    }, 1500);
-    
-} 
+    const sortedItems = dataItem.sort((a, b) => {
+                            let [a1, a2] = a.item_code.split('.').map(Number);
+                            let [b1, b2] = b.item_code.split('.').map(Number);
 
-async function getSupplierItems(supplier_id = false) {
-    let project_id = $("[name=project_id]").val();
+                            return a1 - b1 || a2 - b2;
+                        });
+                        
+    sortedItems.map(item => {
+        html += itemTableRow(item);
+    })
+    
+    html += `
+        <tr>
+            <td colspan="5">Total</td>
+            <td class="total-table text-right">${currencyFormat(totalAmount)}</td>
+        </tr>`;
+
+    tbody.html(html);
+}
+
+/* -----------------------------
+    Row Template
+----------------------------- */
+
+function itemTableRow({
+    index = 0,
+    cost_plan_section_id = "",
+    item_code = "",
+    item_description = "",
+    item_quantity = 0,
+    item_unit_price = 0,
+    total = 0,
+    is_sub_row = false
+}) {
+    const sectionCode = item_code && item_code.split(".")[0];
+
+    return `
+        <tr class="purchase-order-item">
+            <td style="width:5%">
+                ${is_sub_row ? `<button type="button" class="btn btn-danger remove-purchase-order-item-row my-2 w-100">
+                    <i class="fas fa-minus"></i>
+                </button>` : ""}
+            </td>
+
+            <td>
+                <input type="hidden" class="section_code" name="section_code[${index}]" value="${sectionCode}">
+                <input type="hidden" class="cost_plan_section_id" name="cost_plan_section_id[${index}]" value="${cost_plan_section_id}">
+                <input type="hidden" class="item_code" name="item_code[${index}]" value="${item_code}">
+                <strong>${item_code}</strong>
+
+                <button type="button" class="btn btn-primary add-purchase-order-item-row my-2 w-100">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </td>
+
+            <td style="width:63%">
+                <textarea name="item_description[${index}]" class="form-control item_description" rows="3">${item_description ?? ""}</textarea>
+            </td>
+
+            <td>
+                <input type="number" name="quantity[${index}]" class="form-control compute-total qty-input quantity"
+                    value="${item_quantity}" min="0">
+            </td>
+
+            <td>
+                <input type="number" name="unit_price[${index}]" class="form-control compute-total price-input unit_price"
+                    value="${item_unit_price.toFixed(2)}" min="0" step="0.01">
+                <input type="hidden" name="total[${index}]" value="${total.toFixed(2)}">
+            </td>
+
+            <td class="total-cell text-right">${total.toFixed(2)}</td>
+        </tr>`;
+}
+
+/* -----------------------------
+    Update Attributes + Grand Total
+----------------------------- */
+
+function updateNameAttrLineItems() {
+    let grandTotal = 0;
+
+    $(".purchase-order-item").each((i, row) => {
+        const el = $(row);
+
+        grandTotal += parseFloat(el.find(".total-cell").text()) || 0;
+
+        el.find(".section_code").attr("name", `section_code[${i}]`);
+        el.find(".cost_plan_section_id").attr("name", `cost_plan_section_id[${i}]`);
+        el.find(".item_code").attr("name", `item_code[${i}]`);
+        el.find(".item_description").attr("name", `item_description[${i}]`);
+        el.find(".quantity").attr("name", `quantity[${i}]`);
+        el.find(".unit_price").attr("name", `unit_price[${i}]`);
+    });
+
+    $(".total-table").text(currencyFormat(grandTotal));
+}
+
+/* -----------------------------
+   Getting Line Item in Table
+----------------------------- */
+
+function getUpsertPayload(){
+    const projectId = $("[name=project_id]").val();
+    const purchaseOrderId = $("[name=purchase_order_id]").val();
+    const supplierId = $("[name=supplier_id]").val();
+
+
+    let data = { projectId, purchaseOrderId, supplierId, items: [] };
+    $(".purchase-order-item").each((i, row) =>{
+        const el = $(row);
+
+        const item = {
+            section_code: el.find(".section_code").val(),
+            cost_plan_section_id: el.find(".cost_plan_section_id").val(),
+            item_code: el.find(".item_code").val(),
+            item_description: el.find(".item_description").val(),
+            quantity: el.find(".quantity").val(),
+            unit_price: el.find(".unit_price").val(),
+        }
+
+        data.items.push(item);
+    });
+
+    return data;
+}
+
+
+/* -----------------------------
+    API Requests
+----------------------------- */
+
+async function getSupplierItems(supplierId) {
+    const projectId = $("[name=project_id]").val();
+
     try {
-        const response = await fetch(`${BASE_URL}/get_items_by_supplier`, {
+        const res = await fetch(`${BASE_URL}/get_items_by_supplier`, {
             method: "POST",
-            headers:{
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'Content-Type': 'application/json'
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                 project_id, supplier_id
-            })
+            body: JSON.stringify({ project_id: projectId, supplier_id: supplierId })
         });
 
-        let html = "";
-        let result = await response.json();
-        return result;
-    } catch (error) {
-        console.log(error);
+        return await res.json();
+    } catch (err) {
+        console.error(err);
+        return [];
     }
-
 }
 
-async function getPurchaseOrderItems(purchase_order_id = false){
+async function upsert() {
+
+    const payload = getUpsertPayload();
     try {
-        const response = await fetch(`${BASE_URL}/get_po_item`,{
+        const res = await fetch(`${BASE_URL}/projects/purchase_order_upsert`, {
             method: "POST",
-            headers:{
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'Content-Type': 'application/json'
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ purchase_order_id })
-        }).json();
-        return response;
-    } catch (error) {
-        console.log(error);
+            body: JSON.stringify(payload)
+        });
+
+        const message =  await res.json();
+
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+
+    } catch (err) {
+        console.error(err);
+        return [];
     }
 }
 
-function itemTableRow(data = {}){
-    let {
-            index = 0, 
-            cost_plan_section_id = null, 
-            item_code = "", 
-            item_description = "", 
-            item_quantity = 0, 
-            item_unit_price = 0, 
-            total = 0,
-            is_sub_row = false
-        } = data;   
+async function getPoItems({supplierId, purchaseOrderId = false}){
+    try {
+        const projectId = $("[name=project_id]").val();
 
-    let section_code = item_code.split(".");
-    let remove_row = `<button type="button" 
-                            class="btn btn-danger remove-purchase-order-item-row my-2 w-100">
-                            <i class="fas fa-minus"></i>
-                        </button>`;
-    let add_row = `<button type="button" 
-                        class="btn btn-primary add-purchase-order-item-row my-2 w-100">
-                        <i class="fas fa-plus"></i>
-                    </button>`;
+        const res = await fetch(`${BASE_URL}/get_po_item`,{
+            method:"POST",
+            headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        "Content-Type": "application/json"
+                    },
+            body:JSON.stringify({projectId, supplierId, purchaseOrderId})
+        });
+        return res.json();
 
-    return `<tr class="purchase-order-item">
-                <td style="width:5% !important;">
-                    ${is_sub_row ? remove_row : ''}
-                </td>
-                <td>
-                    <input type="hidden" class="section_code" name="section_code[${index}]" value="${section_code[0]}">
-                    <input type="hidden" class="cost_plan_section_id" name="cost_plan_section_id[${index}]" value="${cost_plan_section_id}">
-                    <input type="hidden" class="item_code" name="item_code[${index}]" value="${item_code}">
-                    <strong>${item_code}</strong>
-                    ${add_row}
-                </td>
-                <td style="width:63% !important;">
-                    <textarea ${!is_sub_row ? 'disabled' : ''} name="item_description[${index}]" class="form-control item_description" rows="3">${item_description ?? '' }</textarea>
-                </td>
-                <td>
-                    <input type="number" name="quantity[${index}]" class="form-control compute-total qty-input quantity" value="${item_quantity ?? '0' }" min="0">
-                </td>
-                <td>
-                    <input type="number" name="unit_price[${index}]" class="form-control compute-total price-input unit_price" value="${item_unit_price ? item_unit_price.toFixed(2) : '0.00' }" min="0" step="0.01">
-                    <input type="hidden" name="total[${index}]" value="${total ? total.toFixed(2) : '0.00' }" >
-                </td>
-                <td class="total-cell text-right">${total ? total.toFixed(2) : '0.00' }</td>
-            </tr>`;
-};
-
-function updateNameAttrLineItems(){
-    let grand_total = 0;
-
-    $(".purchase-order-item").each((index, element) => {
-        let total_row_cell = $(element).find(".total-cell").text();
-        grand_total += parseFloat(total_row_cell ?? "0");
-        $(element).find(".section_code").attr("name", `section_code[${index}]`);
-        $(element).find(".cost_plan_section_id").attr("name", `cost_plan_section_id[${index}]`);
-        $(element).find(".item_code").attr("name", `item_code[${index}]`);
-        $(element).find(".item_description").attr("name", `item_description[${index}]`);
-        $(element).find(".quantity").attr("name", `quantity[${index}]`);
-        $(element).find(".unit_price").attr("name", `unit_price[${index}]`);
-    });
-
-    $(".total-table").text(currencyFormat(grand_total));
-}
-
-function getPurchaseOrderLineItems(){
-    let data = {};
-    let purchase_order_items = $(".purchase-order-item");
-
-    purchase_order_items.each()
-
-}
-function upsertPurchaseOrderItem(){
-    
+    } catch (message) {
+        console.error(message);
+        return [];
+    }
 }

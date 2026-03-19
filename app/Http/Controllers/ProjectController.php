@@ -286,12 +286,12 @@ class ProjectController extends Controller
     }
     
     public function upsertPurchaseOrder(Request $request){
-        // dd($request);
-        $project_id = $request->project_id;
-        $supplier_id = $request->supplier_id;
-        $purchase_order_id = $request->purchase_order_id;
+        $project_id = $request->projectId;
+        $supplier_id = $request->supplierId;
+        $purchase_order_id = $request->purchaseOrderId;
         $item_data = [];
         $exist_purchase_order_items = [];
+        $items = $request->items;
         
         $purchase_order = !$purchase_order_id ? new PurchaseOrder() : PurchaseOrder::findOrFail($purchase_order_id);
         $purchase_order->project_id = $project_id;
@@ -308,19 +308,21 @@ class ProjectController extends Controller
             }
         }
 
-        for ($i=0; $i < count($request->item_code) ; $i++) { 
-            $total = floatval($request?->quantity[$i] ?? 0) * floatval($request?->unit_price[$i] ?? 0);
-            $items = [
-                    "purchase_order_id" => $purchase_order_id,
-                    "section_code" => $request->section_code[$i],
-                    "cost_plan_section_id" => $request->cost_plan_section_id[$i],
-                    "item_code" => $request->item_code[$i],
-                    "description" => $request->item_description[$i],
-                    "quantity" => $request->quantity[$i],
-                    "unit_price" => $request->unit_price[$i],
-                    "total" => $total,
-                ];  
-            array_push($item_data, $items);
+        if(count($items) > 0){
+                foreach ($items as $key => $item) {
+                    $total = floatval($item?->quantity ?? 0) * floatval($item?->unit_price ?? 0);
+                    $tmp_item = [
+                            "purchase_order_id" => $purchase_order_id,
+                            "section_code" => $item["section_code"],
+                            "cost_plan_section_id" => $item["cost_plan_section_id"],
+                            "item_code" => $item["item_code"],
+                            "description" => $item["item_description"],
+                            "quantity" => $item["quantity"],
+                            "unit_price" => $item["unit_price"],
+                            "total" => $total,
+                        ];  
+                    array_push($item_data, $tmp_item);
+                }
         }
 
         $purchase_order_item_result = DB::table("purchase_order_items")
@@ -331,8 +333,8 @@ class ProjectController extends Controller
         
         $po_number = "PO-" . str_pad($purchase_order_id, 5, '0', STR_PAD_LEFT);
         $message = count($exist_purchase_order_items) ? $po_number." Update Successfully" : "New Purchase Order ".$po_number; 
-        return redirect("projects/edit/purchase-orders/$project_id")->with("success", $message);
-
+        // return redirect("projects/edit/purchase-orders/$project_id")->with("success", $message);
+        return response()->json($message);
     }
 
     public function viewItemFromAdjudication($id){

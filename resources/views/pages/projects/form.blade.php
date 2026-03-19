@@ -2,6 +2,8 @@
 
      <x-slot name="importedLinks">
        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+        {{-- <link rel="stylesheet" src="{{ asset('plugins/sweetalert2/sweetalert2.all.js') }}"></link> --}}
+       
     </x-slot>
     
     @section('style')

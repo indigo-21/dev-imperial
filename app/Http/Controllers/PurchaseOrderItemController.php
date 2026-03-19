@@ -11,14 +11,30 @@ class PurchaseOrderItemController extends Controller
 {
     
     public function getPurchaseOrderItems(Request $request){
-        $purchase_order_id = $request->purchase_order_id;   
-        $purchase_order_items = PurchaseOrderItem::where("purchase_order_id", $purchase_order_id)->get();
-        $purchase_order = PurchaseOrder::find($purchase_order_id);
-        $data = [
-                    "purchase_order" => $purchase_order, 
-                    "purchase_order_items" => $purchase_order_items
-                ];
-        return json_encode($data);
+        $projectId = $request->projectId;
+        $supplierId = $request->supplierId;
+        $purchaseOrderId = $request->purchaseOrderId;
+       
+        $query = PurchaseOrder::where('project_id', $projectId)
+                                ->where("supplier_id", $supplierId);
+        if ($purchaseOrderId) {
+            $query->where('id', $purchaseOrderId);
+        }
+
+        $purchaseOrders = $query->get();
+
+        $result = [];
+
+        foreach ($purchaseOrders as $po) {
+            $poNumber = 'PO-' . str_pad($po->id, 5, '0', STR_PAD_LEFT);
+
+            foreach ($po->po_items as $item) {
+                array_push($result, $item);
+            }
+        }
+
+        return response()->json($result);
+
     }
 
     public function getPurchaseOrderPerSection(Request $request){
