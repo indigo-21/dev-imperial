@@ -16,7 +16,9 @@
                             <th class="text-right">Profit</th>
                             <th class="text-right">Gross Profit %</th>
                             <th class="text-right">Total ex. VAT</th>
-                            <th class="text-right">PO Amount</th>
+                            <th class="text-right">Actual Cost</th>
+                            <th class="text-right">Actual Profit</th>
+                            <th class="text-right">Actual GP %</th>
                             <th class="text-right">Inv Amount</th>
                             <th class="text-center">Actions</th>
                         </tr>
@@ -76,6 +78,8 @@
                                 <td class="text-right">{{ number_format($section_profit, 2, '.', ',') }}</td>
                                 <td class="text-right"> {{ round($gross_profit) }}% </td>
                                 <td class="text-right">{{ number_format($section_total, 2, '.', ',') }}</td>
+                                <td class="text-right">0.00</td>
+                                <td class="text-right">0.00</td>
                                 <td class="text-right">0.00</td>
                                 <td class="text-right">0.00</td>
                                 <td class="text-center">
@@ -165,8 +169,6 @@
                             <td>Cost</td>
                             <td>Total</td>
                             <td>PO No.</td>
-                            <td>PO Amount</td>
-                            <td>Invoice No.</td>
                             <td>Invoice Amount</td>
                         </tr>
                     </tbody>
