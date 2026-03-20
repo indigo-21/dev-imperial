@@ -289,9 +289,10 @@ class ProjectController extends Controller
         $project_id = $request->projectId;
         $supplier_id = $request->supplierId;
         $purchase_order_id = $request->purchaseOrderId;
+        $items = $request->items;
+        
         $item_data = [];
         $exist_purchase_order_items = [];
-        $items = $request->items;
         
         $purchase_order = !$purchase_order_id ? new PurchaseOrder() : PurchaseOrder::findOrFail($purchase_order_id);
         $purchase_order->project_id = $project_id;
@@ -310,7 +311,7 @@ class ProjectController extends Controller
 
         if(count($items) > 0){
                 foreach ($items as $key => $item) {
-                    $total = floatval($item?->quantity ?? 0) * floatval($item?->unit_price ?? 0);
+                    $total = floatval($item["quantity"] ?? 0) * floatval($item["unit_price"] ?? 0);
                     $tmp_item = [
                             "purchase_order_id" => $purchase_order_id,
                             "section_code" => $item["section_code"],
@@ -324,6 +325,7 @@ class ProjectController extends Controller
                     array_push($item_data, $tmp_item);
                 }
         }
+        
 
         $purchase_order_item_result = DB::table("purchase_order_items")
                                                 ->insert($item_data);

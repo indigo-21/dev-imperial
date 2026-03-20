@@ -1,4 +1,5 @@
 $(function () {
+
     // Centralized Event Handlers
     const clickHandlers = {
         "#create-po-btn": () => sectionAnimation(),
@@ -7,7 +8,7 @@ $(function () {
         "#cancel-btn-from-tablelist": () => sectionAnimation("cancel-btn-from-tablelist"),
         ".add-purchase-order-item-row": handleAddRow,
         ".remove-purchase-order-item-row": handleRemoveRow,
-        "#proceed-btn-from-tablelist": () => upsert(),
+        "#proceed-btn-from-tablelist": () => handleUpsertValiadtion(),
         ".edit-purchase-order": handleEdit,
     };
 
@@ -25,6 +26,8 @@ $(function () {
     // Recompute totals
     $(document).on("keyup", ".compute-total", handleRecomputeTotal);
 });
+
+let LIMIT_COST = [];
 
 /* -----------------------------
     Row Add / Remove
@@ -62,11 +65,13 @@ function handleRecomputeTotal() {
     const qty = parseFloat(row.find(".qty-input").val()) || 0;
     const rate = parseFloat(row.find(".price-input").val()) || 0;
     const total = qty * rate;
-
+    
     row.find("[name=total]").val(total.toFixed(2));
     row.find(".total-cell").text(total.toFixed(2));
-
+    
     updateNameAttrLineItems();
+    
+    
 }
 
 /* -----------------------------
@@ -74,9 +79,11 @@ function handleRecomputeTotal() {
 ----------------------------- */
 async function proceedToTable(){
     const isFromEdit = $(this).attr("data-is-from-edit");
+    const supplierId = $("#supplier_id").val();
     sectionAnimation("proceed-btn-from-checklist");
     displayLineItems();
     $("#proceed-btn-from-checklist").attr("data-is-from-edit", isFromEdit);
+    $("[name=supplier_id]").val(supplierId);
 }
 /* -----------------------------
     Handling Edit Button from the table
@@ -85,8 +92,8 @@ async function proceedToTable(){
 async function handleEdit(){
     const purchaseOrderId = $(this).attr("data-purchase-order-id");
     const supplierId = $(this).attr("data-supplier-id");
-    await displaySupplierItems(supplierId, purchaseOrderId);
     sectionAnimation("edit-purchase-order");
+    await displaySupplierItems(supplierId, purchaseOrderId);
 
     $("#supplier_id").attr("disabled", true);
     $("#proceed-btn-from-checklist").attr("data-is-from-edit", true);
@@ -104,6 +111,9 @@ function sectionAnimation(from = "create-button-order") {
     const list = $("#line-items-container");
     const table = $("#line-items-table-container");
 
+    const supplierField = $("#supplier_id");
+    const itemList = $("#line-items-list");
+
     // reset
     form.hide();
     list.hide();
@@ -115,12 +125,15 @@ function sectionAnimation(from = "create-button-order") {
         "proceed-btn-from-checklist": () => { form.show() & table.show()},
         "cancel-btn-from-tablelist": () => form.show() & list.show(),
         "view-purchase-order": () => table.show(),
-        "edit-purchase-order": () => {form.show() & list.show()}
+        "edit-purchase-order": () => { form.show() & list.show() }
     }; 
     
     (states[from] ?? ( () => {
                                     form.show();
                                     list.show();
+                                    supplierField.attr("disabled", false);
+                                    supplierField.val("");
+                                    itemList.html("");
                                 }) 
     ) ();
 
@@ -191,7 +204,7 @@ async function displayLineItems() {
             const price = item.unit_price;
             const data = {
                 index: countRow,
-                cost_plan_section_id: item.section_code,
+                cost_plan_section_id: item.cost_plan_section_id,
                 item_code: item.item_code,
                 item_description: item.description,
                 item_quantity: qty,
@@ -208,7 +221,7 @@ async function displayLineItems() {
         
     }
 
-    $(`.cost-plan-item:not(:disabled)`).each((i, item) => {
+    $(`.cost-plan-item:not(:disabled):checked`).each((i, item) => {
         const el = $(item);
         const qty = parseFloat(el.data("quantity")) || 0;
         const price = parseFloat(el.data("unit-price")) || 0;
@@ -364,7 +377,7 @@ function getUpsertPayload(){
 
 async function getSupplierItems(supplierId) {
     const projectId = $("[name=project_id]").val();
-
+    LIMIT_COST = [];
     try {
         const res = await fetch(`${BASE_URL}/get_items_by_supplier`, {
             method: "POST",
@@ -374,17 +387,87 @@ async function getSupplierItems(supplierId) {
             },
             body: JSON.stringify({ project_id: projectId, supplier_id: supplierId })
         });
-
-        return await res.json();
+        const result = await res.json();
+        result.map((item, i)=>{
+            const tmp = {
+                                item_code: item.item_code,
+                                cost_limit: parseFloat(item.rate ?? 0)
+                            };
+            LIMIT_COST.push(tmp)
+        });
+        return result;
     } catch (err) {
         console.error(err);
         return [];
     }
 }
 
+async function handleUpsertValiadtion(){
+    const row  = $(".purchase-order-item");
+
+    let hasWarning = false;
+    
+    LIMIT_COST.map((item, i) => {
+        const itemCode = item.item_code;
+        const costLimit = parseFloat(item.cost_limit ?? 0);
+
+        let rowTotal = 0;
+
+        row.find(`[value='${itemCode}']`).each((rowIndex, rowItem) =>{
+            const tableRow = $(rowItem).closest(".purchase-order-item");
+            const total = tableRow.find(".total-cell").html() == NaN ? "0" : tableRow.find(".total-cell").html().trim();
+
+            rowTotal += parseFloat(total);
+        });
+
+        if(rowTotal > costLimit){
+            row.find(`[value='${itemCode}']`).each((rowIndex, rowItem) =>{
+                const tableRow = $(rowItem).closest(".purchase-order-item");
+                const unitPrice = tableRow.find(".unit_price");
+
+                unitPrice.addClass("is-invalid");
+
+            });
+            
+            hasWarning = true;
+        }
+
+    });
+
+    if(hasWarning){
+        swal({
+                title: "Warning!",
+                text: "Item total exceed Item Cost in Cost Plan.",
+                icon: "warning",
+                buttons: {
+                    proceed: "Proceed",
+                    cancel: "See Items",
+                },
+                dangerMode: true,
+                })
+                .then((value) => {
+                if (value == "proceed") {
+                    upsert();
+                    // swal("Poof! Your imaginary file has been deleted!", {
+                    //     icon: "success",
+                    // });
+                } else {
+                    swal("Please see red fields.");
+                }
+        });
+    }
+    
+    
+
+    // $(".purchase-order-item").find(`[value='${itemCode}']`).each((i, item) =>{
+
+    // });
+}
+
 async function upsert() {
 
     const payload = getUpsertPayload();
+
     try {
         const res = await fetch(`${BASE_URL}/projects/purchase_order_upsert`, {
             method: "POST",
