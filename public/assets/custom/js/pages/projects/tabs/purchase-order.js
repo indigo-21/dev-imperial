@@ -407,13 +407,15 @@ async function handleUpsertValiadtion(){
 
     let hasWarning = false;
     
+    $(".unit_price").removeClass("is-invalid");
+
     LIMIT_COST.map((item, i) => {
         const itemCode = item.item_code;
         const costLimit = parseFloat(item.cost_limit ?? 0);
 
         let rowTotal = 0;
 
-        row.find(`[value='${itemCode}']`).each((rowIndex, rowItem) =>{
+        row.find(`[value='${itemCode}']`).each((rowIndex, rowItem) => {
             const tableRow = $(rowItem).closest(".purchase-order-item");
             const total = tableRow.find(".total-cell").html() == NaN ? "0" : tableRow.find(".total-cell").html().trim();
 
@@ -455,6 +457,8 @@ async function handleUpsertValiadtion(){
                     swal("Please see red fields.");
                 }
         });
+    }else{
+        upsert();
     }
     
     
