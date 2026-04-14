@@ -46,9 +46,15 @@ class CostPlanController extends Controller
         $project_id = $request->project_id;
         $sections = $request->sections;
         $is_create = false;
+        $existSections = [];
+        $existItems = [];
         
         foreach ($sections as $key => $section) {
+
             $costplan_section_id = $section["section_id"];
+
+            array_push($existSections, $costplan_section_id);
+
             $is_create = !$costplan_section_id;
             $cost_plan_section = $costplan_section_id ?  CostPlanSection::find($costplan_section_id) : new CostPlanSection();
             $cost_plan_section->project_id = $project_id;
@@ -58,6 +64,7 @@ class CostPlanController extends Controller
             $result = $cost_plan_section->save();
 
             if($result && count($section["items"]) > 0){
+
               foreach ($section["items"] as $key => $item) {
                     $costplan_item_id = $item["item_id"];
                     $cost_plan_item = $costplan_item_id ? CostPlanItem::find($costplan_item_id): new CostPlanItem();
@@ -72,12 +79,20 @@ class CostPlanController extends Controller
                     $cost_plan_item->total  = $item["total"];
                     $cost_plan_item->supplier_id  = $item["supplier_id"];
                     $result = $cost_plan_item->save() ? true : false;
+                    
+                    if($result){
+                        array_push($existItems, $costplan_item_id);
+                    }
+
               }
+
             }
 
-
-
         }
+
+        CostPlanItem::whereIn("cost_plan_section_id", $existSections)
+                        ->whereNotIn("id", $existItems)->delete();
+
 
         $project_reference = "PRJ-" . str_pad($project_id, 5, '0', STR_PAD_LEFT);
         $message = !$is_create ? $project_reference." Update Successfully" : "New Costplan created on ".$project_reference; 

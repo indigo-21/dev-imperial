@@ -102,7 +102,8 @@ $(function () {
         let unit_options = "";
         let markup_val = parent.closest(".section-container").find("[name=section_markup]").val();
 
-        supplier_options = $(`[name="supplier_id"]`).first().find("option");
+        supplier_options = $(`.supplier-id`).first().find("option");
+        // supplier_options = $(`[name="supplier_id"]`).first().find("option");
         supplier_options.each((option_index, option) => {
             supplier_options += `<option value="${option.value}">${option.label}</option>`;
         });
@@ -184,7 +185,7 @@ $(function () {
                                     </div>
                                     <div class="col-md-8 mt-3">
                                         <label>Supplier</label>
-                                        <select name="supplier_id" class="form-control select2bs4">
+                                        <select name="supplier_id" class="form-control select2bs4 supplier-id" multiple>
                                             ${supplier_options}
                                         </select>
                                     </div>

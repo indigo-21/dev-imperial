@@ -110,7 +110,7 @@
                                                 @endphp
                                             
                                                 <select name="supplier_id[]"
-                                                    class="form-control select2bs4"
+                                                    class="form-control select2bs4 supplier-id"
                                                     multiple
                                                     style="width:100%;">
                                             
