@@ -1,9 +1,46 @@
 
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-white navbar-dark bg-dark fixed-top">
 <!-- Left navbar links -->
+   
+    <a href="/dashboard" class="brand-link p-0">
+        <img src="{{ asset('assets/images/imperial-light.png') }}" alt="Logo" class="img-fluid d-flex m-auto" style="padding:10px; width:180px;">
+    </a>
     <ul class="navbar-nav">
+        
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.index') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Sub Contractor / Suppliers
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('clients.index') }}" class="nav-link {{ request()->routeIs('clients.index') ? 'active' : '' }}">
+                <i class="fas fa-user"></i> Clients
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('projects.index') }}" class="nav-link {{ request()->routeIs('projects.index') ? 'active' : '' }}">
+                <i class="fas fa-layer-group"></i> Projects
+            </a>
+        </li>
+
+        <!-- Dropdown for Configurations -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-cogs"></i> Configurations
+            </a>
+            <div class="dropdown-menu">
+                <a href="{{ route('supplier-types.index') }}" class="dropdown-item">
+                    Supplier Types
+                </a>
+            </div>
         </li>
     </ul>
 
