@@ -14,10 +14,10 @@
 
         @yield('style')
     </head>
-    <body class="font-sans antialiased" base_url="{{url("/")}}">
+    <body class="hold-transition layout-top-nav" base_url="{{url("/")}}">
         <div class="wrapper">
             @include('includes.navigation')
-            @include('includes.aside')
+            {{-- @include('includes.aside') --}}
 
             @isset($content)
                   <div class="content-wrapper">
