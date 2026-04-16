@@ -155,7 +155,10 @@ async function displaySupplierItems(supplierId, purchaseOrderId = false) {
 
     const html = items
         .map(item => {
-            const checked = existItemCode.includes(item.item_code) ? "checked disabled" : "";
+            // const checked = existItemCode.includes(item.item_code) ? "checked disabled" : "";
+            // const checked = existItemCode.includes(item.item_code) ? "checked disabled" : "";
+            const hasPo = existItemCode.includes(item.item_code);
+
             return `
                 <label class="d-flex align-items-center mb-2 selectable-label">
                     <input type="checkbox"
@@ -166,10 +169,10 @@ async function displaySupplierItems(supplierId, purchaseOrderId = false) {
                         data-quantity="${item.quantity}" 
                         data-unit-price="${item.rate}"
                         data-item-total="${item.total}"
-                        ${checked}
+                        
                     >
                     <span class="mx-2">
-                        <strong>${item.item_code}</strong> — ${item.description}
+                        <strong>${item.item_code}</strong> — <span class="${hasPo ? 'text-danger' : '' }">${item.description}</span>
                     </span>
                 </label>`;
         })

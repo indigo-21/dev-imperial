@@ -86,7 +86,11 @@ class ProjectController extends Controller
             if ($id) {
                 if($has_cost_plan){
                     // array_push($tabs,"variation-order");
-                    $cost_plan_sections = CostPlanSection::where("project_id", $id);
+                    // $cost_plan_sections = CostPlanSection::where("project_id", $id);
+                    $cost_plan_sections = CostPlanSection::where('project_id', $id)
+                                                ->with(['items' => function ($query) {
+                                                    $query->orderBy('item_code');
+                                                }]);
                     $cost_plan_section_ids = [];
                     $cost_plan_supplier_ids = [];
 
