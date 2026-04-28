@@ -10,4 +10,9 @@ class CostPlanSection extends Model
     {
         return $this->hasMany(CostPlanItem::class);
     }
+
+    public function po_items()
+    {
+        return $this->hasMany(PurchaseOrderItem::class);
+    }
 }

@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Casts\Json;
 
+use function Symfony\Component\Translation\t;
+
 class ProjectController extends Controller
 {
     public function default_data($type = "index", $id = false){
@@ -348,9 +350,41 @@ class ProjectController extends Controller
         return response()->json($cost_plan_item);
     }
 
-    public function costPlanItems($project_id)
+    public function costPlanItems($costplanSectionId)
     {
-        return view('pages.projects.cost-plan-items');
+        $section = CostPlanSection::with([
+            'items',
+            'po_items.purchase_order.supplier',
+        ])->findOrFail($costplanSectionId);
+
+        // Unallocated (not PO’d) items
+        // $unallocatedItems = $section->items->filter(fn ($item) => $item->po_items->isEmpty());
+        $unallocatedItems = $section->items;
+
+        // Group PO items by supplier
+        $purchaseOrdered = $section->po_items
+            ->groupBy(fn ($poItem) => $poItem->purchase_order->supplier_id)
+            ->map(function ($items) {
+                $purchaseOrder = $items->first()->purchase_order;
+                $supplier = $items->first()->purchase_order->supplier;
+
+                return [
+                    'purchaseOrderId'   => "PO-" . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT),
+                    'supplierId'   => $supplier->id,
+                    'supplierName' => $supplier->business_name,
+                    'items'        => $items,
+                ];
+            })
+            ->values();
+
+        $data = [
+            "unallocatedItems" => $unallocatedItems,
+            "purchaseOrdered" => $purchaseOrdered
+        ];
+        
+        // dd($data);
+
+        return view('pages.projects.cost-plan-items', $data);
     }
     
 

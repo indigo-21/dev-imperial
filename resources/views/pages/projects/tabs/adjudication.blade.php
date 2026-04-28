@@ -83,7 +83,7 @@
                                 <td class="text-right">0.00</td>
                                 <td class="text-right">0.00</td>
                                 <td class="text-center">
-                                    <a href="{{ route('projects.cost-plan-items', $project->id) }}" class="btn btn-primary" target="_blank">
+                                    <a href="{{url("projects/adjudication_details/$section->id")}}" class="btn btn-primary" target="_blank">
                                         View Items
                                     </a>
                                     {{-- <button 

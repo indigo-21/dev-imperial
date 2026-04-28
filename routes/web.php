@@ -69,6 +69,8 @@ Route::middleware('auth')->group(function () {
             ->name('project_file_destroy');
         Route::post('/purchase_order_upsert', [ProjectController::class, 'upsertPurchaseOrder'])
             ->name('purchase_order_upsert');
+        Route::get('/adjudication_details/{costplanSectionId?}', [ProjectController::class, 'costPlanItems'])
+            ->name('adjudication_details');
     });
 
     Route::post('costplan_upsert', [CostPlanController::class, 'upsert'])
@@ -81,9 +83,6 @@ Route::middleware('auth')->group(function () {
             ->name('get_items');
     Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
             ->name('get_po_item');
-
-    Route::get('/projects/{id}/cost-plan-items', [ProjectController::class, 'costPlanItems'])
-    ->name('projects.cost-plan-items');
 
     Route::get('/cost-plan/export', [CostPlanController::class, 'export'])
     ->name('costplan.export');
