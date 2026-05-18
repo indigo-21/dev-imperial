@@ -70,7 +70,24 @@ $(function () {
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
+                },
+
+                error: function(xhr, status, error){
+                    console.log("XHR:", xhr);
+                    console.log("Status:", status);
+                    console.log("Error:", error);
+                    console.log("Response:", xhr.responseText);
+            
+                    submit_button.attr("disabled", false);
+                    $(".preloader").hide();
+            
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: xhr.responseText
+                    });
                 }
+
             });
         }else{
             form.find(".is-invalid").first().focus();
@@ -185,7 +202,7 @@ $(function () {
                                     </div>
                                     <div class="col-md-8 mt-3">
                                         <label>Supplier</label>
-                                        <select name="supplier_id" class="form-control select2bs4 supplier-id" multiple>
+                                        <select name="supplier_id[]" class="form-control select2bs4 supplier-id" multiple>
                                             ${supplier_options}
                                         </select>
                                     </div>
