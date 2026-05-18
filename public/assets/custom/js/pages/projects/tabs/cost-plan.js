@@ -202,7 +202,7 @@ $(function () {
                                     </div>
                                     <div class="col-md-8 mt-3">
                                         <label>Supplier</label>
-                                        <select name="supplier_id[]" class="form-control select2bs4 supplier-id" multiple>
+                                        <select name="supplier_id" class="form-control select2bs4 supplier-id" multiple>
                                             ${supplier_options}
                                         </select>
                                     </div>
