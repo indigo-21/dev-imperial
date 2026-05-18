@@ -70,24 +70,7 @@ $(function () {
                     setTimeout(() => {
                         window.location.reload();
                     }, 2000);
-                },
-
-                error: function(xhr, status, error){
-                    console.log("XHR:", xhr);
-                    console.log("Status:", status);
-                    console.log("Error:", error);
-                    console.log("Response:", xhr.responseText);
-            
-                    submit_button.attr("disabled", false);
-                    $(".preloader").hide();
-            
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Server Error',
-                        text: xhr.responseText
-                    });
                 }
-
             });
         }else{
             form.find(".is-invalid").first().focus();
