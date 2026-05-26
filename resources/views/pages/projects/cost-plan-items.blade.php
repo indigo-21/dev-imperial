@@ -33,10 +33,10 @@
                                 <tbody>
                                     @foreach ($unallocatedItems as $item )
                                          <tr>
-                                            <td>{{$item->item_code}}</td>
-                                            <td>{{$item->description}}</td>
-                                            <td class="text-right">{{$item->cost}}</td>
-                                            <td class="text-right">{{$item->total}}</td>
+                                            <td>{{$item["item_code"]}}</td>
+                                            <td>{{$item["description"]}}</td>
+                                            <td class="text-right">{{$item["cost"]}}</td>
+                                            <td class="text-right">{{$item["total"]}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -72,25 +72,21 @@
                                             <th>Amount</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
-
                                         @foreach ($po_suppliers["items"] as $po_item )
                                             <tr>
                                                 <td>{{$po_item->item_code}}</td>
                                                 <td>{{$po_item->description}}</td>
                                                 <td class="text-right">0.00</td>
                                                 <td class="text-right">0.00</td>
-                                                <td>{{$po_item->purchaseOrderId}}</td>
+                                                <td>{{$po_suppliers["purchaseOrderId"]}}</td>
                                                 <td class="text-right">{{$po_item->total}}</td>
-
                                                 <td>
                                                     <input type="text"
                                                         name="invoice_no[]"
                                                         value=""
                                                         class="form-control form-control-sm">
                                                 </td>
-
                                                 <td>
                                                     <input type="number"
                                                         step="0.01"
@@ -101,7 +97,6 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
-
                                     <tfoot>
                                         <tr>
                                             <th colspan="3" class="text-right">Supplier Total</th>
@@ -109,16 +104,11 @@
                                             <th colspan="4"></th>
                                         </tr>
                                     </tfoot>
-
                                 </table>
                             </div>
                         </div>
                     </div>
                 @endforeach
-
-                
-
-
             </div>
         </div>
     </x-slot>

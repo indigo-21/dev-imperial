@@ -24,7 +24,8 @@ use function Symfony\Component\Translation\t;
 
 class ProjectController extends Controller
 {
-    public function default_data($type = "index", $id = false){
+    public function default_data($type = "index", $id = false)
+    {
         // $tabs = [
         //     "project-detail",
         //     "project-files",
@@ -59,7 +60,7 @@ class ProjectController extends Controller
             'Construction Stage',
             'After Care',
         ];
-        
+
         $units = [
             'sqm',
             'LM',
@@ -79,20 +80,20 @@ class ProjectController extends Controller
         if ($type == "form") {
             $has_cost_plan = CostPlanSection::where("project_id", $id)->count();
             $result += [
-                        "units" => $units,
-                        "statuses" => $statuses,
-                        "cost_plan" => TemplateSection::with('items')->get(),
-                        "has_costplan" => false
-                        ];
+                "units" => $units,
+                "statuses" => $statuses,
+                "cost_plan" => TemplateSection::with('items')->get(),
+                "has_costplan" => false
+            ];
 
             if ($id) {
-                if($has_cost_plan){
+                if ($has_cost_plan) {
                     // array_push($tabs,"variation-order");
                     // $cost_plan_sections = CostPlanSection::where("project_id", $id);
                     $cost_plan_sections = CostPlanSection::where('project_id', $id)
-                                                ->with(['items' => function ($query) {
-                                                    $query->orderBy('item_code');
-                                                }]);
+                        ->with(['items' => function ($query) {
+                            $query->orderBy('item_code');
+                        }]);
                     $cost_plan_section_ids = [];
                     $cost_plan_supplier_ids = [];
 
@@ -100,12 +101,12 @@ class ProjectController extends Controller
                         array_push($cost_plan_section_ids, $cost_plan_section->id);
                         $items = $cost_plan_section->items()->get();
 
-                        if($items->count()){
+                        if ($items->count()) {
                             foreach ($items as $key => $item) {
                                 $item_suppliers = explode(",", $item->supplier_id);
-                                for ($i=0; $i < count($item_suppliers); $i++) { 
+                                for ($i = 0; $i < count($item_suppliers); $i++) {
                                     $item_supplier_id = $item_suppliers[$i];
-                                    if(!in_array($item_supplier_id, $cost_plan_supplier_ids, true) ){
+                                    if (!in_array($item_supplier_id, $cost_plan_supplier_ids, true)) {
                                         array_push($cost_plan_supplier_ids, $item_supplier_id);
                                     }
                                 }
@@ -123,36 +124,33 @@ class ProjectController extends Controller
                     //                                 ->groupBy('supplier_id')
                     //                                 ->orderBy("business_name",'asc')
                     //                                 ->get();
-                    
-                    if($for_po_suppliers->count()){
-                        array_push($tabs,"purchase-orders");
-                        array_push($tabs,"adjudication");
+
+                    if ($for_po_suppliers->count()) {
+                        array_push($tabs, "purchase-orders");
+                        array_push($tabs, "adjudication");
                     }
 
                     $result["cost_plan"] = "";
                     $result["has_costplan"] = true;
                     $result["cost_plan"] = $cost_plan_sections->get();
-                    $result["for_po_suppliers"] = $for_po_suppliers; 
+                    $result["for_po_suppliers"] = $for_po_suppliers;
                     $result["purchase_orders"] = PurchaseOrder::where("project_id", $id)->get();
-                    
                 }
                 $result += [
                     "project"   => Project::findOrFail($id),
                     "has_cost_plan" => CostPlanSection::where("project_id", $id)->get(),
-                    "project_files" => ProjectFile::where("project_id",$id)->get()
+                    "project_files" => ProjectFile::where("project_id", $id)->get()
                 ];
-
-                
-                
             }
-        }else{
+        } else {
             $result += ["projects" => Project::all()];
         }
         $result["tabs"] = $tabs;
         return $result;
     }
 
-    public function form_rule($type= "project-detail", $id = false){
+    public function form_rule($type = "project-detail", $id = false)
+    {
         switch ($type) {
             case 'cost-plan':
                 return [
@@ -167,42 +165,46 @@ class ProjectController extends Controller
 
                 ];
                 break;
-            
+
             default:
                 # project-detail
                 return [
-                        "project_description" => ["required", "string","min:2"],
-                        "client_id" => ["required"],
-                        "project_type" => ["required"],
-                        "project_status" => ["required"],
-                        "high_risk_building" => ["required"],
+                    "project_description" => ["required", "string", "min:2"],
+                    "client_id" => ["required"],
+                    "project_type" => ["required"],
+                    "project_status" => ["required"],
+                    "high_risk_building" => ["required"],
                 ];
                 break;
         }
     }
 
-    public function change_field_name(){
+    public function change_field_name()
+    {
         return [
-                "project_description" => "Project Description",
-                "client_id" => "Client",
-                "project_type" => "Project Type",
-                "project_status" => "Project Status",
+            "project_description" => "Project Description",
+            "client_id" => "Client",
+            "project_type" => "Project Type",
+            "project_status" => "Project Status",
         ];
     }
 
-    public function index(){
+    public function index()
+    {
         $data = self::default_data();
         return view('pages.projects.index', $data);
 
         // return view('pages.projects.pdf-purchase-order', $data);
     }
 
-    public function create(){
+    public function create()
+    {
         $data = self::default_data("form");
         return view('pages.projects.tabs.project-detail', $data);
     }
 
-    public function edit($tab = "project-detail", $id){
+    public function edit($tab = "project-detail", $id)
+    {
         $data = self::default_data("form", $id);
         $view = "pages.projects.tabs.$tab";
 
@@ -210,12 +212,13 @@ class ProjectController extends Controller
             return redirect("projects/edit/project-detail/$id");
             // return  view("pages.projects.tabs.project-detail", $data);
         }
-      
+
         return view($view, $data);
     }
 
-    public function upsertProject(Request $request, $id = false){
-        $request->validate(self::form_rule("project-detail", $id),[], self::change_field_name());
+    public function upsertProject(Request $request, $id = false)
+    {
+        $request->validate(self::form_rule("project-detail", $id), [], self::change_field_name());
 
         $project = !$id ? new Project : Project::findOrFail($id);
 
@@ -246,14 +249,15 @@ class ProjectController extends Controller
         return redirect("projects/edit/project-detail/$project->id")->with("success", $success_message["message"]);
     }
 
-    public function upsertProjectFile(Request $request, $project_id){
-            
-        
+    public function upsertProjectFile(Request $request, $project_id)
+    {
+
+
         $request->validate([
             // "project_id" => ["required"],
             // "file" => ["required", "file"],
             "description" => ["required"],
-            ]);
+        ]);
         // dd($request->validate([
         //     "project_id" => ["required"],
         //     "file" => ["required", "file"],
@@ -262,9 +266,9 @@ class ProjectController extends Controller
 
         $project_file_id = $request->project_file_id;
         $project_file = !$project_file_id ? new ProjectFile() : ProjectFile::findOrFail($project_file_id);
-        if($request->file("file")){
+        if ($request->file("file")) {
             $file = $request->file("file");
-            $filename = time()."_".$file->getClientOriginalName();
+            $filename = time() . "_" . $file->getClientOriginalName();
             // $path = $file->storeAs("public/uploads", $filename);
             $path = $file->storeAs('uploads', $filename, 'public');
             $project_file->filename = $filename;
@@ -274,78 +278,81 @@ class ProjectController extends Controller
         $project_file->description = $request->description;
         $project_file->{!$project_file_id ? "created_by" : "updated_by"} = Auth::id();
 
-        if($project_file->save()){
-            return redirect("projects/edit/project-files/$project_id")->with("success", "File Upload Successfully ".$project_file->description);
-        }else{
+        if ($project_file->save()) {
+            return redirect("projects/edit/project-files/$project_id")->with("success", "File Upload Successfully " . $project_file->description);
+        } else {
             return redirect("projects/edit/project-files/$project_id")->with("error", "No file selected.");
         }
     }
 
-    public function destroyProjectFile($id){
+    public function destroyProjectFile($id)
+    {
         $project_file = ProjectFile::findOrFail($id);
-        $project_id = $project_file->project_id ;
+        $project_id = $project_file->project_id;
         $filename = $project_file->filename;
         $project_file->deleted_by = Auth::id();
         $project_file->save();
         $project_file->delete();
-        return redirect("projects/edit/project-files/$project_id")->with("success", $filename." deleted successfully ");
+        return redirect("projects/edit/project-files/$project_id")->with("success", $filename . " deleted successfully ");
     }
-    
-    public function upsertPurchaseOrder(Request $request){
+
+    public function upsertPurchaseOrder(Request $request)
+    {
         $project_id = $request->projectId;
         $supplier_id = $request->supplierId;
         $purchase_order_id = $request->purchaseOrderId;
         $items = $request->items;
-        
+
         $item_data = [];
         $exist_purchase_order_items = [];
-        
+
         $purchase_order = !$purchase_order_id ? new PurchaseOrder() : PurchaseOrder::findOrFail($purchase_order_id);
         $purchase_order->project_id = $project_id;
         $purchase_order->supplier_id = $supplier_id;
-        $purchase_order->{$purchase_order_id ? "updated_by":"created_by"} = Auth::id();
+        $purchase_order->{$purchase_order_id ? "updated_by" : "created_by"} = Auth::id();
         $purchase_order->save();
         $purchase_order_id = $purchase_order->id;
 
         $purchase_order_items = PurchaseOrderItem::where("purchase_order_id", $purchase_order_id);
 
-        if($purchase_order_items->count()){
+        if ($purchase_order_items->count()) {
             foreach ($purchase_order_items->get() as $key => $item) {
-                array_push($exist_purchase_order_items, $item->id);  
+                array_push($exist_purchase_order_items, $item->id);
             }
         }
 
-        if(count($items) > 0){
-                foreach ($items as $key => $item) {
-                    $total = floatval($item["quantity"] ?? 0) * floatval($item["unit_price"] ?? 0);
-                    $tmp_item = [
-                            "purchase_order_id" => $purchase_order_id,
-                            "section_code" => $item["section_code"],
-                            "cost_plan_section_id" => $item["cost_plan_section_id"],
-                            "item_code" => $item["item_code"],
-                            "description" => $item["item_description"],
-                            "quantity" => $item["quantity"],
-                            "unit_price" => $item["unit_price"],
-                            "total" => $total,
-                        ];  
-                    array_push($item_data, $tmp_item);
-                }
+        if (count($items) > 0) {
+            foreach ($items as $key => $item) {
+                $total = floatval($item["quantity"] ?? 0) * floatval($item["unit_price"] ?? 0);
+                $tmp_item = [
+                    "purchase_order_id" => $purchase_order_id,
+                    "section_code" => $item["section_code"],
+                    "cost_plan_section_id" => $item["cost_plan_section_id"],
+                    "item_code" => $item["item_code"],
+                    "description" => $item["item_description"],
+                    "quantity" => $item["quantity"],
+                    "unit_price" => $item["unit_price"],
+                    "total" => $total,
+                ];
+                array_push($item_data, $tmp_item);
+            }
         }
-        
+
 
         $purchase_order_item_result = DB::table("purchase_order_items")
-                                                ->insert($item_data);
-        if($purchase_order_item_result){
+            ->insert($item_data);
+        if ($purchase_order_item_result) {
             PurchaseOrderItem::whereIn("id", $exist_purchase_order_items)->delete();
-        }   
-        
+        }
+
         $po_number = "PO-" . str_pad($purchase_order_id, 5, '0', STR_PAD_LEFT);
-        $message = count($exist_purchase_order_items) ? $po_number." Update Successfully" : "New Purchase Order ".$po_number; 
+        $message = count($exist_purchase_order_items) ? $po_number . " Update Successfully" : "New Purchase Order " . $po_number;
         // return redirect("projects/edit/purchase-orders/$project_id")->with("success", $message);
         return response()->json($message);
     }
 
-    public function viewItemFromAdjudication($id){
+    public function viewItemFromAdjudication($id)
+    {
         $cost_plan_item = CostPlanItem::findOrFail($id);
         return response()->json($cost_plan_item);
     }
@@ -357,36 +364,96 @@ class ProjectController extends Controller
             'po_items.purchase_order.supplier',
         ])->findOrFail($costplanSectionId);
 
-        // Unallocated (not PO’d) items
-        // $unallocatedItems = $section->items->filter(fn ($item) => $item->po_items->isEmpty());
-        $unallocatedItems = $section->items;
+        // // PO ITEMS
+        // $allocatedItems = [];
+        // $unallocatedItems =[];
+
+        // // Unallocated (not PO’d) items
+        // // $unallocatedItems = $section->items->filter(fn ($item) => $item->po_items->isEmpty());
+        // $sectionItems = $section->items;
+
+        // // Group PO items by supplier
+        // $purchaseOrdered = $section->po_items
+        //     ->groupBy(fn ($poItem) => $poItem->purchase_order->supplier_id)
+        //     ->map(function ($items) {
+        //         $purchaseOrder = $items->first()->purchase_order;
+        //         $supplier = $items->first()->purchase_order->supplier;
+
+        //         return [
+        //             'purchaseOrderId'   => "PO-" . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT),
+        //             'supplierId'   => $supplier->id,
+        //             'supplierName' => $supplier->business_name,
+        //             'items'        => $items,
+        //         ];
+        //     })
+        //     ->values();
+
+
+        // foreach ($purchaseOrdered as $key => $supplier) {
+        //     foreach ($supplier["items"] as $supplierItem) {
+        //         array_push($allocatedItems, $supplierItem->item_code);
+        //     }
+        // }
+
+        // foreach ($sectionItems as $key => $sectionItem) {
+
+        //     if(!in_array($allocatedItems, $sectionItem->item_code)){
+        //         array_push($unallocatedItems,[
+        //             "item_code" => $sectionItem->item_code,
+        //             "description" => $sectionItem->description,
+        //             "cost" => $sectionItem->cost,
+        //             "total" => $sectionItem->total,
+        //         ]);
+        //     }
+
+        // }
+
+        // $data = [
+        //     "unallocatedItems" => $unallocatedItems,
+        //     "purchaseOrdered" => $purchaseOrdered
+        // ];
 
         // Group PO items by supplier
         $purchaseOrdered = $section->po_items
-            ->groupBy(fn ($poItem) => $poItem->purchase_order->supplier_id)
+            ->groupBy(fn($poItem) => $poItem->purchase_order->supplier_id)
             ->map(function ($items) {
                 $purchaseOrder = $items->first()->purchase_order;
-                $supplier = $items->first()->purchase_order->supplier;
+                $supplier = $purchaseOrder->supplier;
 
                 return [
-                    'purchaseOrderId'   => "PO-" . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT),
-                    'supplierId'   => $supplier->id,
-                    'supplierName' => $supplier->business_name,
-                    'items'        => $items,
+                    'purchaseOrderId' => "PO-" . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT),
+                    'supplierId'     => $supplier->id,
+                    'supplierName'   => $supplier->business_name,
+                    'items'          => $items,
                 ];
             })
             ->values();
 
+        // Get all allocated item_codes efficiently
+        $allocatedItems = $section->po_items
+            ->pluck('item_code')
+            ->unique()
+            ->toArray();
+
+        // Filter unallocated items
+        $unallocatedItems = $section->items
+            ->filter(fn($item) => !in_array($item->item_code, $allocatedItems))
+            ->map(fn($item) => [
+                'item_code'   => $item->item_code,
+                'description' => $item->description,
+                'cost'        => number_format($item->cost, 2),
+                'total'       => number_format($item->total, 2),
+            ])
+            ->values();
+
         $data = [
-            "unallocatedItems" => $unallocatedItems,
-            "purchaseOrdered" => $purchaseOrdered
+            'unallocatedItems' => $unallocatedItems,
+            'purchaseOrdered'  => $purchaseOrdered,
         ];
-        
+
+
         // dd($data);
 
         return view('pages.projects.cost-plan-items', $data);
     }
-    
-
-
 }
