@@ -1,6 +1,31 @@
 @extends('pages.projects.form')
 
 @section('cost-plan-tab')
+
+<div class="cost-plan-layout d-flex">
+
+    {{-- Sidebar --}}
+    <div class="cost-plan-sidebar card shadow-sm">
+        <div class="card-header">
+            <strong>Sections</strong>
+        </div>
+
+        <div class="list-group list-group-flush">
+            @foreach ($cost_plan as $cost_plan_section)
+                <a href="#cost-section-{{$cost_plan_section->id}}"
+                   class="list-group-item list-group-item-action cost-section-link">
+
+                    {{$cost_plan_section->section_code}}
+                    -
+                    {{$cost_plan_section->section_name}}
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div class="cost-plan-content flex-grow-1">
+
     <form id="cost_plan_form" method="POST">
         @csrf
         <input type="hidden" name="project_id" value="{{$project->id}}">
@@ -11,7 +36,7 @@
         @foreach ($cost_plan as $section_index => $cost_plan_section )
 
          
-            <div class="card card-primary card-outline item-container mb-4 section-container">
+            <div id="cost-section-{{$cost_plan_section->id}}" class="card card-primary card-outline item-container mb-4 section-container">
                 <div class="card-header d-flex justify-content-between align-items-center" data-toggle="collapse"
                     data-target="#section-{{$cost_plan_section->id}}" aria-expanded="true"
                     aria-controls="section-{{$cost_plan_section->id}}" style="cursor:pointer;">
@@ -171,6 +196,9 @@
         <button type="button" class="btn btn-success cost-plan-submit" id="cost-plan-submit-button">{{ count($has_cost_plan) ? "Update" : "Save" }} Cost Plan</button>
         
     </form>
+
+    </div>
+</div>
     <!-- Scroll to Bottom Button -->
     <button id="scrollToBottom" title="Go to bottom">
         <i class="fas fa-arrow-down"></i>

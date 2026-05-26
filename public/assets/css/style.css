@@ -124,3 +124,37 @@ thead.thead-light th {
     background-color: #4682b4 !important;
     color: #FFF !important;
 }
+
+.cost-plan-layout {
+    position: relative;
+}
+
+.cost-plan-sidebar {
+    width: 280px;
+    min-width: 280px;
+    max-height: 85vh;
+    overflow-y: auto;
+
+    position: sticky;
+    top: 20px;
+
+    margin-right: 20px;
+}
+
+.cost-plan-content {
+    width: 100%;
+}
+
+.cost-section-link {
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.cost-section-link:hover {
+    background: #4682b4;
+    color: white;
+}
+
+html {
+    scroll-behavior: smooth;
+}
