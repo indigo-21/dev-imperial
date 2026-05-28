@@ -11,11 +11,46 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ config('app.name', 'Imperial') }}</title>
+        <style>
+            #page-loader {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #0f172a;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+            }
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border: 5px solid #334155;
+                border-top: 5px solid #38bdf8;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
 
+            @keyframes spin {
+                100% { transform: rotate(360deg); }
+            }
+            .fade-out {
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.5s ease;
+            }
+        </style>
         @yield('style')
     </head>
     <body class="hold-transition layout-top-nav" base_url="{{url("/")}}">
-        <div class="wrapper">
+        <div id="page-loader">
+            <div class="spinner"></div>
+            {{-- <span class="text-light">Please wait...</span> --}}
+        </div>
+
+        <div class="wrapper" id="app">
             @include('includes.navigation')
             {{-- @include('includes.aside') --}}
 
@@ -50,7 +85,19 @@
             
             @yield("modal")
     
-       
+            <script>
+                window.addEventListener("load", function () {
+                    const loader = document.getElementById("page-loader");
+                    const app = document.getElementById("app");
+
+                    loader.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        loader.style.display = "none";
+                        app.style.display = "block";
+                    }, 500);
+                });
+            </script>
             @include('includes.footer')
             @include('includes.script')
             <script src="{{ asset('assets/custom/js/global/variables.js') }}"></script>

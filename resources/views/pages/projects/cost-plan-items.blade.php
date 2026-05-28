@@ -19,7 +19,8 @@
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="unallocatedTable" class="table table-hover table-bordered table-striped table-sm">
+                            <table id="unallocatedTable"
+                                class="table table-hover table-bordered table-striped table-sm">
                                 <thead class="thead-light text-center">
                                     <tr>
                                         <th rowspan="2">Item Code</th>
@@ -27,16 +28,16 @@
                                         <th rowspan="2">Cost</th>
                                         <th rowspan="2">Total</th>
                                     </tr>
-                                   
+
                                 </thead>
 
                                 <tbody>
-                                    @foreach ($unallocatedItems as $item )
-                                         <tr>
-                                            <td>{{$item["item_code"]}}</td>
-                                            <td>{{$item["description"]}}</td>
-                                            <td class="text-right">{{$item["cost"]}}</td>
-                                            <td class="text-right">{{$item["total"]}}</td>
+                                    @foreach ($unallocatedItems as $item)
+                                        <tr>
+                                            <td>{{ $item['item_code'] }}</td>
+                                            <td>{{ $item['description'] }}</td>
+                                            <td class="text-right">{{ $item['cost'] }}</td>
+                                            <td class="text-right">{{ $item['total'] }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -44,18 +45,30 @@
                         </div>
                     </div>
                 </div>
-                
 
-                @foreach ($purchaseOrdered as $po_suppliers )
+
+                @foreach ($purchaseOrdered as $po_suppliers)
                     {{-- SUPPLIER TABLE --}}
-                    <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">Supplier: {{$po_suppliers["supplierName"]}}</h3>
+                    <div class="card card-primary card-outline po-container">
+                        <div class="card-header d-flex justify-content-round align-items-center">
+                            <div class="left w-50">
+                                <h3 class="card-title">Supplier: {{ $po_suppliers['supplierName'] }}</h3>
+                            </div>
+                            <div class="right w-50 text-right">
+                                <button class="btn btn-primary create-invoice-btn"> <i class="fa fa-plus-square"
+                                        aria-hidden="true"></i> Create Invoice </button>
+
+                                <button class="alter-invoice-btn btn btn-primary d-none  save-invoice-btn"> <i
+                                        class="fa fa-check-square" aria-hidden="true"></i> Save Invoice </button>
+                                <button class="alter-invoice-btn btn btn-danger  d-none cancel-invoice-btn"> <i
+                                        class="fa fa-times" aria-hidden="true"></i> Cancel </button>
+                            </div>
                         </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="supplierTable1" class="table table-hover table-bordered table-striped table-sm">
+                                <table id="supplierTable1"
+                                    class="table table-hover table-bordered table-striped table-sm">
                                     <thead class="thead-light text-center">
                                         <tr>
                                             <th rowspan="2">Item Code</th>
@@ -73,33 +86,23 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($po_suppliers["items"] as $po_item )
-                                            <tr>
-                                                <td>{{$po_item->item_code}}</td>
-                                                <td>{{$po_item->description}}</td>
-                                                <td class="text-right">0.00</td>
-                                                <td class="text-right">0.00</td>
-                                                <td>{{$po_suppliers["purchaseOrderId"]}}</td>
-                                                <td class="text-right">{{$po_item->total}}</td>
-                                                <td>
-                                                    <input type="text"
-                                                        name="invoice_no[]"
-                                                        value=""
-                                                        class="form-control form-control-sm">
-                                                </td>
-                                                <td>
-                                                    <input type="number"
-                                                        step="0.01"
-                                                        name="invoice_amount[]"
-                                                        value=""
-                                                        class="form-control form-control-sm text-right">
-                                                </td>
+                                        @foreach ($po_suppliers['items'] as $po_item)
+                                            <tr class="po-table-row">
+                                                <td>{{ $po_item->item_code }}</td>
+                                                <td>{{ $po_item->description }}</td>
+                                                <td class="text-right">{{ number_format($po_item->unit_price, 2)  }}</td>
+                                                <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
+                                                <td>{{ $po_suppliers['purchaseOrderId'] }}</td>
+                                                <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
+                                                <td class="po-invoice-number"> - </td>
+                                                <td class="po-invoice-amount"> - </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="3" class="text-right">Supplier Total</th>
+                                            <th colspan="2"> Supplier Total </th>
+                                            <th class="text-right">0.00</th>
                                             <th class="text-right">0.00</th>
                                             <th colspan="4"></th>
                                         </tr>
@@ -115,31 +118,73 @@
 
 
     @section('scripts')
-
         @include('includes.datatables-scripts')
 
         <script>
-            $(function () {
+            $(function() {
 
-                if (!$.fn.DataTable.isDataTable('#unallocatedTable')) {
-                    $('#unallocatedTable').DataTable({
-                        responsive: true,
-                        autoWidth: false,
-                        paging: true
-                    });
-                }
+                // if (!$.fn.DataTable.isDataTable('#unallocatedTable')) {
+                //     $('#unallocatedTable').DataTable({
+                //         responsive: true,
+                //         autoWidth: false,
+                //         paging: true
+                //     });
+                // }
 
-                if (!$.fn.DataTable.isDataTable('#supplierTable1')) {
-                    $('#supplierTable1').DataTable({
-                        responsive: true,
-                        autoWidth: false,
-                        paging: true
+                // if (!$.fn.DataTable.isDataTable('#supplierTable1')) {
+                //     $('#supplierTable1').DataTable({
+                //         responsive: true,
+                //         autoWidth: false,
+                //         paging: true
+                //     });
+                // }
+
+
+                $(document).on("click", ".create-invoice-btn", function() {
+                    const $container = $(this).closest(".po-container");
+                    const $createBtn = $(this);
+                    const $alterBtn = $container.find(".alter-invoice-btn");
+                    const $rows = $container.find(".po-table-row");
+
+                    $rows.each((index, element) =>  {
+                        const $row = $(element);
+
+                        const $input = $("<input>", {
+                            type: "number",
+                            step: "0.01",
+                            name: "invoice_amount[]",
+                            class: "form-control form-control-sm text-right",
+                            value: ""
+                        });
+
+                        $row.find(".po-invoice-amount").html($input);
                     });
-                }
+
+                    $alterBtn.removeClass("d-none");
+                    $createBtn.addClass("d-none");
+                });
+
+                $(document).on("click",".save-invoice-btn", function(){
+                    const $container = $(this).closest(".po-container");
+                    const $createBtn = $container.find(".create-invoice-btn");
+                    const $alterBtn = $(this);
+                    const $rows = $container.find(".po-table-row");
+
+                    $rows.each((index, element) =>  {
+                        const $row = $(element);
+                        const invoiceNo = "INV-00001";
+                        const $input = "100.00";
+
+                        $row.find(".po-invoice-number").html(invoiceNo);
+                        $row.find(".po-invoice-amount").html($input);
+                    });
+
+                    $alterBtn.addClass("d-none");
+                    $createBtn.removeClass("d-none");
+                });
 
             });
         </script>
-
     @endsection
 
 </x-app-layout>

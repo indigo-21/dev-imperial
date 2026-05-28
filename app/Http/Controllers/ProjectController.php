@@ -359,10 +359,7 @@ class ProjectController extends Controller
 
     public function costPlanItems($costplanSectionId)
     {
-        $section = CostPlanSection::with([
-            'items',
-            'po_items.purchase_order.supplier',
-        ])->findOrFail($costplanSectionId);
+        $section = CostPlanSection::findOrFail($costplanSectionId);
 
         // // PO ITEMS
         // $allocatedItems = [];
