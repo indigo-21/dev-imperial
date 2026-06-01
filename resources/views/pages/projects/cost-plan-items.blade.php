@@ -48,6 +48,13 @@
 
 
                 @foreach ($purchaseOrdered as $po_suppliers)
+                    @php
+                        $costPlanCostTotal = 0;
+                        $costPlanCostSubTotal = 0;
+                        $purchaseOrderTotal = 0;
+                        $existItemCode = [];
+
+                    @endphp
                     {{-- SUPPLIER TABLE --}}
                     <div class="card card-primary card-outline po-container">
                         <div class="card-header d-flex justify-content-round align-items-center">
@@ -86,12 +93,31 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
                                         @foreach ($po_suppliers['items'] as $po_item)
+                                            @php
+                                                $unitCost = $po_item->cost_plan_items->cost;
+                                                $totalCost = $po_item->cost_plan_items->total;
+                                                $poTotal = $po_item->total;
+
+                                                $isDuplicate = in_array($po_item->item_code, $existItemCode);
+
+                                                if(!$isDuplicate){
+                                                    $costPlanCostTotal += $unitCost;
+                                                    $costPlanCostSubTotal += $totalCost;
+                                                }
+
+                                                $purchaseOrderTotal += $poTotal;
+
+                                                $existItemCode[] += $po_item->item_code;
+                                                // array_push($existItemCode, $po_item->item_code);
+
+                                            @endphp
                                             <tr class="po-table-row">
-                                                <td>{{ $po_item->item_code }}</td>
+                                                <td>{{ $po_item->item_code }} </td>
                                                 <td>{{ $po_item->description }}</td>
-                                                <td class="text-right">{{ number_format($po_item->unit_price, 2)  }}</td>
-                                                <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
+                                                <td class="text-right">{{ $isDuplicate ? "-" : number_format($unitCost, 2)  }}</td>
+                                                <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
                                                 <td>{{ $po_suppliers['purchaseOrderId'] }}</td>
                                                 <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
                                                 <td class="po-invoice-number"> - </td>
@@ -102,9 +128,10 @@
                                     <tfoot>
                                         <tr>
                                             <th colspan="2"> Supplier Total </th>
-                                            <th class="text-right">0.00</th>
-                                            <th class="text-right">0.00</th>
-                                            <th colspan="4"></th>
+                                            <th class="text-right">{{number_format($costPlanCostTotal, 2)}}</th>
+                                            <th class="text-right">{{number_format($costPlanCostSubTotal, 2)}}</th>
+                                            <th colspan="2" class="text-right">{{number_format($purchaseOrderTotal, 2)}}</th>
+                                            <th colspan="2"></th>
                                         </tr>
                                     </tfoot>
                                 </table>

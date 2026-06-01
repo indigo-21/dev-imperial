@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CostPlanItem extends Model
@@ -17,5 +18,9 @@ class CostPlanItem extends Model
 
     public function supplier(): HasOne{
         return $this->hasOne(Supplier::class, "supplier_id");
+    }
+    
+    public function po_items(): HasMany{
+        return $this->hasMany(PurchaseOrderItem::class);
     }
 }

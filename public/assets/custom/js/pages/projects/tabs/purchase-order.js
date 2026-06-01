@@ -164,12 +164,12 @@ async function displaySupplierItems(supplierId, purchaseOrderId = false) {
                     <input type="checkbox"
                         class="cost-plan-item"
                         data-section-id="${item.cost_plan_section_id}" 
+                        data-item-id="${item.id}" 
                         data-item-code="${item.item_code}" 
                         data-item-description="${item.description}" 
                         data-quantity="${item.quantity}" 
                         data-unit-price="${item.rate}"
                         data-item-total="${item.total}"
-                        
                     >
                     <span class="mx-2">
                         <strong>${item.item_code}</strong> — <span class="${hasPo ? 'text-danger' : '' }">${item.description}</span>
@@ -208,6 +208,7 @@ async function displayLineItems() {
             const data = {
                 index: countRow,
                 cost_plan_section_id: item.cost_plan_section_id,
+                cost_plan_item_id: item.cost_plan_item_id,
                 item_code: item.item_code,
                 item_description: item.description,
                 item_quantity: qty,
@@ -232,6 +233,7 @@ async function displayLineItems() {
         const data = {
             index: countRow,
             cost_plan_section_id: el.data("section-id"),
+            cost_plan_item_id: el.data("item-id"),
             item_code: el.data("item-code").toString(),
             item_description: el.data("item-description"),
             item_quantity: qty,
@@ -274,6 +276,7 @@ async function displayLineItems() {
 function itemTableRow({
     index = 0,
     cost_plan_section_id = "",
+    cost_plan_item_id = "",
     item_code = "",
     item_description = "",
     item_quantity = 0,
@@ -294,6 +297,7 @@ function itemTableRow({
             <td>
                 <input type="hidden" class="section_code" name="section_code[${index}]" value="${sectionCode}">
                 <input type="hidden" class="cost_plan_section_id" name="cost_plan_section_id[${index}]" value="${cost_plan_section_id}">
+                <input type="hidden" class="cost_plan_item_id" name="cost_plan_item_id[${index}]" value="${cost_plan_item_id}">
                 <input type="hidden" class="item_code" name="item_code[${index}]" value="${item_code}">
                 <strong>${item_code}</strong>
 
@@ -361,6 +365,7 @@ function getUpsertPayload(){
         const item = {
             section_code: el.find(".section_code").val(),
             cost_plan_section_id: el.find(".cost_plan_section_id").val(),
+            cost_plan_item_id: el.find(".cost_plan_item_id").val(),
             item_code: el.find(".item_code").val(),
             item_description: el.find(".item_description").val(),
             quantity: el.find(".quantity").val(),

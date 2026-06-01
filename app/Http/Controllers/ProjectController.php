@@ -328,6 +328,7 @@ class ProjectController extends Controller
                     "purchase_order_id" => $purchase_order_id,
                     "section_code" => $item["section_code"],
                     "cost_plan_section_id" => $item["cost_plan_section_id"],
+                    "cost_plan_item_id" => $item["cost_plan_item_id"],
                     "item_code" => $item["item_code"],
                     "description" => $item["item_description"],
                     "quantity" => $item["quantity"],
@@ -360,55 +361,6 @@ class ProjectController extends Controller
     public function costPlanItems($costplanSectionId)
     {
         $section = CostPlanSection::findOrFail($costplanSectionId);
-
-        // // PO ITEMS
-        // $allocatedItems = [];
-        // $unallocatedItems =[];
-
-        // // Unallocated (not PO’d) items
-        // // $unallocatedItems = $section->items->filter(fn ($item) => $item->po_items->isEmpty());
-        // $sectionItems = $section->items;
-
-        // // Group PO items by supplier
-        // $purchaseOrdered = $section->po_items
-        //     ->groupBy(fn ($poItem) => $poItem->purchase_order->supplier_id)
-        //     ->map(function ($items) {
-        //         $purchaseOrder = $items->first()->purchase_order;
-        //         $supplier = $items->first()->purchase_order->supplier;
-
-        //         return [
-        //             'purchaseOrderId'   => "PO-" . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT),
-        //             'supplierId'   => $supplier->id,
-        //             'supplierName' => $supplier->business_name,
-        //             'items'        => $items,
-        //         ];
-        //     })
-        //     ->values();
-
-
-        // foreach ($purchaseOrdered as $key => $supplier) {
-        //     foreach ($supplier["items"] as $supplierItem) {
-        //         array_push($allocatedItems, $supplierItem->item_code);
-        //     }
-        // }
-
-        // foreach ($sectionItems as $key => $sectionItem) {
-
-        //     if(!in_array($allocatedItems, $sectionItem->item_code)){
-        //         array_push($unallocatedItems,[
-        //             "item_code" => $sectionItem->item_code,
-        //             "description" => $sectionItem->description,
-        //             "cost" => $sectionItem->cost,
-        //             "total" => $sectionItem->total,
-        //         ]);
-        //     }
-
-        // }
-
-        // $data = [
-        //     "unallocatedItems" => $unallocatedItems,
-        //     "purchaseOrdered" => $purchaseOrdered
-        // ];
 
         // Group PO items by supplier
         $purchaseOrdered = $section->po_items
@@ -447,9 +399,6 @@ class ProjectController extends Controller
             'unallocatedItems' => $unallocatedItems,
             'purchaseOrdered'  => $purchaseOrdered,
         ];
-
-
-        // dd($data);
 
         return view('pages.projects.cost-plan-items', $data);
     }

@@ -10,20 +10,24 @@ class PurchaseOrder extends Model
 {
     use SoftDeletes;
 
-    public function supplier(){
+    public function supplier(): BelongsTo{
         return $this->belongsTo(Supplier::class, "supplier_id");
     }
 
-    public function project(){
+    public function project(): BelongsTo{
         return $this->belongsTo(Project::class, "project_id");
     }
 
-    public function created_user(){
+    public function created_user(): BelongsTo{
         return $this->belongsTo(User::class,"created_by");
     }
 
-    public function po_items(){
+    public function po_items(): HasMany{
         return $this->hasMany(PurchaseOrderItem::class, "purchase_order_id");
+    }
+
+    public function cost_plan_items(): BelongsTo{
+        return $this->belongsTo(CostPlanItem::class,"cost_plan_item_id");
     }
 
 }
