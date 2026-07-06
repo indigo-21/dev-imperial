@@ -99,6 +99,7 @@
                                                 $unitCost = $po_item->cost_plan_items->cost;
                                                 $totalCost = $po_item->cost_plan_items->total;
                                                 $poTotal = $po_item->total;
+                                                $poId = str_pad($po_item->purchase_order_id, 5, '0', STR_PAD_LEFT);
 
                                                 $isDuplicate = in_array($po_item->item_code, $existItemCode);
 
@@ -118,7 +119,7 @@
                                                 <td>{{ $po_item->description }}</td>
                                                 <td class="text-right">{{ $isDuplicate ? "-" : number_format($unitCost, 2)  }}</td>
                                                 <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
-                                                <td>{{ $po_suppliers['purchaseOrderId'] }}</td>
+                                                <td>{{ $poId }}</td>
                                                 <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
                                                 <td class="po-invoice-number"> - </td>
                                                 <td class="po-invoice-amount"> - </td>
