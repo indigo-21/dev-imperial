@@ -25,6 +25,18 @@ $(function () {
 
     // Recompute totals
     $(document).on("keyup", ".compute-total", handleRecomputeTotal);
+
+    // Select All
+    $("#line-items-list").on("change", "#select-all-items", function () {
+        $(".cost-plan-item").prop("checked", this.checked);
+    });
+    
+    $("#line-items-list").on("change", ".cost-plan-item", function () {
+        $("#select-all-items").prop(
+            "checked",
+            $(".cost-plan-item").length === $(".cost-plan-item:checked").length
+        );
+    });
 });
 
 let LIMIT_COST = [];
@@ -178,7 +190,13 @@ async function displaySupplierItems(supplierId, purchaseOrderId = false) {
         })
         .join("");
 
-    container.html(html);
+        container.html(`
+            <label class="d-flex align-items-center mb-3 border-bottom pb-2">
+                <input type="checkbox" id="select-all-items">
+                <span class="mx-2"><strong>Select All</strong></span>
+            </label>
+            ${html}
+        `);
 }
 
 /* -----------------------------
@@ -268,6 +286,7 @@ async function displayLineItems() {
 
     tbody.html(html);
 }
+
 
 /* -----------------------------
     Row Template

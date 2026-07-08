@@ -136,9 +136,13 @@ thead.thead-light th {
     overflow-y: auto;
 
     position: sticky;
-    top: 20px;
+    top: 80px;
 
     margin-right: 20px;
+}
+
+.section-container {
+    scroll-margin-top: 90px;
 }
 
 .cost-plan-content {
@@ -157,4 +161,12 @@ thead.thead-light th {
 
 html {
     scroll-behavior: smooth;
+}
+
+
+/* Remove arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

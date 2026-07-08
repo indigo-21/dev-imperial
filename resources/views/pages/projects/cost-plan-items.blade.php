@@ -119,7 +119,7 @@
                                                 <td>{{ $po_item->description }}</td>
                                                 <td class="text-right">{{ $isDuplicate ? "-" : number_format($unitCost, 2)  }}</td>
                                                 <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
-                                                <td>{{ $poId }}</td>
+                                                <td>PO-{{ $poId }}</td>
                                                 <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
                                                 <td class="po-invoice-number"> - </td>
                                                 <td class="po-invoice-amount"> - </td>

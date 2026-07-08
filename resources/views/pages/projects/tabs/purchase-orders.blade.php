@@ -9,7 +9,7 @@
     <div id="purchase-order-form" class="mt-3" style="display:none;">
         <div class="card border">
             <div class="card-header">
-                <strong>Create Purchase Order</strong>
+                <strong>Purchase Order Details</strong>
             </div>
 
             <div class="card-body">
@@ -100,7 +100,7 @@
                         <th style="width:10%">PO Number</th>
                         <th>Supplier</th>
                         <th style="width:20%">Created By</th>
-                        <th class="text-center" style="width:10%">View</th>
+                        <th class="text-center" style="width:10%">Edit</th>
                         <th class="text-center" style="width:10%">PDF</th>
                     </tr>
                 </thead>
@@ -112,11 +112,6 @@
                                 <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
                                 <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-primary view-purchase-order" 
-                                        data-purchase-order-id="{{$purchase_order->id}}"
-                                        data-supplier-id="{{$purchase_order->supplier_id}}"  title="View"><i
-                                                class="fas fa-eye"></i></button>
-
                                     <button class="btn btn-sm btn-outline-primary edit-purchase-order" 
                                         data-purchase-order-id="{{$purchase_order->id}}"
                                         data-supplier-id="{{$purchase_order->supplier_id}}"  title="Edit"><i

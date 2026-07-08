@@ -128,6 +128,7 @@ class ProjectController extends Controller
                     if ($for_po_suppliers->count()) {
                         array_push($tabs, "purchase-orders");
                         array_push($tabs, "adjudication");
+                        array_push($tabs, "invoice");
                     }
 
                     $result["cost_plan"] = "";

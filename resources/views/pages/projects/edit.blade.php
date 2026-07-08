@@ -65,6 +65,11 @@
                                             role="tab" aria-controls="summary"
                                             aria-selected="false">Adjudication</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="invoice-tab" data-toggle="tab" href="#summary"
+                                            role="tab" aria-controls="summary"
+                                            aria-selected="false">Invoice</a>
+                                    </li>
                                     
                                 </ul>
                             </div>
