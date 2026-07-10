@@ -210,6 +210,46 @@
                         </div>
                     </div>
 
+                    <div class="row pt-4">
+                        <!-- LEFT COLUMN -->
+                        <div class="col-md-6">
+                            <h4>Bank Details</h4>
+                            {{-- BANK ACCOUNT NAME --}}
+                            <div class="form-group">
+                                <label>Bank Account Name</label>
+                                <input type="text" name="bank_account_name"
+                                       class="form-control @error('bank_account_name') is-invalid @enderror"
+                                       value="{{ old('bank_account_name', $supplier->bank_account_name ?? '') }}"
+                                       placeholder="Enter bank account name">
+                                @error('bank_account_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            {{-- BANK ACCOUNT NUMBER --}}
+                            <div class="form-group">
+                                <label>Bank Account Number</label>
+                                <input type="text" name="bank_account_number"
+                                       class="form-control @error('bank_account_number') is-invalid @enderror"
+                                       value="{{ old('bank_account_number', $supplier->bank_account_number ?? '') }}"
+                                       placeholder="Enter bank account number">
+                                @error('bank_account_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                             {{-- SORT CODE --}}
+                             <div class="form-group">
+                                <label>Sort Code</label>
+                                <input type="text" name="sort_code"
+                                       class="form-control @error('sort_code') is-invalid @enderror"
+                                       value="{{ old('sort_code', $supplier->sort_code ?? '') }}"
+                                       placeholder="Enter sort code">
+                                @error('sort_code')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- SUBMIT BUTTON --}}
                     <div class="mt-4 d-flex justify-content-end">
                         <a href="{{ route('suppliers.index') }}" class="btn btn-secondary mr-2">Cancel</a>
