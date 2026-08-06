@@ -19,7 +19,6 @@
                             <th class="text-right">Actual Cost</th>
                             <th class="text-right">Actual Profit</th>
                             <th class="text-right">Actual GP %</th>
-                            <th class="text-right">Inv Amount</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -30,9 +29,13 @@
                             $total_gross = 0;
                             $total_purchase_order = 0.00;
                             $total_invoiced = 0.00;
+                            $total_actual_cost = 0;
+                            $total_actual_profit = 0;
+                            $total_actual_gp = 0;
                         @endphp
                         @foreach ($cost_plan as $section )  
                             @php
+                                   
                                 $number_of_items = floatval($section->items->count());
                                 // $section_markup = 0;
                                 $section_rate = 0;
@@ -68,7 +71,22 @@
                                 $total_cost += $section_cost;
                                 $total_profit += $section_profit;
                                 $total_gross += $section_total;
-                                // $total_purchase_order += 
+
+                                //actual cost, profit, gp
+                                $actual_cost = $section->po_items->sum('total');
+
+                                $actual_profit = 0;
+                                if($actual_cost > 0){
+                                    $actual_profit = $section_total - $actual_cost;
+                                }
+
+                                $actual_gp = $section_total > 0
+                                    ? ($actual_profit / $section_total) * 100
+                                    : 0;
+
+                                $total_actual_cost += $actual_cost;
+                                $total_actual_profit += $actual_profit;
+                                $total_actual_gp = ($total_actual_profit / $total_gross) * 100;
                             @endphp  
                             <tr>
                                 <td>{{$section->section_code}}</td>
@@ -78,10 +96,9 @@
                                 <td class="text-right">{{ number_format($section_profit, 2, '.', ',') }}</td>
                                 <td class="text-right"> {{ round($gross_profit) }}% </td>
                                 <td class="text-right">{{ number_format($section_total, 2, '.', ',') }}</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
-                                <td class="text-right">0.00</td>
+                                <td class="text-right">{{ number_format($actual_cost, 2, '.', ',') }}</td>
+                                <td class="text-right">{{ number_format($actual_profit, 2, '.', ',') }}</td>
+                                <td class="text-right">{{ number_format($actual_gp, 0) }}%</td>
                                 <td class="text-center">
                                     <a href="{{url("projects/adjudication_details/$section->id")}}" class="btn btn-primary" target="_blank">
                                         View Items
@@ -95,12 +112,12 @@
                         @endforeach
 
                         <!-- CONTINGENCY -->
-                        <tr>
+                        {{-- <tr>
                             <td colspan="6"><strong>CONTINGENCY</strong></td>
                             <td colspan="4" class="text-right">
                                 <strong>0.00</strong>
                             </td>
-                        </tr>
+                        </tr> --}}
 
                         <!-- BUILD TOTAL -->
                         <tr class="table-success">
@@ -111,14 +128,15 @@
                                 $gross_percentage = number_format($gross_percentage, 1, ".", ",");
 
                             @endphp
-                            <td colspan="2"><strong>Build Total ex. VAT</strong></td>
+                            <td colspan="2"><strong>Project Total ex. VAT</strong></td>
                             <td class="text-right">{{number_format($total_cost, 2, '.', ',')}}</td>
                             <td class="text-center"><strong>{{ $avg_markup }}%</strong></td>
                             <td class="text-right">{{ number_format($total_profit, 2, '.', ',') }}</td>
                             <td class="text-center"><strong>{{$gross_percentage}}%</strong></td>
                             <td class="text-right">{{number_format($total_gross, 2, ".", ",") }}</td>
-                            <td class="text-right">{{number_format($total_purchase_order, 2, ".", ",") }}</td>
-                            <td class="text-right">{{number_format($total_invoiced, 2, ".", ",") }}</td>
+                            <td class="text-right">{{number_format($total_actual_cost, 2, ".", ",") }}</td>
+                            <td class="text-right">{{number_format($total_actual_profit, 2, ".", ",") }}</td>
+                            <td class="text-right"><strong>{{number_format($total_actual_gp, 2, ".", ",") }}%</strong></td>
                             <td></td>
                         </tr>
 
