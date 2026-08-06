@@ -121,8 +121,8 @@
                                                 <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
                                                 <td>PO-{{ $poId }}</td>
                                                 <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
-                                                <td class="po-invoice-number"> - </td>
-                                                <td class="po-invoice-amount"> - </td>
+                                                <td class="po-invoice-number"> {{ $po_item->invoice_number }} </td>
+                                                <td class="po-invoice-amount"> {{number_format($po_item->invoice_amount, 2)}} </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
