@@ -83,6 +83,8 @@ Route::middleware('auth')->group(function () {
             ->name('get_items');
     Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
             ->name('get_po_item');
+    Route::post('/invoiced_items', [PurchaseOrderItemController::class, 'invoicedItems'])
+            ->name('invoiced_items');
 
     Route::get('/cost-plan/export', [CostPlanController::class, 'export'])
     ->name('costplan.export');

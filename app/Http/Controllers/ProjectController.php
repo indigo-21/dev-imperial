@@ -117,7 +117,7 @@ class ProjectController extends Controller
                     // dd($cost_plan_supplier_ids);
 
                     $for_po_suppliers = Supplier::whereIn('id', $cost_plan_supplier_ids)->get();
-
+                    
                     // $for_po_suppliers = CostPlanItem::whereIn("cost_plan_section_id", $cost_plan_section_ids)
                     //                                 ->join('suppliers', 'suppliers.id', '=', 'cost_plan_items.supplier_id')
                     //                                 ->select('supplier_id', DB::raw('MIN(suppliers.business_name) as business_name'))
