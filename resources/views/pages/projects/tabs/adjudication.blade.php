@@ -73,7 +73,14 @@
                                 $total_gross += $section_total;
 
                                 //actual cost, profit, gp
-                                $actual_cost = $section->po_items->sum('total');
+
+                                $cost_plan_item_codes = $section->items->pluck('item_code');
+
+                                $actual_cost = $section->po_items
+                                    ->whereIn('item_code', $cost_plan_item_codes)
+                                    ->sum('total');
+
+                                // $actual_cost = $section->po_items->sum('total');
 
                                 $actual_profit = 0;
                                 if($actual_cost > 0){
