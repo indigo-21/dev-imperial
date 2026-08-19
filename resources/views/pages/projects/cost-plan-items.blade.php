@@ -93,7 +93,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if count($po_suppliers['items']) == 0
+                                        @if (count($po_suppliers['items'])) == 0
                                             <tr>
                                                 <td colspan="8" class="text-center">No items found for this supplier.</td>
                                             </tr>
