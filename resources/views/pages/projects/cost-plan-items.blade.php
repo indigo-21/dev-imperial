@@ -93,38 +93,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
-                                        @foreach ($po_suppliers['items'] as $po_item)
-                                            @php
-                                                $unitCost = $po_item->cost_plan_items->cost;
-                                                $totalCost = $po_item->cost_plan_items->total;
-                                                $poTotal = $po_item->total;
-                                                $poId = str_pad($po_item->purchase_order_id, 5, '0', STR_PAD_LEFT);
-
-                                                $isDuplicate = in_array($po_item->item_code, $existItemCode);
-
-                                                if(!$isDuplicate){
-                                                    $costPlanCostTotal += $unitCost;
-                                                    $costPlanCostSubTotal += $totalCost;
-                                                }
-
-                                                $purchaseOrderTotal += $poTotal;
-
-                                                $existItemCode[] += $po_item->item_code;
-                                                // array_push($existItemCode, $po_item->item_code);
-
-                                            @endphp
-                                            <tr class="po-table-row">
-                                                <td>{{ $po_item->item_code }} </td>
-                                                <td>{{ $po_item->description }}</td>
-                                                <td class="text-right">{{ $isDuplicate ? "-" : number_format($unitCost, 2)  }}</td>
-                                                <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
-                                                <td>PO-{{ $poId }}</td>
-                                                <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
-                                                <td class="po-invoice-number"> {{ $po_item->invoice_number }} </td>
-                                                <td class="po-invoice-amount"> {{number_format($po_item->invoice_amount, 2)}} </td>
+                                        @if count($po_suppliers['items']) == 0
+                                            <tr>
+                                                <td colspan="8" class="text-center">No items found for this supplier.</td>
                                             </tr>
-                                        @endforeach
+                                            @else
+                                                @foreach ($po_suppliers['items'] as $po_item)
+                                                @php
+                                                    $unitCost = $po_item->cost_plan_items->cost;
+                                                    $totalCost = $po_item->cost_plan_items->total;
+                                                    $poTotal = $po_item->total;
+                                                    $poId = str_pad($po_item->purchase_order_id, 5, '0', STR_PAD_LEFT);
+
+                                                    $isDuplicate = in_array($po_item->item_code, $existItemCode);
+
+                                                    if(!$isDuplicate){
+                                                        $costPlanCostTotal += $unitCost;
+                                                        $costPlanCostSubTotal += $totalCost;
+                                                    }
+
+                                                    $purchaseOrderTotal += $poTotal;
+
+                                                    $existItemCode[] += $po_item->item_code;
+                                                    // array_push($existItemCode, $po_item->item_code);
+
+                                                @endphp
+                                                <tr class="po-table-row">
+                                                    <td>{{ $po_item->item_code }} </td>
+                                                    <td>{{ $po_item->description }}</td>
+                                                    <td class="text-right">{{ $isDuplicate ? "-" : number_format($unitCost, 2)  }}</td>
+                                                    <td class="text-right">{{ $isDuplicate ? "-" : number_format($totalCost, 2) }}</td>
+                                                    <td>PO-{{ $poId }}</td>
+                                                    <td class="text-right">{{ number_format($po_item->total, 2) }}</td>
+                                                    <td class="po-invoice-number"> {{ $po_item->invoice_number }} </td>
+                                                    <td class="po-invoice-amount"> {{number_format($po_item->invoice_amount, 2)}} </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    
                                     </tbody>
                                     <tfoot>
                                         <tr>
