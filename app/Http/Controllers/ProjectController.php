@@ -130,12 +130,17 @@ class ProjectController extends Controller
                         array_push($tabs, "adjudication");
                         array_push($tabs, "invoice");
                     }
-
+                    $purchase_order_data = PurchaseOrder::where("project_id", $id);
                     $result["cost_plan"] = "";
                     $result["has_costplan"] = true;
                     $result["cost_plan"] = $cost_plan_sections->get();
                     $result["for_po_suppliers"] = $for_po_suppliers;
-                    $result["purchase_orders"] = PurchaseOrder::where("project_id", $id)->get();
+                    $result["purchase_orders"] = $purchase_order_data->get();
+                    $result["purchase_order_suppliers"] = $purchase_order_data
+                    ->join('suppliers', 'suppliers.id', '=', 'purchase_orders.supplier_id') // Join suppliers table
+                    ->select('purchase_orders.supplier_id', 'suppliers.business_name') // Select columns
+                    ->groupBy('purchase_orders.supplier_id', 'suppliers.business_name')
+                    ->get();
                 }
                 $result += [
                     "project"   => Project::findOrFail($id),

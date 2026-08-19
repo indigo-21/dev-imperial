@@ -15,8 +15,8 @@
                     <label for="supplier_to_invoice">Supplier</label>
                         <select id="supplier_to_invoice" class="form-control">
                             <option value="">-- Select Supplier --</option>
-                            @foreach ($purchase_orders as $purchase_order)
-                                <option value="{{ $purchase_order->supplier_id }}">{{ $purchase_order->supplier->business_name }}
+                            @foreach ($purchase_order_suppliers as $purchase_order_supplier)
+                                <option value="{{ $purchase_order_supplier->supplier_id }}">{{ $purchase_order_supplier->supplier->business_name }}
                                 </option>
                             @endforeach
                         </select>

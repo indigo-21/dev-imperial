@@ -86,7 +86,10 @@
 
                                 $total_actual_cost += $actual_cost;
                                 $total_actual_profit += $actual_profit;
-                                $total_actual_gp = ($total_actual_profit / $total_gross) * 100;
+                                // $total_actual_gp = ($total_actual_profit / $total_gross) * 100;
+                                $total_actual_gp = $total_gross > 0
+                                ? ($total_actual_profit / $total_gross) * 100
+                                : 0;
                             @endphp  
                             <tr>
                                 <td>{{$section->section_code}}</td>
