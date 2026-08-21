@@ -61,7 +61,7 @@
                             <div class="left w-50">
                                 <h3 class="card-title">Supplier: {{ $po_suppliers['supplierName'] }}</h3>
                             </div>
-                            <div class="right w-50 text-right">
+                            {{-- <div class="right w-50 text-right">
                                 <button class="btn btn-primary create-invoice-btn"> <i class="fa fa-plus-square"
                                         aria-hidden="true"></i> Create Invoice </button>
 
@@ -69,7 +69,7 @@
                                         class="fa fa-check-square" aria-hidden="true"></i> Save Invoice </button>
                                 <button class="alter-invoice-btn btn btn-danger  d-none cancel-invoice-btn"> <i
                                         class="fa fa-times" aria-hidden="true"></i> Cancel </button>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="card-body">

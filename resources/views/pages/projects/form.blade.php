@@ -45,6 +45,15 @@
             .section-items { cursor: move; }
             .ui-state-highlight { height: 200px; background: #f0f0f0; border: 1px dashed #ccc; }
             .section-item-row { background: #ffffff;}
+            .project-tabs-header {
+                position: sticky;
+                top: 80px;
+                z-index: 1030;
+                background-color: #fff;
+                padding-top: 15px !important;
+                border-bottom: 2px solid #dee2e6;
+
+            }
         </style>
     @endsection
 
@@ -90,7 +99,7 @@
                                 <div class="card card-outline card-primary">
                                     
                                     @isset($project)
-                                        <div class="card-header p-0 border-bottom-0">
+                                        <div class="card-header p-0 border-bottom-0 project-tabs-header">
                                             <ul class="nav nav-tabs" id="projectTabs" role="tablist">
                                                 @foreach ($tabs as $tab )
                                                     @php

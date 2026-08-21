@@ -163,6 +163,10 @@ html {
     scroll-behavior: smooth;
 }
 
+.section-code-text {
+    color: #4682b4;
+}
+
 
 /* Remove arrows */
 input[type="number"]::-webkit-outer-spin-button,

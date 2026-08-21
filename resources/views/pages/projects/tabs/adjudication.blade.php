@@ -99,7 +99,10 @@
                                 : 0;
                             @endphp  
                             <tr>
-                                <td>{{$section->section_code}}</td>
+                                
+                                <td><a class="text-bold section-code-text" href="{{ url('projects/edit/cost-plan/' . $project->id) }}#cost-section-{{ $section->id }}">
+                                    {{ $section->section_code }}
+                                </a></td>
                                 <td>{{$section->section_name}}</td>
                                 <td class="text-right">{{ number_format($section_cost, 2, '.', ',') }}</td>
                                 <td class="text-right">{{ round($section_markup) }} %</td>
