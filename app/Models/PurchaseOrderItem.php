@@ -14,4 +14,8 @@ class PurchaseOrderItem extends Model
     public function cost_plan_items(): BelongsTo{
         return $this->belongsTo(CostPlanItem::class,"cost_plan_item_id");
     }
+    public function invoices() {
+        return $this->hasMany(Invoice::class);
+    }
 }
+

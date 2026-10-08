@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\CostPlanSection;
 use App\Models\TemplateItem;
@@ -145,7 +146,50 @@ class ProjectController extends Controller
                 $result += [
                     "project"   => Project::findOrFail($id),
                     "has_cost_plan" => CostPlanSection::where("project_id", $id)->get(),
-                    "project_files" => ProjectFile::where("project_id", $id)->get()
+                    "project_files" => ProjectFile::where("project_id", $id)->get(),
+                    "invoices" => Invoice::whereHas(
+                        'purchaseOrderItem.purchase_order',
+                        function ($query) use ($id) {
+                            $query->where('project_id', $id);
+                        }
+                    )
+                    ->with([
+                        'purchaseOrderItem.purchase_order.supplier',
+                    ])
+                    ->get()
+                    ->groupBy('invoice_number')
+                    ->map(function ($invoiceItems) {
+
+                        $firstInvoice = $invoiceItems->first();
+
+                        return [
+                            'invoice_number' => $firstInvoice->invoice_number,
+
+                            'po_number' => 'PO-' . str_pad(
+                                $firstInvoice->purchaseOrderItem->purchase_order->id,
+                                5,
+                                '0',
+                                STR_PAD_LEFT
+                            ),
+
+                            'supplier' => $firstInvoice
+                                ->purchaseOrderItem
+                                ->purchase_order
+                                ->supplier
+                                ->business_name ?? '',
+
+                            'invoice_amount' => $invoiceItems->sum('invoice_amount'),
+
+                            'items' => $invoiceItems->map(function ($invoice) {
+                                return [
+                                    'description' => $invoice->purchaseOrderItem->description,
+                                    'amount' => $invoice->invoice_amount,
+                                ];
+                            })->values(),
+                        ];
+                    })
+                    ->values(),
+
                 ];
             }
         } else {

@@ -19,6 +19,7 @@ use App\Models\CostPlanItem;
 use App\Http\Controllers\CostPlanItemController;
 use App\Models\PurchaseOrderItem;
 use App\Http\Controllers\PurchaseOrderItemController;
+use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -71,11 +72,17 @@ Route::middleware('auth')->group(function () {
             ->name('purchase_order_upsert');
         Route::get('/adjudication_details/{costplanSectionId?}', [ProjectController::class, 'costPlanItems'])
             ->name('adjudication_details');
-    });
+        Route::get('/invoice/{id}', [InvoiceController::class, 'show'])
+            ->name('invoices.show');
+            
+
+            });
 
     Route::post('costplan_upsert', [CostPlanController::class, 'upsert'])
     ->name('costplan_upsert');
 
+    Route::post('/invoices/{purchaseOrderItem}', [InvoiceController::class, 'store'])
+    ->name('invoices.store');
 
     Route::post('/get_items_by_supplier', [CostPlanItemController::class, 'getItemsBySupplier'])
             ->name('get_items_by_supplier');
@@ -83,8 +90,13 @@ Route::middleware('auth')->group(function () {
             ->name('get_items');
     Route::post('/get_po_item', [PurchaseOrderItemController::class, 'getPurchaseOrderItems'])
             ->name('get_po_item');
-    Route::post('/invoiced_items', [PurchaseOrderItemController::class, 'invoicedItems'])
+    Route::post('/get_po_items_for_invoice',[PurchaseOrderItemController::class, 'getPurchaseOrderItemsForInvoice'])
+            ->name('get_po_items_for_invoice');
+    Route::post('/invoiced_items', [InvoiceController::class, 'storeMultiple'])
             ->name('invoiced_items');
+
+    Route::post('/invoice-receipts/{purchaseOrderItem}/receipts', [InvoiceController::class, 'storeReceipt'])
+    ->name('invoices.receipts.store');
 
     Route::get('/cost-plan/export', [CostPlanController::class, 'export'])
     ->name('costplan.export');

@@ -20,7 +20,11 @@ class PurchaseOrderItemController extends Controller
         $purchaseOrderId = $request->purchaseOrderId;
 
         $query = PurchaseOrder::where('project_id', $projectId)
-            ->where("supplier_id", $supplierId);
+            ->where("supplier_id", $supplierId)
+            ->with(['po_items' => function ($query) {
+                $query->withSum('invoices', 'invoice_amount');
+            }]);
+        
         if ($purchaseOrderId) {
             $query->where('id', $purchaseOrderId);
         }
@@ -33,6 +37,8 @@ class PurchaseOrderItemController extends Controller
             $poNumber = 'PO-' . str_pad($po->id, 5, '0', STR_PAD_LEFT);
 
             foreach ($po->po_items as $item) {
+                $item->outstanding_amount =
+                $item->total - ($item->invoices_sum_invoice_amount ?? 0);
                 array_push($result, $item);
             }
         }
@@ -52,6 +58,54 @@ class PurchaseOrderItemController extends Controller
             })
             ->get();
         // dd($purchase_orders);
+    }
+
+    public function getPurchaseOrderItemsForInvoice(Request $request)
+    {
+        $projectId = $request->projectId;
+        $purchaseOrderId = $request->purchaseOrderId;
+    
+        $purchaseOrder = PurchaseOrder::where('project_id', $projectId)
+            ->where('id', $purchaseOrderId)
+            ->with([
+                'po_items' => function ($query) {
+                    $query->withSum('invoices', 'invoice_amount');
+                }
+            ])
+            ->first();
+    
+        if (!$purchaseOrder) {
+            return response()->json([]);
+        }
+    
+        $result = [];
+    
+        $poNumber = 'PO-' . str_pad($purchaseOrder->id, 5, '0', STR_PAD_LEFT);
+    
+        foreach ($purchaseOrder->po_items as $item) {
+    
+            $invoiceTotal = $item->invoices_sum_invoice_amount ?? 0;
+    
+            $result[] = [
+                'id' => $item->id,
+                'item_code' => $item->item_code,
+                'description' => $item->description,
+                'po_number' => $poNumber,
+                'po_amount' => $item->total,
+    
+                // Existing invoices
+                'invoiced_amount' => $invoiceTotal,
+    
+                // Remaining amount
+                'outstanding_amount' => $item->total - $invoiceTotal,
+    
+                // New invoice input should be blank
+                'invoice_number' => '',
+                'invoice_amount' => '',
+            ];
+        }
+    
+        return response()->json($result);
     }
 
     public function invoicedItems(Request $request): JsonResponse
