@@ -84,7 +84,7 @@
                                 Save Invoice
                             </button>
                         </div>
-                        <button type="button" id="cancel-btn-from-invoice" class="btn btn-secondary btn-sm ml-2">
+                        <button type="button" id="cancel-btn-from-invoice" class="btn btn-secondary btn-sm ml-2 mt-3">
                             Cancel
                         </button>
                     </div>
