@@ -125,7 +125,6 @@ class PurchaseOrderItemController extends Controller
                 'nullable',
                 'required_with:*.invoiceNumber',
                 'numeric',
-                'min:0',
             ],
         ]);
 

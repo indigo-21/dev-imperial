@@ -131,7 +131,7 @@
                         </td>
                 
                         <td class="text-right">
-                            ₱{{ number_format($invoice['invoice_amount'], 2) }}
+                            £{{ number_format($invoice['invoice_amount'], 2) }}
                         </td>
                         <td>
                         <button
@@ -210,7 +210,7 @@
                                     Total
                                 </th>
                                 <th class="text-right" id="modalInvoiceTotal">
-                                    ₱0.00
+                                    £0.00
                                 </th>
                             </tr>
                         </tfoot>
@@ -280,7 +280,7 @@
                     <tr>
                         <td>${item.description ?? ''}</td>
                         <td class="text-right">
-                            ₱${amount.toLocaleString('en-PH', {
+                            £${amount.toLocaleString('en-PH', {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
                             })}
@@ -292,7 +292,7 @@
             $('#invoiceItems').html(rows);
         
             $('#modalInvoiceTotal').text(
-                '₱' + total.toLocaleString('en-PH', {
+                '£' + total.toLocaleString('en-GB', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 })

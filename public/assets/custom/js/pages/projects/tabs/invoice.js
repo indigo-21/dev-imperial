@@ -312,7 +312,6 @@ function invoiceItemTableRow(item) {
                         type="number"
                         class="form-control form-control-sm invoice-amount"
                         data-item-id="${item.id}"
-                        min="0"
                         max="${item.outstanding_amount ?? 0}"
                         step="0.01"
                         value="${item.invoice_amount ?? ''}"

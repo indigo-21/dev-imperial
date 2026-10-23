@@ -78,7 +78,6 @@ class InvoiceController extends Controller
         'items.*.invoiceAmount' => [
             'required',
             'numeric',
-            'min:0',
         ],
     ]);
 
