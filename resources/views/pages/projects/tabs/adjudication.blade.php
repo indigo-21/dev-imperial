@@ -86,6 +86,10 @@
                                 if($actual_cost > 0){
                                     $actual_profit = $section_total - $actual_cost;
                                 }
+                                else {
+                                    // No purchase order yet - use planned profit
+                                    $actual_profit = $section_profit;
+                                }
 
                                 $actual_gp = $section_total > 0
                                     ? ($actual_profit / $section_total) * 100
