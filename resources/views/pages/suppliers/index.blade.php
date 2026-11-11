@@ -46,7 +46,7 @@
                                             $typeNames = array_map(fn($id) => $supplierTypes[$id] ?? '-', $typeIds);
                                         @endphp
                                         <tr>
-                                            <td>{{ $supplier->id }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $supplier->business_name }}</td>
                                             <td>{{ $supplier->business_address }}</td>
                                             <td>{{ $supplier->unique_tax_reference }}</td>
