@@ -196,6 +196,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Item Code</th>
                                 <th>Description</th>
                                 <th class="text-right">Invoice Amount</th>
                             </tr>
@@ -206,6 +207,7 @@
     
                         <tfoot>
                             <tr>
+                                <th></th>
                                 <th class="text-right">
                                     Total
                                 </th>
@@ -278,6 +280,7 @@
         
                 rows += `
                     <tr>
+                        <td>${item.item_code ?? '-'}</td>
                         <td>${item.description ?? ''}</td>
                         <td class="text-right">
                             £${amount.toLocaleString('en-PH', {

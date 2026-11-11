@@ -182,6 +182,7 @@ class ProjectController extends Controller
 
                             'items' => $invoiceItems->map(function ($invoice) {
                                 return [
+                                    'item_code'   => $invoice->purchaseOrderItem->item_code,
                                     'description' => $invoice->purchaseOrderItem->description,
                                     'amount' => $invoice->invoice_amount,
                                 ];
@@ -410,7 +411,11 @@ class ProjectController extends Controller
 
     public function costPlanItems($costplanSectionId)
     {
-        $section = CostPlanSection::findOrFail($costplanSectionId);
+        $section = CostPlanSection::with([
+            'po_items.purchase_order.supplier',
+            'po_items.invoices',
+            'items'
+        ])->findOrFail($costplanSectionId);
 
         // Group PO items by supplier
         $purchaseOrdered = $section->po_items
