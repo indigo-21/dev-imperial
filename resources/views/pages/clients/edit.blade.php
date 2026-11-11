@@ -91,12 +91,14 @@
                                 </select>
                             </div>
 
-                            <div class="form-group" id="industries-group" style="display: {{ optional($client->clientType)->name === 'Occupier' ? 'block' : 'none' }}">
+                            <div class="form-group" id="industries-group" style="display: none;">
                                 <label>Industry</label>
                                 <select name="industry" id="industry" class="form-control select2">
                                     <option value="">-- Select Industry --</option>
                                     @foreach ($industries as $industry)
-                                        <option value="{{ $industry }}" {{ old('industry', $client->industry ?? '') == $industry ? 'selected' : '' }}>{{ $industry }}</option>
+                                        <option value="{{ $industry }}" {{ old('industry', $client->industry ?? '') == $industry ? 'selected' : '' }}>
+                                            {{ $industry }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -135,11 +137,26 @@
             }
 
             // Show industries if client type is Occupier
-            document.getElementById('client_type_id').addEventListener('change', function() {
-                const selected = this.options[this.selectedIndex].dataset.name;
-                document.getElementById('industries-group').style.display = selected === 'Occupier' ? 'block' : 'none';
-                if(selected !== 'Occupier') document.getElementById('industry').value = '';
-            });
+            const clientType = document.getElementById('client_type_id');
+            const industriesGroup = document.getElementById('industries-group');
+            const industry = document.getElementById('industry');
+
+            function toggleIndustries() {
+                const selected = clientType.options[clientType.selectedIndex].dataset.name;
+
+                industriesGroup.style.display = selected === 'Occupier' ? 'block' : 'none';
+
+                if (selected !== 'Occupier') {
+                    industry.value = '';
+                    $(industry).trigger('change');
+                }
+            }
+
+            // Run when page loads
+            toggleIndustries();
+
+            // Run when client type changes
+            clientType.addEventListener('change', toggleIndustries);
         </script>
     @endsection
 </x-app-layout>

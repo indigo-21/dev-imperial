@@ -4,6 +4,26 @@ $(function () {
     const tableBody = document.getElementById("line-items-table-body");
     // const submitInvoice = document.getElementById("proceed-btn-from-invoice");
 
+    // Invoice DataTable
+    $('#invoices-table').DataTable({
+        pageLength: 15,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        order: [[4, 'desc']],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: [5,6]
+            }
+        ],
+        language: {
+            search: "Search:",
+            emptyTable: "No invoice records found",
+            zeroRecords: "No matching invoices found"
+        }
+    });
+
     tableContainer.style.display = "none";
 
     // Updated sample static data

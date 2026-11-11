@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\CostPlanSection;
@@ -162,8 +163,12 @@ class ProjectController extends Controller
 
                         $firstInvoice = $invoiceItems->first();
 
+                        $createdBy = User::find($firstInvoice->created_by);
+
                         return [
                             'invoice_number' => $firstInvoice->invoice_number,
+
+                            
 
                             'po_number' => 'PO-' . str_pad(
                                 $firstInvoice->purchaseOrderItem->purchase_order->id,
@@ -180,6 +185,12 @@ class ProjectController extends Controller
 
                             'invoice_amount' => $invoiceItems->sum('invoice_amount'),
 
+                            'created_at' => $firstInvoice->created_at,
+
+                            'created_by_name' => $createdBy
+                            ? $createdBy->firstname . ' ' . $createdBy->lastname
+                            : '',                
+
                             'items' => $invoiceItems->map(function ($invoice) {
                                 return [
                                     'item_code'   => $invoice->purchaseOrderItem->item_code,
@@ -189,6 +200,7 @@ class ProjectController extends Controller
                             })->values(),
                         ];
                     })
+                    
                     ->values(),
 
                 ];

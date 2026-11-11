@@ -94,14 +94,16 @@
 
         <!-- TABLE: Existing Purchase Orders -->
         <div id="purchase-order-table">
-            <table class="table table-bordered table-striped">
+            <table id="purchase-orders-table" class="table table-bordered table-striped">
                 <thead class="thead-light">
                     <tr>
                         <th style="width:10%">PO Number</th>
                         <th>Supplier</th>
-                        <th style="width:20%">Created By</th>
-                        <th class="text-center" style="width:10%">Edit</th>
-                        <th class="text-center" style="width:10%">PDF</th>
+                        <th class="text-right">PO Amount</th>
+                        <th style="width:120px;">Date Created</th>
+                        <th style="width:120px;">Created By</th>
+                        <th class="text-center" style="width:70px;">Edit</th>
+                        <th class="text-center" style="width:70px;">PDF</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,6 +112,8 @@
                             <tr>
                                 <td>{{"PO-" . str_pad($purchase_order->id, 5, '0', STR_PAD_LEFT)}}</td>
                                 <td>{{$purchase_order?->supplier->business_name ?? ""}}</td>
+                                <td class="text-right"> £{{ number_format($purchase_order->po_items->sum('total'), 2) }}</td>
+                                <td>{{ $purchase_order->created_at->format('M d, Y') }}</td>
                                 <td>{{$purchase_order->created_user->firstname}} {{$purchase_order->created_user->lastname}}</td>
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-outline-primary edit-purchase-order" 
@@ -143,6 +147,8 @@
 
 
 @section('scripts')
+    @include('includes.datatables-scripts')
+    <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ asset('assets/custom/js/pages/projects/tabs/purchase-order.js') }}"></script>
+    <script src="{{ asset('assets/custom/js/pages/projects/tabs/purchase-order.js') }}?v={{ filemtime(public_path('assets/custom/js/pages/projects/tabs/purchase-order.js')) }}"></script>
 @endsection

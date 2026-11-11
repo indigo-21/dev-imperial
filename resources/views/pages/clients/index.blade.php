@@ -29,7 +29,7 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>No.</th>
                                     <th>Business Name</th>
                                     <th>Business Address</th>
                                     <th>Industry</th>
@@ -39,7 +39,7 @@
                             <tbody>
                                 @foreach ($clients as $client)
                                     <tr>
-                                        <td>{{ $client->id }}</td>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>{{ $client->business_name }}</td>
                                         <td>{{ $client->business_address }}</td>
                                         <td>{{ $client->industry }}</td>

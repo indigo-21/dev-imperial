@@ -29,7 +29,7 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>No.</th>
                                     <th>Business Name</th>
                                     <th>Business Address</th>
                                     <th>UTR</th>

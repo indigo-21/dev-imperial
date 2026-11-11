@@ -100,16 +100,18 @@
     <div class="card-body">
 
         <div id="invoice-table">
-            <table class="table table-bordered table-striped">
+            <table id="invoices-table" class="table table-bordered table-striped">
                 <thead class="thead-light">
                     <tr>
-                        <th>Invoice Number</th>
+                        <th style="width: 120px;">Invoice Number</th>
                         <th style="width: 15%">PO Number</th>
                         <th>Supplier</th>
                         <th class="text-right" style="width: 20%">
                             Invoice Amount
                         </th>
-                        <th style="width:10%">Action</th>
+                        <th>Date Created</th>
+                        <th style="width:120px;">Created By</th>
+                        <th class="text-center" style="width:70px;">Action</th>
 
                     </tr>
                 </thead>
@@ -133,7 +135,9 @@
                         <td class="text-right">
                             £{{ number_format($invoice['invoice_amount'], 2) }}
                         </td>
-                        <td>
+                        <td data-order="{{ strtotime($invoice['created_at']) }}">{{ date('M d, Y', strtotime($invoice['created_at']))}}</td>
+                        <td>{{ $invoice['created_by_name'] }}</td>
+                        <td class="text-center">
                         <button
                             type="button"
                             class="btn btn-sm btn-primary view-invoice"
@@ -238,9 +242,11 @@
 
 
 @section('scripts')
+    @include('includes.datatables-scripts')
+    <script src="{{ asset('assets/js/datatables.js') }}"></script>
     <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ asset('assets/custom/js/pages/projects/tabs/invoice.js') }}?v={{ time() }}"></script>
-    <script src="{{ asset('assets/custom/js/pages/projects/tabs/purchase-order.js') }}"></script>
+    <script src="{{ asset('assets/custom/js/pages/projects/tabs/invoice.js') }}?v={{ filemtime(public_path('assets/custom/js/pages/projects/tabs/invoice.js')) }}"></script>
+    <script src="{{ asset('assets/custom/js/pages/projects/tabs/purchase-order.js') }}?v={{ filemtime(public_path('assets/custom/js/pages/projects/tabs/purchase-order.js')) }}"></script>
 
     <script>
         $(document).on('click', '.view-invoice', function () {

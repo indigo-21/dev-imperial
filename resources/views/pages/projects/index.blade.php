@@ -29,6 +29,7 @@
                         <table id="defaultTable" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th width="20px;">No.</th>
                                     <th>Project Reference</th>
                                     <th>Client</th>
                                     <th>Project Type</th>
@@ -39,6 +40,7 @@
                             <tbody>
                                 @foreach ($projects as $project )
                                     <tr>
+                                        <td>{{$loop->iteration}}</td>
                                         <td>{{"PRJ-" . str_pad($project->id, 5, '0', STR_PAD_LEFT)}}</td>
                                         <td>{{$project->client->business_name}}</td>
                                         <td>{{$project->project_type->name}}</td>

@@ -37,6 +37,26 @@ $(function () {
             $(".cost-plan-item").length === $(".cost-plan-item:checked").length
         );
     });
+
+    $('#purchase-orders-table').DataTable({
+        "pageLength": 15,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            {
+                "orderable": false,
+                "targets": [5, 6]
+            }
+        ],
+        "language": {
+            "search": "Search:",
+            "emptyTable": "No purchase orders available",
+            "zeroRecords": "No matching purchase orders found"
+        }
+    });
+
 });
 
 let LIMIT_COST = [];
@@ -549,3 +569,4 @@ async function getPoItems({supplierId, purchaseOrderId = false}){
         return [];
     }
 }
+
