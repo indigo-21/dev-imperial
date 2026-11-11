@@ -52,6 +52,7 @@
                         $costPlanCostTotal = 0;
                         $costPlanCostSubTotal = 0;
                         $purchaseOrderTotal = 0;
+                        $invoiceTotal = 0;
                         $existItemCode = [];
 
                     @endphp
@@ -78,8 +79,8 @@
                                     class="table table-hover table-bordered table-striped table-sm">
                                     <thead class="thead-light text-center">
                                         <tr>
-                                            <th rowspan="2">Item Code</th>
-                                            <th rowspan="2">Description</th>
+                                            <th rowspan="2" width="70px;">Item Code</th>
+                                            <th rowspan="2" width="700px;">Description</th>
                                             <th rowspan="2">Cost</th>
                                             <th rowspan="2">Total</th>
                                             <th colspan="2">Purchase Order</th>
@@ -113,6 +114,10 @@
                                                     }
 
                                                     $purchaseOrderTotal += $poTotal;
+
+                                                    foreach ($po_item->invoices as $invoice) {
+                                                        $invoiceTotal += floatval($invoice->invoice_amount);
+                                                    }
 
                                                     $existItemCode[] += $po_item->item_code;
                                                     // array_push($existItemCode, $po_item->item_code);
@@ -149,11 +154,12 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2"> Supplier Total </th>
+                                            <th colspan="2" class="text-right"> Total </th>
                                             <th class="text-right">{{number_format($costPlanCostTotal, 2)}}</th>
                                             <th class="text-right">{{number_format($costPlanCostSubTotal, 2)}}</th>
                                             <th colspan="2" class="text-right">{{number_format($purchaseOrderTotal, 2)}}</th>
-                                            <th colspan="2"></th>
+                                            <th></th>
+                                            <th colspan="2">{{ number_format($invoiceTotal, 2) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>
