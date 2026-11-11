@@ -121,12 +121,19 @@
 
                                 <div id="contact-group">
                                     @php
-                                        $contacts = old(
-                                            'contacts',
-                                            isset($supplier)
+                                        $contacts = old('contacts');
+
+                                        if ($contacts === null) {
+                                            $contacts = isset($supplier)
                                                 ? $supplier->contacts->toArray()
-                                                : [['contact_name' => '', 'phone' => '', 'email' => '']]
-                                        );
+                                                : [];
+                                        }
+
+                                        if (empty($contacts)) {
+                                            $contacts = [
+                                                ['contact_name' => '', 'phone' => '', 'email' => '']
+                                            ];
+                                        }
                                     @endphp
 
                                     @foreach ($contacts as $index => $contact)
@@ -383,9 +390,47 @@
 
     @section('scripts')
         <script>
+            let contactIndex = {{ count($contacts ?? [1]) }};
+
+            function addContact() {
+                const group = document.createElement('div');
+                group.classList.add('contact-info-group', 'mb-2', 'd-flex');
+                group.innerHTML = `
+                    <input type="text" name="contacts[${contactIndex}][name]" class="form-control mr-2" placeholder="Contact Name" required>
+                    <input type="text" name="contacts[${contactIndex}][phone]" class="form-control mr-2" placeholder="Phone Number">
+                    <input type="text" name="contacts[${contactIndex}][email]" class="form-control mr-2" placeholder="Email Address">
+                    <div class="contact-info-group-append">
+                        <button type="button" class="btn btn-danger" onclick="removeContact(this)"><i class="fa fa-minus"></i></button>
+                    </div>`;
+                document.getElementById('contact-group').appendChild(group);
+                contactIndex++;
+            }
+
+            function removeContact(button) {
+                button.closest('.contact-info-group').remove();
+            }
+
+            // Update dropdown button text with selected types
+            $(document).on('change', '.supplier-checkbox', function () {
+                const selected = [];
+                $('.supplier-checkbox:checked').each(function () {
+                    selected.push($(this).data('name'));
+                });
+                $('#supplierDropdown').text(selected.length ? selected.join(', ') : 'Select Supplier Type(s)');
+            });
+
+            // Supplier search filter
+            $('#supplierSearch').on('keyup', function () {
+                const value = $(this).val().toLowerCase();
+                $('#supplierList .form-check').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
             $(document).ready(function() {
                 $('#documentsTable').DataTable(); // Initialize datatable for documents
             });
+
         </script>
         {{-- Include your existing contact add/remove JS --}}
     @endsection

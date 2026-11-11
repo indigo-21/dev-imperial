@@ -51,19 +51,22 @@ class SupplierController extends Controller
         $supplier->save();
 
           // Save contacts if provided
-        if ($request->has('contacts')) {
-            
-            foreach ($request->contacts as $contact) {
+        foreach ($request->input('contacts', []) as $contact) {
 
-                 if (empty($contact['name']) && empty($contact['mobile']) && empty($contact['email'])) {
-                    continue;
-                }
-                $supplier->contacts()->create([
-                    'contact_name' => $contact['name'] ?? null,
-                    'email' => $contact['email'] ?? null,
-                    'phone' => $contact['phone'] ?? null                
-                ]);
+            // Skip completely empty rows
+            if (
+                empty($contact['name']) &&
+                empty($contact['phone']) &&
+                empty($contact['email'])
+            ) {
+                continue;
             }
+
+            $supplier->contacts()->create([
+                'contact_name' => $contact['name'] ?? null,
+                'phone' => $contact['phone'] ?? null,
+                'email' => $contact['email'] ?? null,
+            ]);
         }
         
 
@@ -101,19 +104,17 @@ class SupplierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-         $request->validate(self::formRule(), self::errorMessage());
+        $request->validate(self::formRule(), self::errorMessage());
 
-    $supplier = Supplier::with('contacts')->findOrFail($id);
+        $supplier = Supplier::with('contacts')->findOrFail($id);
 
-    // Update supplier fields
-    $supplier->fill($request->all());
+        // Update supplier details
+        $supplier->fill($request->except('contacts', 'supplier_types'));
 
-    // Convert supplier types array to comma-separated string
-    $supplier->supplier_types = implode(',', $request->supplier_types);
-
-    $supplier->updated_by = auth()->id();
-
-    $supplier->save();
+        $supplier->supplier_types = implode(',', $request->supplier_types ?? []);
+        $supplier->updated_by = auth()->id();
+    
+        $supplier->save();
 
     /**
      * Update contacts
@@ -123,50 +124,55 @@ class SupplierController extends Controller
      */
     $existingContactIds = $supplier->contacts->pluck('id')->toArray();
     $submittedContactIds = [];
+    
+    foreach ($request->input('contacts', []) as $contact) {
 
-    if ($request->has('contacts')) {
+        // Skip completely empty rows
+        if (
+            empty($contact['name']) &&
+            empty($contact['phone']) &&
+            empty($contact['email'])
+        ) {
+            continue;
+        }
 
-        foreach ($request->contacts as $contact) {
+        if (!empty($contact['id'])) {
 
-            // Skip completely empty rows
-            if (
-                empty($contact['name']) &&
-                empty($contact['phone']) &&
-                empty($contact['email'])
-            ) {
-                continue;
-            }
+            // Only update contacts belonging to this supplier
+            $existingContact = $supplier->contacts()
+                ->where('id', $contact['id'])
+                ->first();
 
-            // Update existing contact
-            if (!empty($contact['id'])) {
-
-                $submittedContactIds[] = $contact['id'];
-
-                $supplier->contacts()
-                    ->where('id', $contact['id'])
-                    ->update([
-                        'contact_name' => $contact['name'] ?? null,
-                        'phone' => $contact['phone'] ?? null,
-                        'email' => $contact['email'] ?? null,
-                    ]);
-
-            } else {
-                // Create new contact
-                $newContact = $supplier->contacts()->create([
+            if ($existingContact) {
+                $existingContact->update([
                     'contact_name' => $contact['name'] ?? null,
                     'phone' => $contact['phone'] ?? null,
                     'email' => $contact['email'] ?? null,
                 ]);
 
-                $submittedContactIds[] = $newContact->id;
+                $submittedContactIds[] = $existingContact->id;
             }
+
+        } else {
+
+            // Create new contact
+            $newContact = $supplier->contacts()->create([
+                'contact_name' => $contact['name'] ?? null,
+                'phone' => $contact['phone'] ?? null,
+                'email' => $contact['email'] ?? null,
+            ]);
+
+            $submittedContactIds[] = $newContact->id;
         }
     }
 
-    // Delete removed contacts
+    // Delete contacts removed from the form
     $contactsToDelete = array_diff($existingContactIds, $submittedContactIds);
+
     if (!empty($contactsToDelete)) {
-        $supplier->contacts()->whereIn('id', $contactsToDelete)->delete();
+        $supplier->contacts()
+            ->whereIn('id', $contactsToDelete)
+            ->delete();
     }
 
     return redirect()->route('suppliers.index')
@@ -178,7 +184,12 @@ class SupplierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $supplier = Supplier::findOrFail($id);
+
+        $supplier->delete();
+
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier deleted successfully.');
     }
 
     public function formRule()

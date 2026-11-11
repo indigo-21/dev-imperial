@@ -56,11 +56,49 @@
                                             <td>
                                                 <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="fa fa-pen"></i>Edit</a>
-                                                <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this supplier?')">Delete</button>
-                                                </form>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteSupplierModal{{ $supplier->id }}">
+                                                        Delete
+                                                    </button>
+                                                    <div class="modal fade" id="deleteSupplierModal{{ $supplier->id }}" tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                    
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Delete Supplier</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal">
+                                                                        <span>&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                    
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to delete
+                                                                    <strong>{{ $supplier->name }}</strong>?
+                                                                    <p class="text-muted mb-0 mt-2">
+                                                                        This supplier will be removed from the active supplier list.
+                                                                    </p>
+                                                                </div>
+                                                    
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                                        Cancel
+                                                                    </button>
+                                                    
+                                                                    <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                    
+                                                                        <button type="submit" class="btn btn-danger">
+                                                                            Yes, Delete
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                    
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                             </td>
                                         </tr>
                                  @endforeach

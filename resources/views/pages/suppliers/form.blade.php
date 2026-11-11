@@ -104,7 +104,19 @@
                                 <label>Contact Information</label>
                                 <div id="contact-group">
                                     @php
-                                        $contacts = old('contacts', $supplier->contacts ?? [['name'=>'','phone'=>'','email'=>'']]);
+                                        $contacts = old('contacts');
+                                    
+                                        if ($contacts === null) {
+                                            $contacts = isset($supplier)
+                                                ? $supplier->contacts->toArray()
+                                                : [];
+                                        }
+                                    
+                                        if (empty($contacts)) {
+                                            $contacts = [
+                                                ['contact_name' => '', 'phone' => '', 'email' => '']
+                                            ];
+                                        }
                                     @endphp
                                     @foreach ($contacts as $index => $contact)
                                         <div class="contact-info-group d-flex mb-2">
