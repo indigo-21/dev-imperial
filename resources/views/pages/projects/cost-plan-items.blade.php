@@ -159,7 +159,7 @@
                                             <th class="text-right">{{number_format($costPlanCostSubTotal, 2)}}</th>
                                             <th colspan="2" class="text-right">{{number_format($purchaseOrderTotal, 2)}}</th>
                                             <th></th>
-                                            <th colspan="2">{{ number_format($invoiceTotal, 2) }}</th>
+                                            <th colspan="2" class="text-right">{{ number_format($invoiceTotal, 2) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>
